@@ -8,9 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 
@@ -32,27 +34,27 @@ public class ChatService {
      * @param file the uploaded PDF file as a {@link MultipartFile}.
      * @return the response from the OpenAI API as a {@link String}.
      */
-    public String generatePreIntakeAnalysis(MultipartFile file) {
-        try {
-            PDDocument document = PDDocument.load(file.getInputStream());
+    @Async
+    public CompletableFuture<String> generatePreIntakeAnalysis(MultipartFile file) {
+        try (PDDocument document = PDDocument.load(file.getInputStream())) {
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String content = pdfStripper.getText(document);
-            document.close();
             ResponseCreateParams params = ResponseCreateParams.builder()
                     .model(ChatModel.GPT_5)
                     .addFileSearchTool(Collections.singletonList(FILE_ID))
-                    .input("Daisy, can you analyse the data and present the outcome according to the 1.3a pre-intake template " + content)
-                    .instructions("Generate the response in the format of a healthcare pre-intake analysis report in a json format.")
+                    .instructions("Generate the detailed analysis with Provisional TPD Hypothesis,Signs & Symptoms clusters,HETA coverage report,Optional additional data,Gap list,Recommended additional questionnaires")
+                    .input("Daisy, can you analyse the data and present the outcome according to the 1.3a pre-intake template and generate in a json format" + content)
                     .build();
 
-            return client.responses()
+            log.info("Sending request to OpenAI with extracted PDF content: {}", content);
+            return CompletableFuture.completedFuture(client.responses()
                     .create(params)
                     .output()
                     .stream()
-                    .flatMap(output -> output.message().stream())
-                    .flatMap(message -> message.content().stream())
+                    .flatMap(item -> item.message().stream())
+                    .flatMap(msg -> msg.content().stream())
                     .map(responseOutputText -> responseOutputText.asOutputText().text())
-                    .collect(Collectors.joining("\n"));
+                    .collect(Collectors.joining()));
 
         } catch (Exception e) {
             log.error("Error processing PDF file for healthcare analysis", e);
