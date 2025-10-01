@@ -36,6 +36,9 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.apache.pdfbox:pdfbox:2.0.29'
 
+	//mysql
+	implementation 'mysql:mysql-connector-java:8.0.33'
+
 	//OpenAI
 	implementation 'com.openai:openai-java:3.0.3'
 	implementation 'org.springframework.ai:spring-ai-openai:1.0.0'
