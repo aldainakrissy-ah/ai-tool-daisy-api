@@ -42,16 +42,17 @@ public class Prompt1Result {
         private List<String> additionalQuestionnaires;
 
         @JsonProperty("ethos_variant")
-        private EthosVariant ethosVariant;
+        private String ethosVariant;
 
         @JsonProperty("heta_modules")
         private List<String> hetaModules;
     }
 
     public enum EthosVariant {
-        Adult,
-        Child,
-        Hybrid
+        Volwassene,
+        Kind,
+        Hybride,
+        Adult, Child, Hybrid
     }
 
     private static final ObjectMapper mapper = new ObjectMapper();

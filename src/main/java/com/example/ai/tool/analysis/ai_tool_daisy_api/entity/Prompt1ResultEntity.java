@@ -2,20 +2,22 @@ package com.example.ai.tool.analysis.ai_tool_daisy_api.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "prompt1_results")
 public class Prompt1ResultEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "patient_id", nullable = false)
     private String patientId;
 
-    @Lob
-    @Column(name = "response_json", columnDefinition = "TEXT")
-    private String responseJson;
+    @Column(name = "result_json", columnDefinition = "jsonb", nullable = false)
+    private String resultJson;
 }
