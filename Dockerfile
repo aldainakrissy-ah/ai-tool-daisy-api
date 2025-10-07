@@ -21,9 +21,11 @@ FROM openjdk:21-jdk-slim
 
 WORKDIR /app
 
-# Copy the built artifact from build stage
-COPY --from=build /app/build/libs/*.jar app.jar
+# Create a directory for the jar and copy it
+RUN mkdir -p /app/libs/
+COPY --from=build /app/build/libs/*.jar /app/libs/
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Update ENTRYPOINT to use the specific jar name
+ENTRYPOINT ["java", "-jar", "/app/libs/ai-tool-daisy-api-0.0.1-SNAPSHOT.jar"]
