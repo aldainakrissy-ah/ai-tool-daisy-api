@@ -1,0 +1,45 @@
+{
+  "id": "ipaq-sf",
+  "title": {
+    "en": "Questionnaire Physical Activity (IPAQ-SF)",
+    "nl": "Vragenlijst Fysieke activiteit (IPAQ-SF)"
+  },
+  "description": {
+    "en": "Enter your physical activity for the past 7 days. Enter both the number of days and the average duration per day. Enter '0' if you haven't done any activity in the category.",
+    "nl": "Vul voor de afgelopen 7 dagen uw fysieke activiteit in. Vul zowel het aantal dagen in en ook de gemiddelde duur per dag. Geef een “0” op als je voor de categorie geen activiteiten hebt uitgevoerd."
+  },
+  "sections": [
+    {
+      "id": "walking",
+      "title": { "en": "Walking", "nl": "Lopen" },
+      "questions": [
+        { "id": "walk-days", "type": "number", "text": { "en": "How many days did you walk for at least 10 minutes at a time (walking to school/work, shopping)?", "nl": "Hoeveel dagen liep je ten minste 10 minuten achter elkaar (wandelen naar school/werk, boodschappen)?" }, "validation": { "min": 0, "max": 7 } },
+        { "id": "walk-minutes", "type": "number", "text": { "en": "Average number of minutes per day", "nl": "Gemiddeld aantal minuten per dag" }, "validation": { "min": 0 } }
+      ]
+    },
+    {
+      "id": "moderate-activity",
+      "title": { "en": "Moderate Activity", "nl": "Matige activiteit" },
+      "questions": [
+        { "id": "mod-days", "type": "number", "text": { "en": "How many days did you do moderate activity (cycling, gardening, swimming) for at least 10 minutes at a time?", "nl": "Hoeveel dagen deed je matige activiteit (fietsen, tuinieren, zwemmen) ten minste 10 minuten achter elkaar?" }, "validation": { "min": 0, "max": 7 } },
+        { "id": "mod-minutes", "type": "number", "text": { "en": "Average number of minutes per day", "nl": "Gemiddeld aantal minuten per dag" }, "validation": { "min": 0 } }
+      ]
+    },
+    {
+      "id": "intense-activity",
+      "title": { "en": "Intense Activity", "nl": "Intensieve activiteit" },
+      "questions": [
+        { "id": "int-days", "type": "number", "text": { "en": "How many days did you do intense activity (running, aerobics) for at least 10 minutes at a time?", "nl": "Hoeveel dagen deed je ten minste 10 minuten achter elkaar intensieve activiteiten (hardlopen, aerobics)?" }, "validation": { "min": 0, "max": 7 } },
+        { "id": "int-minutes", "type": "number", "text": { "en": "Average number of minutes per day", "nl": "Gemiddeld aantal minuten per dag" }, "validation": { "min": 0 } }
+      ]
+    },
+    {
+      "id": "sitting",
+      "title": { "en": "Sitting", "nl": "Zitten" },
+      "questions": [
+        { "id": "sit-hours", "type": "number", "text": { "en": "How many hours (total) did you sit on average per day?", "nl": "Op hoeveel uur (totaal) zat je gemiddeld per dag?" }, "validation": { "min": 0 } }
+      ]
+    }
+  ]
+}
+

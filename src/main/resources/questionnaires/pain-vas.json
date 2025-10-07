@@ -1,0 +1,31 @@
+{
+  "id": "vas-pain",
+  "title": {
+    "en": "Visual Analog Scale for Pain",
+    "nl": "Visual Analog Scale voor Pijn"
+  },
+  "description": {
+    "en": "Please rate your pain on a scale of 0-10. (0 = no pain, 10 = Extreme pain.)",
+    "nl": "Vul uw pijn score in op een schaal van 0-10. (0 = geen pijn, 10 = Extreem veel pijn.)"
+  },
+  "sections": [
+    {
+      "id": "pain-scale",
+      "questions": [
+        {
+          "id": "vas-score",
+          "type": "slider",
+          "text": {
+            "en": "How much pain are you experiencing right now?",
+            "nl": "Hoeveel pijn ervaar je op dit moment?"
+          },
+          "validation": {
+            "min": 0,
+            "max": 10
+          }
+        }
+      ]
+    }
+  ]
+}
+

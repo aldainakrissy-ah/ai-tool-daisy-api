@@ -1,0 +1,65 @@
+{
+  "id": "ethos-scan-adult",
+  "title": {
+    "en": "Values and Norms Scan & Values-Behavior Discrepancy Scan",
+    "nl": "Waarden- en Normen scan & Scan Waarden-Gedrag Discrepantie"
+  },
+  "description": {
+    "en": "To better understand your values-behavior congruence, please complete the short Ethos ⁺ scan (6 statements in 2 minutes) and the Values-Behavior Discrepancy scan (4 questions per value, 5 minutes). The goal of the scan is to gain insight into how well your personal core values guide your daily choices and behavior.",
+    "nl": "Om je waarden-gedrag congruentie beter te begrijpen, vul je nu de korte Ethos ⁺ -scan in (6 stellingen in 2 minuten) en de Waarden-Gedrag discrepantie scan in (per waarde 4 vragen, 5 minuten). Het doel van de scan is : Inzicht krijgen in hoe goed je persoonlijke kernwaarden je dagelijkse keuzes en gedrag sturen."
+  },
+  "sections": [
+    {
+      "id": "core-values",
+      "title": {
+        "en": "Core Values Selection",
+        "nl": "Kernwaarden Selectie"
+      },
+      "questions": [
+        {
+          "id": "core-values-selection",
+          "type": "multi-choice-selection",
+          "text": {
+            "en": "Core values are the driving forces that determine what you truly value in your life and work. They form your moral compass for choices and behavior. Therefore, choose a maximum of four core values that best suit you below.",
+            "nl": "Kernwaarden zijn de drijfveren die bepalen wat jij écht belangrijk vindt in je leven en werk. Ze vormen je morele kompas bij keuzes en gedrag. Kies daarom hieronder maximaal 4 kernwaarden die het beste bij jou passen."
+          },
+          "options": [
+            { "value": "connection", "label": { "en": "Connection (Collaboration, Empathy, Loyalty, Solidarity)", "nl": "Verbinding (Samenwerking, Empathie, Loyaliteit, Solidariteit)" } },
+            { "value": "integrity", "label": { "en": "Integrity (Honesty, Transparency, Reliability, Equality)", "nl": "Integriteit (Eerlijkheid, Transparantie, Betrouwbaarheid, Gelijkwaardigheid)" } },
+            { "value": "growth", "label": { "en": "Growth and Development (Curiosity, Personal Growth, Creativity, Adventure)", "nl": "Groei en Ontwikkeling (Leergierigheid, Persoonlijke groei, Creativiteit, Avontuur)" } },
+            { "value": "autonomy", "label": { "en": "Autonomy (Freedom, Self-Determination, Entrepreneurship)", "nl": "Autonomie (Vrijheid, Zelfbeschikking, Ondernemerschap)" } },
+            { "value": "results", "label": { "en": "Results (Purposefulness, Efficiency, Quality, Impact)", "nl": "Resultaat (Doelgerichtheid, Efficiëntie, Kwaliteit, Impact)" } },
+            { "value": "care", "label": { "en": "People & Care (Caring, Well-being, Respect, Safety)", "nl": "Mens & Zorg (Zorgzaamheid, Welzijn, Respect, Veiligheid)" } },
+            { "value": "innovation", "label": { "en": "Innovation (Renewal, Courage, Visionary Thinking)", "nl": "Innovatie (Vernieuwing, Durf, Visionair denken)" } },
+            { "value": "sustainability", "label": { "en": "Sustainability (Sustainability, Responsibility)", "nl": "Duurzaamheid (Duurzaamheid, Verantwoordelijkheid)" } }
+          ],
+          "validation": { "minSelections": 4, "maxSelections": 4 }
+        }
+      ]
+    },
+    {
+      "id": "statements",
+      "title": { "en": "Statements", "nl": "Stellingen" },
+      "questions": [
+        { "id": "statement-1", "type": "likert-scale-5", "text": { "en": "I have a clear understanding of the core values that guide my choices.", "nl": "Ik weet duidelijk welke kernwaarden mijn keuzes sturen." } },
+        { "id": "statement-2", "type": "likert-scale-5", "text": { "en": "Sometimes I feel guilty or ashamed because my choices don't align with what I truly value.", "nl": "Soms voel ik me schuldig of beschaamd omdat mijn keuzes niet passen bij wat ik echt belangrijk vind." } },
+        { "id": "statement-3", "type": "likert-scale-5", "text": { "en": "My daily life (work, family, leisure) is largely in line with my deepest beliefs.", "nl": "Mijn dagelijks leven (werk, gezin, vrije tijd) loopt grotendeels in lijn met mijn diepste overtuigingen." } },
+        { "id": "statement-4", "type": "likert-scale-5", "text": { "en": "I sometimes hesitate to make choices for fear of what others think, even if they don't align with my values.", "nl": "Ik durf soms geen keuzes te maken uit angst voor wat anderen denken, ook al strookt dat niet met mijn waarden." } },
+        { "id": "statement-5", "type": "likert-scale-5", "text": { "en": "When I look back on my recent decisions, I often wish I had acted differently.", "nl": "Als ik terugkijk op mijn recente beslissingen, had ik vaak liever anders gehandeld." } },
+        { "id": "statement-6", "type": "likert-scale-5", "text": { "en": "Overall, I feel in harmony with my own values.", "nl": "Over het algemeen voel ik me in harmonie met mijn eigen waarden." } }
+      ]
+    },
+    {
+      "id": "dynamic-section-1",
+      "condition": { "questionId": "core-values-selection", "operator": "hasValueAtIndex", "index": 0 },
+      "title": { "en": "Reflection on Core Value", "nl": "Reflectie op Kernwaarde" },
+      "questions": [
+        { "id": "val1-q1", "type": "likert-scale-5", "text": { "en": "To what extent have you acted in accordance with this value in the past week?", "nl": "In hoeverre heb je de afgelopen week gehandeld in overeenstemming met deze waarde?" } },
+        { "id": "val1-q2", "type": "likert-scale-5", "text": { "en": "To what extent have you acted in deviation from this value in the past week?", "nl": "In hoeverre heb je de afgelopen week gehandeld in afwijking van deze waarde?" } },
+        { "id": "val1-q3", "type": "text", "text": { "en": "What factors or situations have prevented you from acting according to this value?", "nl": "Welke factoren of situaties hebben je weerhouden om volgens deze waarde te handelen?" } },
+        { "id": "val1-q4", "type": "text", "text": { "en": "Describe an example of a time when you acted in accordance with this value.", "nl": "Beschrijf een voorbeeld van een moment waarop je juist wel in lijn met deze waarde hebt gehandeld." } }
+      ]
+    }
+  ]
+}
+

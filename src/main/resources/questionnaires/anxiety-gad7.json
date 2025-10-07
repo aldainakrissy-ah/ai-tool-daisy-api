@@ -1,0 +1,26 @@
+{
+  "id": "gad-7",
+  "title": {
+    "en": "Questionnaire Generalized Anxiety Disorder (GAD-7)",
+    "nl": "Vragenlijst Algemene Angststoornissen (GAD-7)"
+  },
+  "description": {
+    "en": "Over the last 2 weeks, how often have you been bothered by the following problems?",
+    "nl": "In de afgelopen 2 weken, hoe vaak had u last van de volgende problemen?"
+  },
+  "sections": [
+    {
+      "id": "gad7-questions",
+      "questions": [
+        { "id": "gad7-1", "type": "likert-scale-4", "text": { "en": "Feeling nervous, anxious, or on edge", "nl": "Neiging om me nerveus, angstig of onrustig te voelen" } },
+        { "id": "gad7-2", "type": "likert-scale-4", "text": { "en": "Not being able to stop or control worrying", "nl": "Moeite met stoppen of beheersen van zorgen" } },
+        { "id": "gad7-3", "type": "likert-scale-4", "text": { "en": "Worrying too much about different things", "nl": "Overmatige zorgen over verschillende zaken" } },
+        { "id": "gad7-4", "type": "likert-scale-4", "text": { "en": "Trouble relaxing", "nl": "Moeite met ontspannen" } },
+        { "id": "gad7-5", "type": "likert-scale-4", "text": { "en": "Being so restless that it is hard to sit still", "nl": "Rusteloosheid, niet stil kunnen zitten" } },
+        { "id": "gad7-6", "type": "likert-scale-4", "text": { "en": "Becoming easily annoyed or irritable", "nl": "Prikkelbaar" } },
+        { "id": "gad7-7", "type": "likert-scale-4", "text": { "en": "Feeling afraid, as if something awful might happen", "nl": "Angst dat er iets verschrikkelijks kan gebeuren" } }
+      ]
+    }
+  ]
+}
+

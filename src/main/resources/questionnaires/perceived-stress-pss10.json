@@ -1,0 +1,23 @@
+{
+  "id": "pss-10",
+  "title": { "en": "Questionnaire Perceived Stress (PSS-10)", "nl": "Waargenomen stress vragenlijst (PSS-10)" },
+  "description": { "en": "The questions on this scale ask you about your feelings and thoughts over the past month. (0=Never, 4=Very Often)", "nl": "Met de vragen op deze schaal wordt u gevraagd naar uw gevoelens en gedachten gedurende de afgelopen maand. (0=Nooit, 4=Heel vaak)" },
+  "sections": [
+    {
+      "id": "pss10-questions",
+      "questions": [
+        { "id": "pss10-1", "type": "likert-scale-5", "text": { "en": "I felt restless and 'rushed'", "nl": "Ik voelde mij onrustig en ‘gejaagd’." } },
+        { "id": "pss10-2", "type": "likert-scale-5", "text": { "en": "I couldn't keep my mind off unpleasant things", "nl": "Ik kon mijn gedachten niet van vervelende dingen afhouden" } },
+        { "id": "pss10-3", "type": "likert-scale-5", "text": { "en": "I felt I lacked control over important matters", "nl": "Ik vond dat ik in belangrijke dingen de controle miste" } },
+        { "id": "pss10-4", "type": "likert-scale-5", "text": { "en": "I could cope with daily problems and irritations", "nl": "Ik kon omgaan met de dagelijkse problemen en irritaties" } },
+        { "id": "pss10-5", "type": "likert-scale-5", "text": { "en": "I felt confident about my ability to handle my problems", "nl": "Ik voelde mij zelfverzekerd over mijn vermogen om met mijn problemen om te gaan" } },
+        { "id": "pss10-6", "type": "likert-scale-5", "text": { "en": "I felt stressed", "nl": "Ik voelde mij gestrest" } },
+        { "id": "pss10-7", "type": "likert-scale-5", "text": { "en": "I managed to keep my worries under control", "nl": "Ik slaagde er in om mijn zorgen onder controle te houden" } },
+        { "id": "pss10-8", "type": "likert-scale-5", "text": { "en": "I felt nervous and 'rushed'", "nl": "Ik voelde mij nerveus en “gehaast”" } },
+        { "id": "pss10-9", "type": "likert-scale-5", "text": { "en": "I expected bad things to happen", "nl": "Ik verwachtte dat er nare dingen zouden gebeuren" } },
+        { "id": "pss10-10", "type": "likert-scale-5", "text": { "en": "I was able to stay calm even when problems arose", "nl": "Ik was in staat om kalm te blijven, zelfs wanneer zich problemen voordeden" } }
+      ]
+    }
+  ]
+}
+
