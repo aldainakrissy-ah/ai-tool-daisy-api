@@ -21,11 +21,21 @@ FROM openjdk:21-jdk-slim
 
 WORKDIR /app
 
+# Create non-root user for security
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
 # Create a directory for the jar and copy it
-RUN mkdir -p /app/libs/
+RUN mkdir -p /app/libs/ && chown -R appuser:appuser /app
+
+# Copy the jar file from build stage
 COPY --from=build /app/build/libs/*.jar /app/libs/
+RUN chown -R appuser:appuser /app/libs/
+
+# Switch to non-root user
+USER appuser
 
 EXPOSE 8080
 
-# Update ENTRYPOINT to use the specific jar name
-ENTRYPOINT ["java", "-jar", "/app/libs/ai-tool-daisy-api-0.0.1-SNAPSHOT.jar"]
+
+# Update ENTRYPOINT to use the specific jar name with optimized JVM settings
+ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=70.0", "-jar", "/app/libs/ai-tool-daisy-api-0.0.1-SNAPSHOT.jar"]

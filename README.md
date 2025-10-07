@@ -27,12 +27,20 @@ git clone https://github.com/yourusername/ai-tool-daisy-api.git
 cd ai-tool-daisy-api
 ```
 
-2. Build and run the containers:
+2. Set up environment variables:
+```bash
+cp .env.example .env
+# Edit .env file with your actual values
+```
+
+3. Build and run the containers:
 ```bash
 docker-compose up --build
 ```
 
 The application will be available at `http://localhost:8080`
+
+**Note**: The Docker setup automatically reads from the `.env` file and configures the database connection between containers.
 
 ### Running Locally
 
@@ -95,12 +103,22 @@ The system includes pre-loaded questionnaires:
 
 ## Environment Variables
 
+Create a `.env` file in the root directory with the following variables:
+
 ```properties
-SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5433/DAISY_DB
-SPRING_DATASOURCE_USERNAME=postgres
-SPRING_DATASOURCE_PASSWORD=daisy
-SPRING_AI_OPENAI_API_KEY=your-openai-api-key
+# OpenAI API Configuration
+OPEN_API_KEY=your_openai_api_key_here
+
+# Database Configuration
+POSTGRES_URL=jdbc:postgresql://localhost:5433/DAISY_DB
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=your_password_here
+
+# Questionnaire Engine Configuration
+LOAD_QUESTIONNAIRES_ON_STARTUP=true
 ```
+
+**Security Note**: Never commit the `.env` file to version control. Use `.env.example` as a template.
 
 ## Project Structure
 
