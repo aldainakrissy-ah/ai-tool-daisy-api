@@ -1,0 +1,368 @@
+{
+  "info": {
+    "_postman_id": "93c0db2e-8a75-4c18-9f9c-98c6d7f5b136",
+    "name": "AI Tool Daisy API",
+    "description": "Complete collection for interacting with the AI Tool Daisy API, including health checks, questionnaire management, and AI analysis features.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health & Status",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "health"]
+            },
+            "description": "Check if the API is running properly"
+          },
+          "response": []
+        },
+        {
+          "name": "Available Endpoints",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/endpoints",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "endpoints"]
+            },
+            "description": "Get a list of all available API endpoints"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints for checking API status and available routes"
+    },
+    {
+      "name": "AI Analysis",
+      "item": [
+        {
+          "name": "Analyze Text",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"text\": \"Patient reports experiencing frequent headaches and fatigue for the past two weeks. No prior history of migraines.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/analyze/text",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "analyze", "text"]
+            },
+            "description": "Analyze medical text using AI"
+          },
+          "response": []
+        },
+        {
+          "name": "Analyze PDF",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/path/to/medical-document.pdf"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/analyze/pdf",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "analyze", "pdf"]
+            },
+            "description": "Analyze medical PDF document using AI"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints for analyzing medical text and PDFs using AI"
+    },
+    {
+      "name": "Questionnaire Management",
+      "item": [
+        {
+          "name": "Get All Questionnaires",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/questionnaires",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "questionnaires"]
+            },
+            "description": "Get all active questionnaires"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Questionnaire by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/questionnaires/gad-7",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "questionnaires", "gad-7"]
+            },
+            "description": "Get a specific questionnaire by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Questionnaire",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"questionnaireId\": \"custom-questionnaire\",\n    \"title\": {\n        \"en\": \"Custom Questionnaire\",\n        \"nl\": \"Aangepaste Vragenlijst\"\n    },\n    \"description\": {\n        \"en\": \"This is a custom questionnaire\",\n        \"nl\": \"Dit is een aangepaste vragenlijst\"\n    },\n    \"sections\": [\n        {\n            \"sectionId\": \"section-1\",\n            \"title\": {\n                \"en\": \"First Section\",\n                \"nl\": \"Eerste Sectie\"\n            },\n            \"questions\": [\n                {\n                    \"questionId\": \"q1\",\n                    \"questionType\": \"TEXT\",\n                    \"questionText\": {\n                        \"en\": \"What is your name?\",\n                        \"nl\": \"Wat is je naam?\"\n                    },\n                    \"required\": true\n                }\n            ]\n        }\n    ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/questionnaires",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "questionnaires"]
+            },
+            "description": "Create a new questionnaire"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Questionnaire",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"questionnaireId\": \"gad-7\",\n    \"title\": {\n        \"en\": \"Updated GAD-7\",\n        \"nl\": \"Bijgewerkte GAD-7\"\n    },\n    \"description\": {\n        \"en\": \"Updated anxiety assessment\",\n        \"nl\": \"Bijgewerkte angstbeoordeling\"\n    },\n    \"sections\": [\n        {\n            \"sectionId\": \"section-1\",\n            \"title\": {\n                \"en\": \"Anxiety Assessment\",\n                \"nl\": \"Angstbeoordeling\"\n            },\n            \"questions\": [\n                {\n                    \"questionId\": \"gad7-1\",\n                    \"questionType\": \"LIKERT_SCALE\",\n                    \"questionText\": {\n                        \"en\": \"Feeling nervous, anxious, or on edge\",\n                        \"nl\": \"Nerveus, angstig of gespannen voelen\"\n                    },\n                    \"required\": true,\n                    \"options\": {\n                        \"en\": [\"Not at all\", \"Several days\", \"More than half the days\", \"Nearly every day\"],\n                        \"nl\": [\"Helemaal niet\", \"Meerdere dagen\", \"Meer dan de helft van de dagen\", \"Bijna elke dag\"]\n                    }\n                }\n            ]\n        }\n    ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/questionnaires/gad-7",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "questionnaires", "gad-7"]
+            },
+            "description": "Update an existing questionnaire"
+          },
+          "response": []
+        },
+        {
+          "name": "Upload JSON Questionnaire",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"questionnaireId\": \"gad-7\",\n    \"title\": {\n        \"en\": \"GAD-7\",\n        \"nl\": \"GAD-7\"\n    },\n    \"description\": {\n        \"en\": \"Generalized Anxiety Disorder assessment\",\n        \"nl\": \"Gegeneraliseerde angststoornis beoordeling\"\n    },\n    \"sections\": [\n        {\n            \"sectionId\": \"section-1\",\n            \"title\": {\n                \"en\": \"Over the last 2 weeks, how often have you been bothered by the following problems?\",\n                \"nl\": \"Hoe vaak hebt u in de afgelopen 2 weken last gehad van de volgende problemen?\"\n            },\n            \"questions\": [\n                {\n                    \"questionId\": \"gad7-1\",\n                    \"questionType\": \"LIKERT_SCALE\",\n                    \"questionText\": {\n                        \"en\": \"Feeling nervous, anxious, or on edge\",\n                        \"nl\": \"Nerveus, angstig of gespannen voelen\"\n                    },\n                    \"required\": true,\n                    \"options\": {\n                        \"en\": [\"Not at all\", \"Several days\", \"More than half the days\", \"Nearly every day\"],\n                        \"nl\": [\"Helemaal niet\", \"Meerdere dagen\", \"Meer dan de helft van de dagen\", \"Bijna elke dag\"]\n                    }\n                }\n            ]\n        }\n    ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/questionnaires/gad-7/upload",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "questionnaires", "gad-7", "upload"]
+            },
+            "description": "Update a questionnaire by uploading JSON"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Questionnaire",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/questionnaires/gad-7",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "questionnaires", "gad-7"]
+            },
+            "description": "Delete a questionnaire by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Load Questionnaire from JSON",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/questionnaires/load/gad-7.json",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "questionnaires", "load", "gad-7.json"]
+            },
+            "description": "Load a specific questionnaire from JSON file"
+          },
+          "response": []
+        },
+        {
+          "name": "Load All Questionnaires",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/questionnaires/load-all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "questionnaires", "load-all"]
+            },
+            "description": "Load all questionnaires from JSON files"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints for managing questionnaires"
+    },
+    {
+      "name": "Questionnaire Responses",
+      "item": [
+        {
+          "name": "Start Questionnaire Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"questionnaireId\": \"gad-7\",\n    \"userId\": \"user123\",\n    \"languageCode\": \"en\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/questionnaire-responses/start",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "questionnaire-responses", "start"]
+            },
+            "description": "Start a new questionnaire session"
+          },
+          "response": []
+        },
+        {
+          "name": "Save Responses",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n    {\n        \"questionId\": \"gad7-1\",\n        \"answerNumber\": 2\n    },\n    {\n        \"questionId\": \"gad7-2\",\n        \"answerNumber\": 1\n    }\n]"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/questionnaire-responses/{{sessionId}}/responses",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "questionnaire-responses", "{{sessionId}}", "responses"]
+            },
+            "description": "Save responses for a questionnaire session"
+          },
+          "response": []
+        },
+        {
+          "name": "Complete Questionnaire",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/questionnaire-responses/{{sessionId}}/complete",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "questionnaire-responses", "{{sessionId}}", "complete"]
+            },
+            "description": "Mark a questionnaire session as complete"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Session Responses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/questionnaire-responses/{{sessionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "questionnaire-responses", "{{sessionId}}"]
+            },
+            "description": "Get responses for a specific session"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Responses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/questionnaire-responses/user/user123",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "questionnaire-responses", "user", "user123"]
+            },
+            "description": "Get all responses for a specific user"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints for managing questionnaire responses"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "sessionId",
+      "value": "your-session-id-here",
+      "type": "string"
+    }
+  ]
+}
