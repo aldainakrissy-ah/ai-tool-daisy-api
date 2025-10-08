@@ -70,16 +70,13 @@ public class QuestionnaireService {
         QuestionnaireDto dto = new QuestionnaireDto();
         dto.setId(questionnaire.getId());
         dto.setQuestionnaireId(questionnaire.getQuestionnaireId());
-        dto.setTitle(questionnaire.getTitle());
-        dto.setDescription(questionnaire.getDescription());
+        dto.setTitle(parseJsonToMap(questionnaire.getTitle()));
+        dto.setDescription(parseJsonToMap(questionnaire.getDescription()));
+        dto.setCreatedAt(questionnaire.getCreatedAt());
+        dto.setUpdatedAt(questionnaire.getUpdatedAt());
         dto.setIsActive(questionnaire.getIsActive());
         dto.setVersion(questionnaire.getVersion());
         
-        // Convert JSON strings to Maps
-        dto.setTitleTranslations(parseJsonToMap(questionnaire.getTitleTranslations()));
-        dto.setDescriptionTranslations(parseJsonToMap(questionnaire.getDescriptionTranslations()));
-        
-        // Convert sections
         if (questionnaire.getSections() != null) {
             dto.setSections(questionnaire.getSections().stream()
                     .map(this::convertSectionToDto)
@@ -144,14 +141,17 @@ public class QuestionnaireService {
     private Questionnaire convertToEntity(QuestionnaireDto dto) {
         Questionnaire questionnaire = new Questionnaire();
         questionnaire.setQuestionnaireId(dto.getQuestionnaireId());
-        questionnaire.setTitle(dto.getTitle());
-        questionnaire.setDescription(dto.getDescription());
         questionnaire.setIsActive(dto.getIsActive() != null ? dto.getIsActive() : true);
         questionnaire.setVersion(dto.getVersion() != null ? dto.getVersion() : 1);
         
-        // Convert Maps to JSON strings
-        questionnaire.setTitleTranslations(mapToJson(dto.getTitleTranslations()));
-        questionnaire.setDescriptionTranslations(mapToJson(dto.getDescriptionTranslations()));
+        // Convert Maps to JSON strings for the title and description fields directly
+        try {
+            questionnaire.setTitle(objectMapper.writeValueAsString(dto.getTitle()));
+            questionnaire.setDescription(objectMapper.writeValueAsString(dto.getDescription()));
+        } catch (JsonProcessingException e) {
+            log.error("Error converting title/description to JSON", e);
+            throw new RuntimeException("Error converting data", e);
+        }
         
         // Convert sections
         if (dto.getSections() != null) {
@@ -170,7 +170,13 @@ public class QuestionnaireService {
         section.setTitle(dto.getTitle());
         section.setSortOrder(dto.getSortOrder());
         section.setQuestionnaire(questionnaire);
-        section.setTitleTranslations(mapToJson(dto.getTitleTranslations()));
+        
+        try {
+            section.setTitleTranslations(objectMapper.writeValueAsString(dto.getTitleTranslations()));
+        } catch (JsonProcessingException e) {
+            log.error("Error converting section title translations to JSON", e);
+            throw new RuntimeException("Error converting data", e);
+        }
         
         if (dto.getQuestions() != null) {
             List<Question> questions = dto.getQuestions().stream()
@@ -190,9 +196,15 @@ public class QuestionnaireService {
         question.setSortOrder(dto.getSortOrder());
         question.setIsRequired(dto.getIsRequired() != null ? dto.getIsRequired() : false);
         question.setSection(section);
-        question.setTextTranslations(mapToJson(dto.getTextTranslations()));
-        question.setValidationRules(objectToJson(dto.getValidationRules()));
-        question.setOptions(optionsListToJson(dto.getOptions()));
+        
+        try {
+            question.setTextTranslations(objectMapper.writeValueAsString(dto.getTextTranslations()));
+            question.setValidationRules(objectMapper.writeValueAsString(dto.getValidationRules()));
+            question.setOptions(objectMapper.writeValueAsString(dto.getOptions()));
+        } catch (JsonProcessingException e) {
+            log.error("Error converting question data to JSON", e);
+            throw new RuntimeException("Error converting data", e);
+        }
         
         if (dto.getColumns() != null) {
             List<QuestionColumn> columns = dto.getColumns().stream()
@@ -211,15 +223,26 @@ public class QuestionnaireService {
         column.setType(dto.getType());
         column.setSortOrder(dto.getSortOrder());
         column.setQuestion(question);
-        column.setLabelTranslations(mapToJson(dto.getLabelTranslations()));
+        
+        try {
+            column.setLabelTranslations(objectMapper.writeValueAsString(dto.getLabelTranslations()));
+        } catch (JsonProcessingException e) {
+            log.error("Error converting column label translations to JSON", e);
+            throw new RuntimeException("Error converting data", e);
+        }
+        
         return column;
     }
     
     private void updateQuestionnaireFields(Questionnaire existing, QuestionnaireDto dto) {
-        existing.setTitle(dto.getTitle());
-        existing.setDescription(dto.getDescription());
-        existing.setTitleTranslations(mapToJson(dto.getTitleTranslations()));
-        existing.setDescriptionTranslations(mapToJson(dto.getDescriptionTranslations()));
+        // Update title and description directly with JSON strings
+        try {
+            existing.setTitle(objectMapper.writeValueAsString(dto.getTitle()));
+            existing.setDescription(objectMapper.writeValueAsString(dto.getDescription()));
+        } catch (JsonProcessingException e) {
+            log.error("Error converting title/description to JSON", e);
+            throw new RuntimeException("Error converting data", e);
+        }
         
         if (dto.getVersion() != null) {
             existing.setVersion(dto.getVersion());
@@ -263,42 +286,6 @@ public class QuestionnaireService {
         } catch (JsonProcessingException e) {
             log.warn("Failed to parse JSON to Options List: {}", json, e);
             return new ArrayList<>();
-        }
-    }
-    
-    private String mapToJson(Map<String, String> map) {
-        if (map == null || map.isEmpty()) {
-            return null;
-        }
-        try {
-            return objectMapper.writeValueAsString(map);
-        } catch (JsonProcessingException e) {
-            log.warn("Failed to convert Map to JSON: {}", map, e);
-            return null;
-        }
-    }
-    
-    private String objectToJson(Object object) {
-        if (object == null) {
-            return null;
-        }
-        try {
-            return objectMapper.writeValueAsString(object);
-        } catch (JsonProcessingException e) {
-            log.warn("Failed to convert Object to JSON: {}", object, e);
-            return null;
-        }
-    }
-    
-    private String optionsListToJson(List<QuestionOptionDto> options) {
-        if (options == null || options.isEmpty()) {
-            return null;
-        }
-        try {
-            return objectMapper.writeValueAsString(options);
-        } catch (JsonProcessingException e) {
-            log.warn("Failed to convert Options List to JSON: {}", options, e);
-            return null;
         }
     }
 }

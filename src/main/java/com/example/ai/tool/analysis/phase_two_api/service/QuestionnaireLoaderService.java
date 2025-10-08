@@ -75,26 +75,28 @@ public class QuestionnaireLoaderService {
         
         dto.setQuestionnaireId(jsonNode.get("id").asText());
         
-        // Parse title
+        // Parse title directly as a translations map
         JsonNode titleNode = jsonNode.get("title");
+        Map<String, String> titleTranslations;
         if (titleNode.isTextual()) {
-            dto.setTitle(titleNode.asText());
+            // If it's just a string, use it as the English title
+            titleTranslations = Map.of("en", titleNode.asText());
         } else {
-            Map<String, String> titleTranslations = parseTranslations(titleNode);
-            dto.setTitle(titleTranslations.get("en"));
-            dto.setTitleTranslations(titleTranslations);
+            titleTranslations = parseTranslations(titleNode);
         }
+        dto.setTitle(titleTranslations); // Store as a Map directly
         
-        // Parse description
+        // Parse description directly as a translations map
         JsonNode descriptionNode = jsonNode.get("description");
         if (descriptionNode != null) {
+            Map<String, String> descriptionTranslations;
             if (descriptionNode.isTextual()) {
-                dto.setDescription(descriptionNode.asText());
+                // If it's just a string, use it as the English description
+                descriptionTranslations = Map.of("en", descriptionNode.asText());
             } else {
-                Map<String, String> descriptionTranslations = parseTranslations(descriptionNode);
-                dto.setDescription(descriptionTranslations.get("en"));
-                dto.setDescriptionTranslations(descriptionTranslations);
+                descriptionTranslations = parseTranslations(descriptionNode);
             }
+            dto.setDescription(descriptionTranslations); // Store as a Map directly
         }
         
         // Parse sections

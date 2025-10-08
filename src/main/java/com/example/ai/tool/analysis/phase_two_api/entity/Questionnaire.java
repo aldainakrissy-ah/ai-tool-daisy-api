@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,17 +22,11 @@ public class Questionnaire {
     @Column(name = "questionnaire_id", unique = true, nullable = false)
     private String questionnaireId;
     
-    @Column(nullable = false)
-    private String title;
+    @Column(nullable = false, columnDefinition = "jsonb")
+    private String title;  // JSON object with language keys (en, nl)
     
-    @Column(columnDefinition = "TEXT")
-    private String description;
-    
-    @Column(name = "title_translations", columnDefinition = "jsonb")
-    private String titleTranslations;
-    
-    @Column(name = "description_translations", columnDefinition = "jsonb")
-    private String descriptionTranslations;
+    @Column(columnDefinition = "jsonb")
+    private String description;  // JSON object with language keys (en, nl)
     
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<QuestionnaireSection> sections;
