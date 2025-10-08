@@ -2,7 +2,7 @@ package com.example.ai.tool.analysis.ai_tool_daisy_api.constant;
 
 public final class QuestionnaireInstructions {
 
-    public static final String PROMPT1_INSTRUCTIONS = "{\n" +
+    public static final String PROMPT1_INSTRUCTION = "{\n" +
             "  \"patient_id\": \"Extraheer de patiëntnaam uit de inhoud.\",\n" +
             "  \"analysis\": {\n" +
             "    \"preliminary_tpd_hypothesis\": \"Formuleer een voorlopige TPD-hypothese\",\n" +
