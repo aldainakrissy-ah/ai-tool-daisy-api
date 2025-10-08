@@ -29,35 +29,28 @@ public class QuestionnaireResponse {
     @Column(name = "session_id")
     private String sessionId;
     
+    @Column(name = "language_code")
+    private String languageCode = "en";
+
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ResponseStatus status;
-    
+    @Column(name = "status")
+    private ResponseStatus status = ResponseStatus.IN_PROGRESS;
+
     @Column(name = "started_at")
     private LocalDateTime startedAt;
     
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
     
-    @Column(name = "language_code")
-    private String languageCode;
-    
     @OneToMany(mappedBy = "questionnaireResponse", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<QuestionResponse> questionResponses;
     
     @PrePersist
     protected void onCreate() {
-        if (startedAt == null) {
-            startedAt = LocalDateTime.now();
-        }
-        if (status == null) {
-            status = ResponseStatus.IN_PROGRESS;
-        }
+        startedAt = LocalDateTime.now();
     }
     
     public enum ResponseStatus {
-        IN_PROGRESS,
-        COMPLETED,
-        ABANDONED
+        IN_PROGRESS, COMPLETED, ABANDONED
     }
 }

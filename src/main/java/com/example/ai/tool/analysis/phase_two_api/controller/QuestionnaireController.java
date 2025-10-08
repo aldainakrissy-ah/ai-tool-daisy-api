@@ -37,14 +37,14 @@ public class QuestionnaireController {
         }
     }
     
-    @GetMapping("/{questionnaireId}")
-    public ResponseEntity<QuestionnaireDto> getQuestionnaire(@PathVariable String questionnaireId) {
+    @GetMapping("/{id}")
+    public ResponseEntity<QuestionnaireDto> getQuestionnaire(@PathVariable String id) {
         try {
-            return questionnaireService.getQuestionnaireById(questionnaireId)
+            return questionnaireService.getQuestionnaireById(id)
                     .map(questionnaire -> ResponseEntity.ok(questionnaire))
                     .orElse(ResponseEntity.notFound().build());
         } catch (Exception e) {
-            log.error("Error retrieving questionnaire: {}", questionnaireId, e);
+            log.error("Error retrieving questionnaire: {}", id, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -63,75 +63,65 @@ public class QuestionnaireController {
     }
     
     
-    @PutMapping("/{questionnaireId}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateQuestionnaire(
-            @PathVariable String questionnaireId,
+            @PathVariable String id,
             @RequestBody QuestionnaireDto questionnaireDto) {
         try {
-            QuestionnaireDto updatedQuestionnaire = questionnaireService.updateQuestionnaire(questionnaireId, questionnaireDto);
+            QuestionnaireDto updatedQuestionnaire = questionnaireService.updateQuestionnaire(id, questionnaireDto);
             return ResponseEntity.ok(updatedQuestionnaire);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
-            log.error("Error updating questionnaire: {}", questionnaireId, e);
+            log.error("Error updating questionnaire: {}", id, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     
-    @PutMapping("/{questionnaireId}/upload")
+    @PutMapping("/{id}/upload")
     public ResponseEntity<?> updateQuestionnaireWithUpload(
-            @PathVariable String questionnaireId,
+            @PathVariable String id,
             @RequestBody JsonNode jsonNode) {
         try {
             // Parse the JSON directly
             QuestionnaireDto questionnaireDto = questionnaireLoaderService.parseJsonToQuestionnaireDto(jsonNode);
             
             // Update the questionnaire
-            QuestionnaireDto updatedQuestionnaire = questionnaireService.updateQuestionnaire(questionnaireId, questionnaireDto);
+            QuestionnaireDto updatedQuestionnaire = questionnaireService.updateQuestionnaire(id, questionnaireDto);
             return ResponseEntity.ok(updatedQuestionnaire);
             
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
-            log.error("Error updating questionnaire with upload: {}", questionnaireId, e);
+            log.error("Error updating questionnaire with upload: {}", id, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing questionnaire");
         }
     }
     
-    @DeleteMapping("/{questionnaireId}")
-    public ResponseEntity<?> deleteQuestionnaire(@PathVariable String questionnaireId) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteQuestionnaire(@PathVariable String id) {
         try {
-            questionnaireService.deleteQuestionnaire(questionnaireId);
+            questionnaireService.deleteQuestionnaire(id);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
-            log.error("Error deleting questionnaire: {}", questionnaireId, e);
+            log.error("Error deleting questionnaire: {}", id, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     
-    @PostMapping("/load/{fileName}")
-    public ResponseEntity<?> loadQuestionnaireFromFile(@PathVariable String fileName) {
+    @PostMapping("/load-json")
+    public ResponseEntity<?> loadQuestionnaireFromJson(@RequestParam String fileName) {
         try {
             questionnaireLoaderService.loadQuestionnaireFromJson(fileName);
-            return ResponseEntity.ok("Questionnaire loaded successfully from: " + fileName);
+            return ResponseEntity.ok("Questionnaire loaded successfully");
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found: " + fileName);
+            log.error("Error loading questionnaire: {}", fileName, e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            log.error("Error loading questionnaire from file: {}", fileName, e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error loading questionnaire");
-        }
-    }
-    
-    @PostMapping("/load-all")
-    public ResponseEntity<String> loadAllQuestionnaires() {
-        try {
-            questionnaireLoaderService.loadAllQuestionnaires();
-            return ResponseEntity.ok("All questionnaires loaded successfully");
-        } catch (Exception e) {
-            log.error("Error loading all questionnaires", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error loading questionnaires");
+            log.error("Error loading questionnaire: {}", fileName, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

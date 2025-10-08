@@ -4,10 +4,9 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class QuestionDto {
+public class SectionDto {
     private String id;
-    private String type;
-    private LocalizedTextDto text;
-    private List<OptionDto> options;
+    private LocalizedTextDto title;
+    private List<QuestionDto> questions;
 }
 

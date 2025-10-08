@@ -15,53 +15,18 @@ import java.util.List;
 public class Question {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    @Column(name = "question_id", nullable = false)
-    private String questionId;
-    
-    @Column(nullable = false)
-    private String text;
-    
-    @Column(name = "text_translations", columnDefinition = "jsonb")
-    private String textTranslations;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private QuestionType type;
-    
-    @Column(name = "options", columnDefinition = "jsonb")
-    private String options;
-    
-    @Column(name = "validation_rules", columnDefinition = "jsonb")
-    private String validationRules;
-    
-    @Column(name = "sort_order")
-    private Integer sortOrder;
-    
-    @Column(name = "is_required")
-    private Boolean isRequired = false;
-    
+    private String id;
+
+    private String type;
+
+    @Embedded
+    private LocalizedText text;
+
+    @ElementCollection
+    @CollectionTable(name = "question_options", joinColumns = @JoinColumn(name = "question_id"))
+    private List<Option> options;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "section_id")
-    private QuestionnaireSection section;
-    
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<QuestionColumn> columns;
-    
-    public enum QuestionType {
-        TEXT,
-        TEXTAREA,
-        YES_NO,
-        LIKERT_SCALE_3,
-        LIKERT_SCALE_4,
-        LIKERT_SCALE_5,
-        MULTIPLE_CHOICE,
-        SINGLE_CHOICE,
-        NUMBER,
-        DATE,
-        TIME,
-        TABLE
-    }
+    private Section section;
 }

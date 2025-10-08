@@ -10,17 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface QuestionnaireRepository extends JpaRepository<Questionnaire, Long> {
-    
-    Optional<Questionnaire> findByQuestionnaireId(String questionnaireId);
-    
-    List<Questionnaire> findByIsActiveTrue();
-    
-    @Query("SELECT q FROM Questionnaire q WHERE q.isActive = true ORDER BY q.createdAt DESC")
-    List<Questionnaire> findActiveQuestionnairesOrderByCreatedDate();
-    
-    @Query("SELECT q FROM Questionnaire q LEFT JOIN FETCH q.sections s LEFT JOIN FETCH s.questions qu LEFT JOIN FETCH qu.columns WHERE q.questionnaireId = :questionnaireId AND q.isActive = true")
-    Optional<Questionnaire> findByQuestionnaireIdWithDetails(@Param("questionnaireId") String questionnaireId);
-    
-    boolean existsByQuestionnaireId(String questionnaireId);
+public interface QuestionnaireRepository extends JpaRepository<Questionnaire, String> {
+    Optional<Questionnaire> findById(String id);
+    List<Questionnaire> findAll();
+    @Query("SELECT q FROM Questionnaire q LEFT JOIN FETCH q.sections s LEFT JOIN FETCH s.questions qu WHERE q.id = :id")
+    Optional<Questionnaire> findByIdWithDetails(@Param("id") String id);
+    boolean existsById(String id);
 }

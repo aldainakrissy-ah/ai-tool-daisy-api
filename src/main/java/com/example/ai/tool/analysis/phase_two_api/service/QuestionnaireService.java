@@ -3,9 +3,6 @@ package com.example.ai.tool.analysis.phase_two_api.service;
 import com.example.ai.tool.analysis.phase_two_api.entity.*;
 import com.example.ai.tool.analysis.phase_two_api.pojo.*;
 import com.example.ai.tool.analysis.phase_two_api.repository.QuestionnaireRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,26 +17,25 @@ import java.util.stream.Collectors;
 public class QuestionnaireService {
     
     private final QuestionnaireRepository questionnaireRepository;
-    private final ObjectMapper objectMapper;
-    
+
     @Transactional(readOnly = true)
     public List<QuestionnaireDto> getAllActiveQuestionnaires() {
-        List<Questionnaire> questionnaires = questionnaireRepository.findActiveQuestionnairesOrderByCreatedDate();
+        List<Questionnaire> questionnaires = questionnaireRepository.findAll();
         return questionnaires.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
     
     @Transactional(readOnly = true)
-    public Optional<QuestionnaireDto> getQuestionnaireById(String questionnaireId) {
-        return questionnaireRepository.findByQuestionnaireIdWithDetails(questionnaireId)
+    public Optional<QuestionnaireDto> getQuestionnaireById(String id) {
+        return questionnaireRepository.findByIdWithDetails(id)
                 .map(this::convertToDto);
     }
     
     @Transactional
     public QuestionnaireDto createQuestionnaire(QuestionnaireDto questionnaireDto) {
-        if (questionnaireRepository.existsByQuestionnaireId(questionnaireDto.getQuestionnaireId())) {
-            throw new IllegalArgumentException("Questionnaire with ID " + questionnaireDto.getQuestionnaireId() + " already exists");
+        if (questionnaireRepository.existsById(questionnaireDto.getId())) {
+            throw new IllegalArgumentException("Questionnaire with ID " + questionnaireDto.getId() + " already exists");
         }
         
         Questionnaire questionnaire = convertToEntity(questionnaireDto);
@@ -48,244 +44,147 @@ public class QuestionnaireService {
     }
     
     @Transactional
-    public QuestionnaireDto updateQuestionnaire(String questionnaireId, QuestionnaireDto questionnaireDto) {
-        Questionnaire existingQuestionnaire = questionnaireRepository.findByQuestionnaireId(questionnaireId)
-                .orElseThrow(() -> new IllegalArgumentException("Questionnaire not found: " + questionnaireId));
-        
+    public QuestionnaireDto updateQuestionnaire(String id, QuestionnaireDto questionnaireDto) {
+        Questionnaire existingQuestionnaire = questionnaireRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Questionnaire not found: " + id));
+
         updateQuestionnaireFields(existingQuestionnaire, questionnaireDto);
         Questionnaire savedQuestionnaire = questionnaireRepository.save(existingQuestionnaire);
         return convertToDto(savedQuestionnaire);
     }
     
     @Transactional
-    public void deleteQuestionnaire(String questionnaireId) {
-        Questionnaire questionnaire = questionnaireRepository.findByQuestionnaireId(questionnaireId)
-                .orElseThrow(() -> new IllegalArgumentException("Questionnaire not found: " + questionnaireId));
-        
-        questionnaire.setIsActive(false);
-        questionnaireRepository.save(questionnaire);
+    public void deleteQuestionnaire(String id) {
+        questionnaireRepository.deleteById(id);
     }
     
     private QuestionnaireDto convertToDto(Questionnaire questionnaire) {
         QuestionnaireDto dto = new QuestionnaireDto();
         dto.setId(questionnaire.getId());
-        dto.setQuestionnaireId(questionnaire.getQuestionnaireId());
-        dto.setTitle(parseJsonToMap(questionnaire.getTitle()));
-        dto.setDescription(parseJsonToMap(questionnaire.getDescription()));
-        dto.setCreatedAt(questionnaire.getCreatedAt());
-        dto.setUpdatedAt(questionnaire.getUpdatedAt());
+        dto.setTitle(toLocalizedTextDto(questionnaire.getTitle()));
+        dto.setDescription(toLocalizedTextDto(questionnaire.getDescription()));
         dto.setIsActive(questionnaire.getIsActive());
         dto.setVersion(questionnaire.getVersion());
-        
         if (questionnaire.getSections() != null) {
             dto.setSections(questionnaire.getSections().stream()
-                    .map(this::convertSectionToDto)
-                    .collect(Collectors.toList()));
+                .map(this::convertSectionToDto)
+                .collect(Collectors.toList()));
         }
-        
         return dto;
     }
-    
-    private QuestionnaireSectionDto convertSectionToDto(QuestionnaireSection section) {
-        QuestionnaireSectionDto dto = new QuestionnaireSectionDto();
+
+    private SectionDto convertSectionToDto(Section section) {
+        SectionDto dto = new SectionDto();
         dto.setId(section.getId());
-        dto.setSectionId(section.getSectionId());
-        dto.setTitle(section.getTitle());
-        dto.setSortOrder(section.getSortOrder());
-        dto.setTitleTranslations(parseJsonToMap(section.getTitleTranslations()));
-        
+        dto.setTitle(toLocalizedTextDto(section.getTitle()));
         if (section.getQuestions() != null) {
             dto.setQuestions(section.getQuestions().stream()
-                    .map(this::convertQuestionToDto)
-                    .collect(Collectors.toList()));
+                .map(this::convertQuestionToDto)
+                .collect(Collectors.toList()));
         }
-        
         return dto;
     }
-    
+
     private QuestionDto convertQuestionToDto(Question question) {
         QuestionDto dto = new QuestionDto();
         dto.setId(question.getId());
-        dto.setQuestionId(question.getQuestionId());
-        dto.setText(question.getText());
         dto.setType(question.getType());
-        dto.setSortOrder(question.getSortOrder());
-        dto.setIsRequired(question.getIsRequired());
-        dto.setTextTranslations(parseJsonToMap(question.getTextTranslations()));
-        dto.setValidationRules(parseJsonToObject(question.getValidationRules()));
-        
-        // Convert options
-        dto.setOptions(parseJsonToOptionsList(question.getOptions()));
-        
-        // Convert columns
-        if (question.getColumns() != null) {
-            dto.setColumns(question.getColumns().stream()
-                    .map(this::convertColumnToDto)
-                    .collect(Collectors.toList()));
+        dto.setText(toLocalizedTextDto(question.getText()));
+        if (question.getOptions() != null) {
+            dto.setOptions(question.getOptions().stream()
+                .map(this::convertOptionToDto)
+                .collect(Collectors.toList()));
         }
-        
         return dto;
     }
-    
-    private QuestionColumnDto convertColumnToDto(QuestionColumn column) {
-        QuestionColumnDto dto = new QuestionColumnDto();
-        dto.setId(column.getId());
-        dto.setColumnId(column.getColumnId());
-        dto.setLabel(column.getLabel());
-        dto.setType(column.getType());
-        dto.setSortOrder(column.getSortOrder());
-        dto.setLabelTranslations(parseJsonToMap(column.getLabelTranslations()));
+
+    private OptionDto convertOptionToDto(Option option) {
+        OptionDto dto = new OptionDto();
+        dto.setValue(option.getValue());
+        dto.setLabel(toLocalizedTextDto(option.getLabel()));
         return dto;
     }
-    
+
+    private LocalizedTextDto toLocalizedTextDto(LocalizedText text) {
+        if (text == null) return null;
+        LocalizedTextDto dto = new LocalizedTextDto();
+        dto.setEn(text.getEn());
+        dto.setNl(text.getNl());
+        return dto;
+    }
+
     private Questionnaire convertToEntity(QuestionnaireDto dto) {
         Questionnaire questionnaire = new Questionnaire();
-        questionnaire.setQuestionnaireId(dto.getQuestionnaireId());
+        questionnaire.setId(dto.getId());
+        questionnaire.setTitle(toLocalizedText(dto.getTitle()));
+        questionnaire.setDescription(toLocalizedText(dto.getDescription()));
         questionnaire.setIsActive(dto.getIsActive() != null ? dto.getIsActive() : true);
         questionnaire.setVersion(dto.getVersion() != null ? dto.getVersion() : 1);
-        
-        // Convert Maps to JSON strings for the title and description fields directly
-        try {
-            questionnaire.setTitle(objectMapper.writeValueAsString(dto.getTitle()));
-            questionnaire.setDescription(objectMapper.writeValueAsString(dto.getDescription()));
-        } catch (JsonProcessingException e) {
-            log.error("Error converting title/description to JSON", e);
-            throw new RuntimeException("Error converting data", e);
-        }
-        
-        // Convert sections
         if (dto.getSections() != null) {
-            List<QuestionnaireSection> sections = dto.getSections().stream()
-                    .map(sectionDto -> convertSectionToEntity(sectionDto, questionnaire))
-                    .collect(Collectors.toList());
-            questionnaire.setSections(sections);
+            questionnaire.setSections(dto.getSections().stream()
+                .map(this::convertSectionToEntity)
+                .collect(Collectors.toList()));
         }
-        
         return questionnaire;
     }
-    
-    private QuestionnaireSection convertSectionToEntity(QuestionnaireSectionDto dto, Questionnaire questionnaire) {
-        QuestionnaireSection section = new QuestionnaireSection();
-        section.setSectionId(dto.getSectionId());
-        section.setTitle(dto.getTitle());
-        section.setSortOrder(dto.getSortOrder());
-        section.setQuestionnaire(questionnaire);
-        
-        try {
-            section.setTitleTranslations(objectMapper.writeValueAsString(dto.getTitleTranslations()));
-        } catch (JsonProcessingException e) {
-            log.error("Error converting section title translations to JSON", e);
-            throw new RuntimeException("Error converting data", e);
-        }
-        
+
+    private Section convertSectionToEntity(SectionDto dto) {
+        Section section = new Section();
+        section.setId(dto.getId());
+        section.setTitle(toLocalizedText(dto.getTitle()));
         if (dto.getQuestions() != null) {
-            List<Question> questions = dto.getQuestions().stream()
-                    .map(questionDto -> convertQuestionToEntity(questionDto, section))
-                    .collect(Collectors.toList());
-            section.setQuestions(questions);
+            section.setQuestions(dto.getQuestions().stream()
+                .map(this::convertQuestionToEntity)
+                .collect(Collectors.toList()));
         }
-        
         return section;
     }
-    
-    private Question convertQuestionToEntity(QuestionDto dto, QuestionnaireSection section) {
+
+    private Question convertQuestionToEntity(QuestionDto dto) {
         Question question = new Question();
-        question.setQuestionId(dto.getQuestionId());
-        question.setText(dto.getText());
+        question.setId(dto.getId());
         question.setType(dto.getType());
-        question.setSortOrder(dto.getSortOrder());
-        question.setIsRequired(dto.getIsRequired() != null ? dto.getIsRequired() : false);
-        question.setSection(section);
-        
-        try {
-            question.setTextTranslations(objectMapper.writeValueAsString(dto.getTextTranslations()));
-            question.setValidationRules(objectMapper.writeValueAsString(dto.getValidationRules()));
-            question.setOptions(objectMapper.writeValueAsString(dto.getOptions()));
-        } catch (JsonProcessingException e) {
-            log.error("Error converting question data to JSON", e);
-            throw new RuntimeException("Error converting data", e);
+        question.setText(toLocalizedText(dto.getText()));
+        if (dto.getOptions() != null) {
+            question.setOptions(dto.getOptions().stream()
+                .map(this::convertOptionToEntity)
+                .collect(Collectors.toList()));
         }
-        
-        if (dto.getColumns() != null) {
-            List<QuestionColumn> columns = dto.getColumns().stream()
-                    .map(columnDto -> convertColumnToEntity(columnDto, question))
-                    .collect(Collectors.toList());
-            question.setColumns(columns);
-        }
-        
         return question;
     }
-    
-    private QuestionColumn convertColumnToEntity(QuestionColumnDto dto, Question question) {
-        QuestionColumn column = new QuestionColumn();
-        column.setColumnId(dto.getColumnId());
-        column.setLabel(dto.getLabel());
-        column.setType(dto.getType());
-        column.setSortOrder(dto.getSortOrder());
-        column.setQuestion(question);
-        
-        try {
-            column.setLabelTranslations(objectMapper.writeValueAsString(dto.getLabelTranslations()));
-        } catch (JsonProcessingException e) {
-            log.error("Error converting column label translations to JSON", e);
-            throw new RuntimeException("Error converting data", e);
-        }
-        
-        return column;
+
+    private Option convertOptionToEntity(OptionDto dto) {
+        Option option = new Option();
+        option.setValue(dto.getValue());
+        option.setLabel(toLocalizedText(dto.getLabel()));
+        return option;
     }
-    
+
+    private LocalizedText toLocalizedText(LocalizedTextDto dto) {
+        if (dto == null) return null;
+        LocalizedText text = new LocalizedText();
+        text.setEn(dto.getEn());
+        text.setNl(dto.getNl());
+        return text;
+    }
+
     private void updateQuestionnaireFields(Questionnaire existing, QuestionnaireDto dto) {
-        // Update title and description directly with JSON strings
-        try {
-            existing.setTitle(objectMapper.writeValueAsString(dto.getTitle()));
-            existing.setDescription(objectMapper.writeValueAsString(dto.getDescription()));
-        } catch (JsonProcessingException e) {
-            log.error("Error converting title/description to JSON", e);
-            throw new RuntimeException("Error converting data", e);
-        }
-        
+        existing.setTitle(toLocalizedText(dto.getTitle()));
+        existing.setDescription(toLocalizedText(dto.getDescription()));
+
         if (dto.getVersion() != null) {
             existing.setVersion(dto.getVersion());
         }
         if (dto.getIsActive() != null) {
             existing.setIsActive(dto.getIsActive());
         }
-    }
-    
-    // Utility methods for JSON conversion
-    private Map<String, String> parseJsonToMap(String json) {
-        if (json == null || json.trim().isEmpty()) {
-            return new HashMap<>();
-        }
-        try {
-            return objectMapper.readValue(json, new TypeReference<Map<String, String>>() {});
-        } catch (JsonProcessingException e) {
-            log.warn("Failed to parse JSON to Map: {}", json, e);
-            return new HashMap<>();
-        }
-    }
-    
-    private Map<String, Object> parseJsonToObject(String json) {
-        if (json == null || json.trim().isEmpty()) {
-            return new HashMap<>();
-        }
-        try {
-            return objectMapper.readValue(json, new TypeReference<Map<String, Object>>() {});
-        } catch (JsonProcessingException e) {
-            log.warn("Failed to parse JSON to Object: {}", json, e);
-            return new HashMap<>();
-        }
-    }
-    
-    private List<QuestionOptionDto> parseJsonToOptionsList(String json) {
-        if (json == null || json.trim().isEmpty()) {
-            return new ArrayList<>();
-        }
-        try {
-            return objectMapper.readValue(json, new TypeReference<List<QuestionOptionDto>>() {});
-        } catch (JsonProcessingException e) {
-            log.warn("Failed to parse JSON to Options List: {}", json, e);
-            return new ArrayList<>();
+
+        // Update sections if provided
+        if (dto.getSections() != null) {
+            List<Section> updatedSections = dto.getSections().stream()
+                .map(this::convertSectionToEntity)
+                .collect(Collectors.toList());
+            existing.setSections(updatedSections);
         }
     }
 }

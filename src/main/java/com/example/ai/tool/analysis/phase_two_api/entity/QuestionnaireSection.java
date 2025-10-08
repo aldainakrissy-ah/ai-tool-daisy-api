@@ -5,13 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
+/**
+ * @deprecated This entity is deprecated and will be removed. Use {@link Section} instead.
+ */
 @Entity
 @Table(name = "questionnaire_sections")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Deprecated(forRemoval = true, since = "1.0")
 public class QuestionnaireSection {
     
     @Id
@@ -34,6 +36,9 @@ public class QuestionnaireSection {
     @JoinColumn(name = "questionnaire_id")
     private Questionnaire questionnaire;
     
-    @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Question> questions;
+    // Removing the OneToMany relationship that's causing conflicts
+    // Questions are now associated with Section entity
 }
+
+// This entity has been deprecated and replaced by Section.
+// Please use Section.java for all future references.

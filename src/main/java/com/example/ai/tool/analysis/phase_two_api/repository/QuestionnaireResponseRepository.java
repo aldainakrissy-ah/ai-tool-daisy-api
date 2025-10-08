@@ -21,6 +21,6 @@ public interface QuestionnaireResponseRepository extends JpaRepository<Questionn
     @Query("SELECT qr FROM QuestionnaireResponse qr LEFT JOIN FETCH qr.questionResponses WHERE qr.sessionId = :sessionId")
     Optional<QuestionnaireResponse> findBySessionIdWithResponses(@Param("sessionId") String sessionId);
     
-    @Query("SELECT qr FROM QuestionnaireResponse qr WHERE qr.questionnaire.questionnaireId = :questionnaireId AND qr.userId = :userId ORDER BY qr.startedAt DESC")
+    @Query("SELECT qr FROM QuestionnaireResponse qr WHERE qr.questionnaire.id = :questionnaireId AND qr.userId = :userId ORDER BY qr.startedAt DESC")
     List<QuestionnaireResponse> findByQuestionnaireIdAndUserId(@Param("questionnaireId") String questionnaireId, @Param("userId") String userId);
 }

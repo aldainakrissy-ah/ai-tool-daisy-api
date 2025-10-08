@@ -31,7 +31,7 @@ public class QuestionnaireResponseService {
     
     @Transactional
     public QuestionnaireResponseDto startQuestionnaire(String questionnaireId, String userId, String languageCode) {
-        Questionnaire questionnaire = questionnaireRepository.findByQuestionnaireId(questionnaireId)
+        Questionnaire questionnaire = questionnaireRepository.findById(questionnaireId)
                 .orElseThrow(() -> new IllegalArgumentException("Questionnaire not found: " + questionnaireId));
         
         QuestionnaireResponse response = new QuestionnaireResponse();
@@ -56,7 +56,7 @@ public class QuestionnaireResponseService {
         
         // Add new responses
         for (QuestionResponseDto responseDto : responses) {
-            Question question = questionRepository.findByQuestionId(responseDto.getQuestionId())
+            Question question = questionRepository.findById(responseDto.getQuestionId())
                     .orElseThrow(() -> new IllegalArgumentException("Question not found: " + responseDto.getQuestionId()));
             
             QuestionResponse questionResponse = new QuestionResponse();
@@ -127,7 +127,7 @@ public class QuestionnaireResponseService {
     private QuestionnaireResponseDto convertToDto(QuestionnaireResponse response) {
         QuestionnaireResponseDto dto = new QuestionnaireResponseDto();
         dto.setId(response.getId());
-        dto.setQuestionnaireId(response.getQuestionnaire().getQuestionnaireId());
+        dto.setQuestionnaireId(response.getQuestionnaire().getId());
         dto.setUserId(response.getUserId());
         dto.setSessionId(response.getSessionId());
         dto.setStatus(response.getStatus());
@@ -147,7 +147,7 @@ public class QuestionnaireResponseService {
     private QuestionResponseDto convertQuestionResponseToDto(QuestionResponse response) {
         QuestionResponseDto dto = new QuestionResponseDto();
         dto.setId(response.getId());
-        dto.setQuestionId(response.getQuestion().getQuestionId());
+        dto.setQuestionId(response.getQuestion().getId());
         dto.setAnswerText(response.getAnswerText());
         dto.setAnswerNumber(response.getAnswerNumber());
         dto.setAnswerBoolean(response.getAnswerBoolean());
@@ -156,7 +156,7 @@ public class QuestionnaireResponseService {
             try {
                 dto.setAnswerJson(objectMapper.readValue(response.getAnswerJson(), Object.class));
             } catch (JsonProcessingException e) {
-                log.warn("Failed to deserialize answer JSON for question {}: {}", response.getQuestion().getQuestionId(), response.getAnswerJson(), e);
+                log.warn("Failed to deserialize answer JSON for question {}: {}", response.getQuestion().getId(), response.getAnswerJson(), e);
                 dto.setAnswerJson(response.getAnswerJson());
             }
         }
