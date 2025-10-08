@@ -1,79 +1,78 @@
 {
-  "id": "myhealth-intake",
+  "id": "myhealth-intake-child",
   "title": {
-    "en": "Intake Questionnaire",
-    "nl": "Intake vragenlijst"
+    "en": "Child Intake Questionnaire",
+    "nl": "Intake vragenlijst kind"
   },
   "description": {
-    "en": "This questionnaire helps you get a more complete picture of your health, your symptoms, how you feel, and how this is developing in your life. Take your time and write in your own words. Everything you provide is valuable.",
+    "en": "This questionnaire will help you get a more complete picture of your health, your symptoms, how you feel, and how these things are developing in your life. Take your time and write in your own words. Everything you provide is valuable.",
     "nl": "Deze vragenlijst helpt om een completer beeld te krijgen van uw gezondheid, de klachten, hoe u zich voelt, en hoe dat zich ontwikkelt in uw leven. Neem de tijd en schrijf in je eigen woorden. Alles wat u invult is waardevol."
   },
   "sections": [
     {
-      "id": "general-orientation",
-      "title": { "en": "General Orientation and Well-Being", "nl": "Algemene oriëntatie en welbevinden" },
+      "id": "pregnancy-imprinting",
+      "title": { "en": "Pregnancy and Early Imprinting", "nl": "Zwangerschap en vroege imprinting" },
+       "description": {
+        "en": "The circumstances of pregnancy and birth can have a lasting impact on a child's development. These questions help you reflect on this important period. Answer the questions as best you can, even if it was a while ago. Your experience and memories are valuable information.",
+        "nl": "De omstandigheden tijdens de zwangerschap en de geboorte kunnen blijvende invloed hebben op de ontwikkeling van een kind. In deze vragen helpen we je om terug te kijken op die belangrijke periode. Beantwoord de vragen zo goed mogelijk, ook als het al een tijd geleden is. Jouw ervaring en herinnering zijn waardevolle informatie."
+      },
       "questions": [
-        { "id": "gen-q1", "type": "text", "text": { "en": "How would you describe your current state in your own words?", "nl": "Hoe zou je je huidige toestand omschrijven in je eigen woorden?" } },
-        { "id": "gen-q2", "type": "text", "text": { "en": "What are you most worried about right now?", "nl": "Waar maak je je op dit moment het meeste zorgen over?" } },
-        { "id": "gen-q3", "type": "text", "text": { "en": "How do you usually feel when you wake up?", "nl": "Hoe voel je je meestal bij het wakker worden?" } },
-        { "id": "gen-q4", "type": "text", "text": { "en": "What physical symptoms are you experiencing?", "nl": "Welke lichamelijke klachten ervaar je?" } },
-        { "id": "gen-q5", "type": "text", "text": { "en": "How has your sleep pattern been over the past few weeks?", "nl": "Hoe is je slaappatroon de afgelopen weken geweest?" } },
-        { "id": "gen-q6", "type": "text", "text": { "en": "Who do you share your daily life with (alone, partner, family, others)?", "nl": "Met wie deel je je dagelijkse leven (alleen, partner, gezin, anderen)?" } },
-        { "id": "gen-q7", "type": "text", "text": { "en": "Are you experiencing internal conflicts (thoughts, emotions) or in your environment?", "nl": "Heb je last van interne conflicten (gedachten, emoties) of in je omgeving?" } },
-        { "id": "gen-q8", "type": "text", "text": { "en": "How does your living and working environment (e.g., home, work, nature, screens) influence your recovery or well-being?", "nl": "Hoe beïnvloed je woon- en werkomgeving (bijv. huis, werk, natuur, schermen) je herstel of welzijn?" } }
+        { "id": "preg-q1", "type": "text", "text": { "en": "How did you experience your child's pregnancy?", "nl": "Hoe heb je de zwangerschap van je kind ervaren?" } },
+        { "id": "preg-q2", "type": "text", "text": { "en": "Did you have any physical complaints during pregnancy that you found noticeable or hindering? If yes, please describe.", "nl": "Heb je tijdens de zwangerschap lichamelijke klachten gehad die je als opvallend of belemmerend hebt ervaren? Indien ja, svp beschrijven." } },
+        { "id": "preg-q3", "type": "text", "text": { "en": "Did you experience emotional stress, anxiety, or tension during pregnancy? If yes, please describe.", "nl": "Had je tijdens de zwangerschap last van emotionele stress, angst of spanning? Indien ja, svp beschrijven." } }
       ]
     },
     {
-      "id": "symptoms-energy",
-      "title": { "en": "Symptoms: Energy and fatigue", "nl": "Symptomen: Energie en vermoeidheid" },
+      "id": "birth-beginning",
+      "title": { "en": "Birth and the Beginning of Life", "nl": "Geboorte en start van het leven" },
+       "description": {
+        "en": "The way a child is born and the first few days or weeks afterward can significantly impact their physical and emotional basic regulation. These questions explore the birth and early life.",
+        "nl": "De manier waarop een kind ter wereld komt en de eerste dagen of weken daarna verlopen, kan veel invloed hebben op de lichamelijke en emotionele basisregulatie. In deze vragen kijken we naar het verloop van de bevalling en de eerste levensperiode."
+      },
       "questions": [
-        { "id": "energy-symptoms", "type": "yes-no", "text": { "en": "Do you have any symptoms?", "nl": "Heb je klachten?" } },
-        { "id": "energy-extent", "type": "likert-scale-3", "text": { "en": "If so, to what extent?", "nl": "Zo ja, in welke mate?" }, "options": [{ "value": "mild", "label": { "en": "Mild", "nl": "Licht" } }, { "value": "moderate", "label": { "en": "Moderate", "nl": "Matig" } }, { "value": "severe", "label": { "en": "Severe", "nl": "Ernstig" } }] },
-        { "id": "energy-impact", "type": "text", "text": { "en": "How do you notice this in your daily activities?", "nl": "Hoe merk je dit terug in je dagelijkse bezigheden?" } },
-        { "id": "energy-duration", "type": "text", "text": { "en": "How long have you been experiencing this, and how does it develop over time?", "nl": "Sinds wanneer ervaar je dit en hoe ontwikkelt zich dat in de tijd?" } },
-        { "id": "energy-q5", "type": "yes-no", "text": { "en": "Do you have trouble committing yourself to something, even when you know it's important to you?", "nl": "Heb je moeite om jezelf ergens toe te zetten, ook als je weet dat het belangrijk voor je is?" } },
-        { "id": "energy-q6", "type": "yes-no", "text": { "en": "Do you often experience a feeling of emptiness after pursuing something that initially seemed motivating?", "nl": "Ervaar je vaak een gevoel van leegte na het nastreven van iets wat eerst motiverend leek?" } }
+        { "id": "birth-q1", "type": "text", "text": { "en": "How did the birth go?", "nl": "Hoe is de bevalling verlopen?" } },
+        { "id": "birth-q2", "type": "text", "text": { "en": "Was your child born on time?", "nl": "Was je kind op tijd geboren?" } },
+        { "id": "birth-q3", "type": "text", "text": { "en": "Did you breastfeed?", "nl": "Heb je borstvoeding gegeven?" } }
       ]
     },
     {
-      "id": "symptoms-sleep",
-      "title": { "en": "Symptoms: Sleep and recovery", "nl": "Symptomen: Slaap en herstel" },
+      "id": "nutrition-digestion",
+      "title": { "en": "Nutrition, Digestion, and Physical Regulation", "nl": "Voeding, spijsvertering en lichamelijke regulatie" },
       "questions": [
-        { "id": "sleep-symptoms", "type": "yes-no", "text": { "en": "Do you have any symptoms?", "nl": "Heb je klachten?" } },
-        { "id": "sleep-q1", "type": "yes-no", "text": { "en": "Do you find it difficult to switch from activity to relaxation, even when you have time to rest?", "nl": "Kun je moeilijk schakelen van actief zijn naar ontspanning, zelfs als je tijd hebt om te rusten?" } },
-        { "id": "sleep-q2", "type": "yes-no", "text": { "en": "Do you often feel overwhelmed by stimuli such as light, noise, or social situations?", "nl": "Voel je je vaak snel overweldigd door prikkels zoals licht, geluid of sociale situaties?" } }
+        { "id": "nutrition-q1", "type": "text", "text": { "en": "How did the transition to solid food go?", "nl": "Hoe verliep de overgang naar vaste voeding?" } },
+        { "id": "nutrition-q2", "type": "text", "text": { "en": "Are there (or were there) any known food intolerances or allergies?", "nl": "Zijn er (of waren er) voedselintoleranties of allergieën bekend?" } }
+      ]
+    },
+     {
+      "id": "emotional-relational",
+      "title": { "en": "Emotional and Relational Development", "nl": "Emotionele en relationele ontwikkeling" },
+      "questions": [
+        { "id": "emotional-q1", "type": "text", "text": { "en": "How does your child seek contact or closeness with parents or caregivers?", "nl": "Hoe zoekt je kind contact of nabijheid bij ouders of verzorgers?" } },
+        { "id": "emotional-q2", "type": "text", "text": { "en": "How does your child show anger or frustration?", "nl": "Hoe toont je kind boosheid of frustratie?" } }
       ]
     },
     {
-      "id": "metaphors",
-      "title": { "en": "Self-Image and metaphors", "nl": "Zelfbeeld en metaforen" },
+      "id": "behavior-play",
+      "title": { "en": "Behaviour, Play, and Development", "nl": "Gedrag, spel en ontwikkeling" },
       "questions": [
-        { "id": "meta-q1", "type": "text", "text": { "en": "Choose three metaphors (e.g., animals, landscapes, objects) that best describe your current state.", "nl": "Kies drie metaforen (bijv. dieren, landschappen, voorwerpen) die jouw huidige toestand het beste beschrijven)." } },
-        { "id": "meta-q2", "type": "text", "text": { "en": "If your body were a landscape, what would it look like?", "nl": "Als je lichaam een landschap was, hoe zou dat er uit zien?" } }
+        { "id": "behavior-q1", "type": "text", "text": { "en": "How would you describe your child's behaviour in daily life?", "nl": "Hoe zou je het gedrag van je kind in het dagelijks leven omschrijven?" } },
+        { "id": "behavior-q2", "type": "text", "text": { "en": "How does your child play (alone, together, imaginatively, repetitively, following rules, testing boundaries)?", "nl": "Hoe speelt je kind (alleen, samen, fantasierijk, herhalend, regels volgend, grenzen zoekend)?" } }
       ]
     },
     {
-      "id": "timeline",
-      "title": { "en": "Timeline and life events", "nl": "Tijdspad en levensgebeurtenissen" },
+      "id": "health-medication",
+      "title": { "en": "Health, Medication, and Physical Stress", "nl": "Gezondheid, medicatie en lichamelijke belasting" },
       "questions": [
-        { "id": "time-q1", "type": "text", "text": { "en": "How long have you been experiencing the symptoms you mentioned?", "nl": "Hoe lang ervaar de al de klachten die je hebt aangegeven?" } },
-        { "id": "time-q2", "type": "text", "text": { "en": "Do you see recurring phases or cycles in your symptoms or well-being?", "nl": "Zie je terugkerende fases of cycli in klachten of je welzijn?" } }
+        { "id": "health-q1", "type": "text", "text": { "en": "Does your child have any chronic conditions or recurring symptoms?", "nl": "Heeft je kind chronische aandoeningen of terugkerende klachten?" } },
+        { "id": "health-q2", "type": "text", "text": { "en": "Are there any health problems in the family that you consider important to mention (mental, physical, or behavioural)?", "nl": "Zijn er in de familie gezondheidsproblemen die je belangrijk vindt om te vermelden (psychisch, lichamelijk of gedragsmatig)?" } }
       ]
     },
     {
-      "id": "relationships",
-      "title": { "en": "Relationships and past impact", "nl": "Relaties en impact uit het verleden" },
+      "id": "parent-perspective",
+      "title": { "en": "What do you see as a parent/caregiver?", "nl": "Wat zie jij als ouder / verzorger?" },
       "questions": [
-        { "id": "rel-q1", "type": "text", "text": { "en": "How do you experience your relationships in general (secure base, restless, withdrawn)?", "nl": "Hoe ervaar je je relaties in het algemeen (veilige basis, onrustig, teruggetrokken)?" } },
-        { "id": "rel-q2", "type": "yes-no", "text": { "en": "Do you struggle to feel safe or secure in social interactions?", "nl": "Heb je moeite met het ervaren van veiligheid of geborgenheid in sociale contacten?" } }
-      ]
-    },
-    {
-      "id": "reflection",
-      "title": { "en": "Reflection and desire for change", "nl": "Reflectie en veranderwens" },
-      "questions": [
-        { "id": "ref-q1", "type": "text", "text": { "en": "What does your current situation reveal about your lifestyle or choices?", "nl": "Wat zegt je huidige toestand over je levensstijl of keuzes?" } },
-        { "id": "ref-q2", "type": "text", "text": { "en": "What would truly mean recovery or improvement for you?", "nl": "Wat zou voor jou écht herstel of verbetering betekenen?" } }
+        { "id": "parent-q1", "type": "text", "text": { "en": "What do you notice about your child in how they feel, behave, or develop?", "nl": "Wat valt je op aan je kind in hoe het zich voelt, gedraagt of ontwikkelt?" } },
+        { "id": "parent-q2", "type": "text", "text": { "en": "What worries you most?", "nl": "Waar maak je je het meeste zorgen over?" } }
       ]
     }
   ]
