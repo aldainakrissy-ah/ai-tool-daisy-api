@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "questionnaires")
@@ -27,9 +28,9 @@ public class Questionnaire {
     })
     private LocalizedText description;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "questionnaire_id")
-    private List<Section> sections;
+    private Set<Section> sections = new HashSet<>();
 
     @Column(name = "is_active")
     private Boolean isActive = true;

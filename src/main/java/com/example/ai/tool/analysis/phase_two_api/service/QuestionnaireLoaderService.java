@@ -101,15 +101,30 @@ public class QuestionnaireLoaderService {
     private SectionDto parseSectionDto(JsonNode sectionNode) {
         SectionDto dto = new SectionDto();
         dto.setId(sectionNode.get("id").asText());
-        dto.setTitle(parseLocalizedTextDto(sectionNode.get("title")));
+        
+        // Parse title if it exists
+        JsonNode titleNode = sectionNode.get("title");
+        if (titleNode != null) {
+            dto.setTitle(parseLocalizedTextDto(titleNode));
+        }
+        
+        // Parse questions array
         JsonNode questionsNode = sectionNode.get("questions");
         if (questionsNode != null && questionsNode.isArray()) {
             List<QuestionDto> questions = new ArrayList<>();
             for (JsonNode questionNode : questionsNode) {
-                questions.add(parseQuestionDto(questionNode));
+                QuestionDto questionDto = parseQuestionDto(questionNode);
+                questions.add(questionDto);
             }
             dto.setQuestions(questions);
+            
+            // Log the number of questions parsed for debugging
+            log.debug("Parsed {} questions for section {}", questions.size(), dto.getId());
+        } else {
+            log.debug("No questions found for section {}", dto.getId());
+            dto.setQuestions(new ArrayList<>());
         }
+        
         return dto;
     }
     

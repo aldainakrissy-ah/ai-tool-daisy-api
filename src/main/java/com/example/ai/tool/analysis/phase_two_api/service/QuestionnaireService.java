@@ -120,23 +120,33 @@ public class QuestionnaireService {
         questionnaire.setDescription(toLocalizedText(dto.getDescription()));
         questionnaire.setIsActive(dto.getIsActive() != null ? dto.getIsActive() : true);
         questionnaire.setVersion(dto.getVersion() != null ? dto.getVersion() : 1);
+        
+        // Convert sections and maintain bidirectional relationships
         if (dto.getSections() != null) {
-            questionnaire.setSections(dto.getSections().stream()
-                .map(this::convertSectionToEntity)
-                .collect(Collectors.toList()));
+            Set<Section> sections = dto.getSections().stream()
+                .map(sectionDto -> convertSectionToEntity(sectionDto, questionnaire))
+                .collect(Collectors.toSet());
+            questionnaire.setSections(sections);
         }
         return questionnaire;
     }
 
-    private Section convertSectionToEntity(SectionDto dto) {
+    private Section convertSectionToEntity(SectionDto dto, Questionnaire questionnaire) {
         Section section = new Section();
         section.setId(dto.getId());
         section.setTitle(toLocalizedText(dto.getTitle()));
+        
         if (dto.getQuestions() != null) {
-            section.setQuestions(dto.getQuestions().stream()
-                .map(this::convertQuestionToEntity)
-                .collect(Collectors.toList()));
+            Set<Question> questions = dto.getQuestions().stream()
+                .map(questionDto -> {
+                    Question question = convertQuestionToEntity(questionDto);
+                    question.setSection(section); // Set up bidirectional relationship
+                    return question;
+                })
+                .collect(Collectors.toSet());
+            section.setQuestions(questions);
         }
+        
         return section;
     }
 
@@ -148,7 +158,7 @@ public class QuestionnaireService {
         if (dto.getOptions() != null) {
             question.setOptions(dto.getOptions().stream()
                 .map(this::convertOptionToEntity)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toSet()));
         }
         return question;
     }
@@ -181,9 +191,9 @@ public class QuestionnaireService {
 
         // Update sections if provided
         if (dto.getSections() != null) {
-            List<Section> updatedSections = dto.getSections().stream()
-                .map(this::convertSectionToEntity)
-                .collect(Collectors.toList());
+            Set<Section> updatedSections = dto.getSections().stream()
+                .map(sectionDto -> convertSectionToEntity(sectionDto, existing))
+                .collect(Collectors.toSet());
             existing.setSections(updatedSections);
         }
     }
