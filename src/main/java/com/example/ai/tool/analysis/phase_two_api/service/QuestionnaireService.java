@@ -133,18 +133,22 @@ public class QuestionnaireService {
 
     private Section convertSectionToEntity(SectionDto dto, Questionnaire questionnaire) {
         Section section = new Section();
-        section.setId(dto.getId());
+        // Ensure ID is set - generate a UUID if not provided
+        section.setId(dto.getId() != null ? dto.getId() : UUID.randomUUID().toString());
         section.setTitle(toLocalizedText(dto.getTitle()));
         
         if (dto.getQuestions() != null) {
             Set<Question> questions = dto.getQuestions().stream()
                 .map(questionDto -> {
                     Question question = convertQuestionToEntity(questionDto);
+                    question.setId(questionDto.getId() != null ? questionDto.getId() : UUID.randomUUID().toString());
                     question.setSection(section); // Set up bidirectional relationship
                     return question;
                 })
                 .collect(Collectors.toSet());
             section.setQuestions(questions);
+        } else {
+            section.setQuestions(new HashSet<>());
         }
         
         return section;
@@ -191,8 +195,34 @@ public class QuestionnaireService {
 
         // Update sections if provided
         if (dto.getSections() != null) {
+            // Create a map of existing sections by ID for easy lookup
+            Map<String, Section> existingSectionsMap = existing.getSections() != null ?
+                existing.getSections().stream().collect(Collectors.toMap(Section::getId, s -> s, (s1, s2) -> s1)) :
+                new HashMap<>();
+
             Set<Section> updatedSections = dto.getSections().stream()
-                .map(sectionDto -> convertSectionToEntity(sectionDto, existing))
+                .map(sectionDto -> {
+                    // Check if section with this ID already exists
+                    Section existingSection = existingSectionsMap.get(sectionDto.getId());
+                    if (existingSection != null) {
+                        // Update existing section
+                        existingSection.setTitle(toLocalizedText(sectionDto.getTitle()));
+                        if (sectionDto.getQuestions() != null) {
+                            Set<Question> updatedQuestions = sectionDto.getQuestions().stream()
+                                .map(questionDto -> {
+                                    Question question = convertQuestionToEntity(questionDto);
+                                    question.setSection(existingSection);
+                                    return question;
+                                })
+                                .collect(Collectors.toSet());
+                            existingSection.setQuestions(updatedQuestions);
+                        }
+                        return existingSection;
+                    } else {
+                        // Create new section
+                        return convertSectionToEntity(sectionDto, existing);
+                    }
+                })
                 .collect(Collectors.toSet());
             existing.setSections(updatedSections);
         }
