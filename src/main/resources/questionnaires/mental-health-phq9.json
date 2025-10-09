@@ -1,0 +1,28 @@
+{
+  "id": "phq-9",
+  "title": {
+    "en": "Questionnaire Mental Health (PHQ-9)",
+    "nl": "Vragenlijst Mentale Gezondheid (PHQ-9)"
+  },
+  "description": {
+    "en": "Over the last 2 weeks, how often have you been bothered by any of the following problems? Scale: 0 = never, 1 = a few days, 2 = more than half, 3 = almost every day.",
+    "nl": "In de afgelopen 2 weken, hoe vaak had u last van de volgende problemen? Schaal: 0 = nooit, 1 = enkele dagen, 2 = meer dan de helft, 3 = bijna iedere dag."
+  },
+  "sections": [
+    {
+      "id": "phq9-questions",
+      "questions": [
+        { "id": "phq9-1", "type": "likert-scale-4", "text": { "en": "Little interest or pleasure in activities", "nl": "Weinig interesse of plezier in activiteiten" } },
+        { "id": "phq9-2", "type": "likert-scale-4", "text": { "en": "Sadness or despondency", "nl": "Somberheid, neerslachtigheid" } },
+        { "id": "phq9-3", "type": "likert-scale-4", "text": { "en": "Difficulty falling asleep or staying asleep", "nl": "Moeite met inslapen of doorslapen" } },
+        { "id": "phq9-4", "type": "likert-scale-4", "text": { "en": "Fatigue or low energy", "nl": "Vermoeidheid of weinig energie" } },
+        { "id": "phq9-5", "type": "likert-scale-4", "text": { "en": "Decreased appetite or overeating", "nl": "Verminderd eetlust of juist over-eten" } },
+        { "id": "phq9-6", "type": "likert-scale-4", "text": { "en": "Feelings of failure or feeling like a failure", "nl": "Gevoelens van falen of jezelf een mislukking voelen" } },
+        { "id": "phq9-7", "type": "likert-scale-4", "text": { "en": "Difficulty concentrating", "nl": "Moeite met concentreren" } },
+        { "id": "phq9-8", "type": "likert-scale-4", "text": { "en": "Slowing down or moving restlessly", "nl": "Jezelf vertragen of juist rusteloos bewegen" } },
+        { "id": "phq9-9", "type": "likert-scale-4", "text": { "en": "Thoughts that you would rather be dead or harm yourself", "nl": "Gedachten dat je liever dood bent of jezelf iets zou aan doen" } }
+      ]
+    }
+  ]
+}
+

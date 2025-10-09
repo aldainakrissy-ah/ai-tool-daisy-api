@@ -6,24 +6,36 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     environment:
+      # Override .env values for Docker container networking
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/DAISY_DB
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: daisy
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_AI_OPENAI_API_KEY: ${OPEN_API_KEY}
+      QUESTIONNAIRE_ENGINE_LOAD_ON_STARTUP: ${LOAD_QUESTIONNAIRES_ON_STARTUP}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   db:
     image: postgres:latest
     restart: always
     environment:
       POSTGRES_DB: DAISY_DB
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: daisy
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d DAISY_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 volumes:
   postgres_data:

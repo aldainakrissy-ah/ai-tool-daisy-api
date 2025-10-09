@@ -1,0 +1,80 @@
+{
+  "id": "myhealth-intake",
+  "title": {
+    "en": "Intake Questionnaire",
+    "nl": "Intake vragenlijst"
+  },
+  "description": {
+    "en": "This questionnaire helps you get a more complete picture of your health, your symptoms, how you feel, and how this is developing in your life. Take your time and write in your own words. Everything you provide is valuable.",
+    "nl": "Deze vragenlijst helpt om een completer beeld te krijgen van uw gezondheid, de klachten, hoe u zich voelt, en hoe dat zich ontwikkelt in uw leven. Neem de tijd en schrijf in je eigen woorden. Alles wat u invult is waardevol."
+  },
+  "sections": [
+    {
+      "id": "general-orientation",
+      "title": { "en": "General Orientation and Well-Being", "nl": "Algemene oriëntatie en welbevinden" },
+      "questions": [
+        { "id": "gen-q1", "type": "text", "text": { "en": "How would you describe your current state in your own words?", "nl": "Hoe zou je je huidige toestand omschrijven in je eigen woorden?" } },
+        { "id": "gen-q2", "type": "text", "text": { "en": "What are you most worried about right now?", "nl": "Waar maak je je op dit moment het meeste zorgen over?" } },
+        { "id": "gen-q3", "type": "text", "text": { "en": "How do you usually feel when you wake up?", "nl": "Hoe voel je je meestal bij het wakker worden?" } },
+        { "id": "gen-q4", "type": "text", "text": { "en": "What physical symptoms are you experiencing?", "nl": "Welke lichamelijke klachten ervaar je?" } },
+        { "id": "gen-q5", "type": "text", "text": { "en": "How has your sleep pattern been over the past few weeks?", "nl": "Hoe is je slaappatroon de afgelopen weken geweest?" } },
+        { "id": "gen-q6", "type": "text", "text": { "en": "Who do you share your daily life with (alone, partner, family, others)?", "nl": "Met wie deel je je dagelijkse leven (alleen, partner, gezin, anderen)?" } },
+        { "id": "gen-q7", "type": "text", "text": { "en": "Are you experiencing internal conflicts (thoughts, emotions) or in your environment?", "nl": "Heb je last van interne conflicten (gedachten, emoties) of in je omgeving?" } },
+        { "id": "gen-q8", "type": "text", "text": { "en": "How does your living and working environment (e.g., home, work, nature, screens) influence your recovery or well-being?", "nl": "Hoe beïnvloed je woon- en werkomgeving (bijv. huis, werk, natuur, schermen) je herstel of welzijn?" } }
+      ]
+    },
+    {
+      "id": "symptoms-energy",
+      "title": { "en": "Symptoms: Energy and fatigue", "nl": "Symptomen: Energie en vermoeidheid" },
+      "questions": [
+        { "id": "energy-symptoms", "type": "yes-no", "text": { "en": "Do you have any symptoms?", "nl": "Heb je klachten?" } },
+        { "id": "energy-extent", "type": "likert-scale-3", "text": { "en": "If so, to what extent?", "nl": "Zo ja, in welke mate?" }, "options": [{ "value": "mild", "label": { "en": "Mild", "nl": "Licht" } }, { "value": "moderate", "label": { "en": "Moderate", "nl": "Matig" } }, { "value": "severe", "label": { "en": "Severe", "nl": "Ernstig" } }] },
+        { "id": "energy-impact", "type": "text", "text": { "en": "How do you notice this in your daily activities?", "nl": "Hoe merk je dit terug in je dagelijkse bezigheden?" } },
+        { "id": "energy-duration", "type": "text", "text": { "en": "How long have you been experiencing this, and how does it develop over time?", "nl": "Sinds wanneer ervaar je dit en hoe ontwikkelt zich dat in de tijd?" } },
+        { "id": "energy-q5", "type": "yes-no", "text": { "en": "Do you have trouble committing yourself to something, even when you know it's important to you?", "nl": "Heb je moeite om jezelf ergens toe te zetten, ook als je weet dat het belangrijk voor je is?" } },
+        { "id": "energy-q6", "type": "yes-no", "text": { "en": "Do you often experience a feeling of emptiness after pursuing something that initially seemed motivating?", "nl": "Ervaar je vaak een gevoel van leegte na het nastreven van iets wat eerst motiverend leek?" } }
+      ]
+    },
+    {
+      "id": "symptoms-sleep",
+      "title": { "en": "Symptoms: Sleep and recovery", "nl": "Symptomen: Slaap en herstel" },
+      "questions": [
+        { "id": "sleep-symptoms", "type": "yes-no", "text": { "en": "Do you have any symptoms?", "nl": "Heb je klachten?" } },
+        { "id": "sleep-q1", "type": "yes-no", "text": { "en": "Do you find it difficult to switch from activity to relaxation, even when you have time to rest?", "nl": "Kun je moeilijk schakelen van actief zijn naar ontspanning, zelfs als je tijd hebt om te rusten?" } },
+        { "id": "sleep-q2", "type": "yes-no", "text": { "en": "Do you often feel overwhelmed by stimuli such as light, noise, or social situations?", "nl": "Voel je je vaak snel overweldigd door prikkels zoals licht, geluid of sociale situaties?" } }
+      ]
+    },
+    {
+      "id": "metaphors",
+      "title": { "en": "Self-Image and metaphors", "nl": "Zelfbeeld en metaforen" },
+      "questions": [
+        { "id": "meta-q1", "type": "text", "text": { "en": "Choose three metaphors (e.g., animals, landscapes, objects) that best describe your current state.", "nl": "Kies drie metaforen (bijv. dieren, landschappen, voorwerpen) die jouw huidige toestand het beste beschrijven)." } },
+        { "id": "meta-q2", "type": "text", "text": { "en": "If your body were a landscape, what would it look like?", "nl": "Als je lichaam een landschap was, hoe zou dat er uit zien?" } }
+      ]
+    },
+    {
+      "id": "timeline",
+      "title": { "en": "Timeline and life events", "nl": "Tijdspad en levensgebeurtenissen" },
+      "questions": [
+        { "id": "time-q1", "type": "text", "text": { "en": "How long have you been experiencing the symptoms you mentioned?", "nl": "Hoe lang ervaar de al de klachten die je hebt aangegeven?" } },
+        { "id": "time-q2", "type": "text", "text": { "en": "Do you see recurring phases or cycles in your symptoms or well-being?", "nl": "Zie je terugkerende fases of cycli in klachten of je welzijn?" } }
+      ]
+    },
+    {
+      "id": "relationships",
+      "title": { "en": "Relationships and past impact", "nl": "Relaties en impact uit het verleden" },
+      "questions": [
+        { "id": "rel-q1", "type": "text", "text": { "en": "How do you experience your relationships in general (secure base, restless, withdrawn)?", "nl": "Hoe ervaar je je relaties in het algemeen (veilige basis, onrustig, teruggetrokken)?" } },
+        { "id": "rel-q2", "type": "yes-no", "text": { "en": "Do you struggle to feel safe or secure in social interactions?", "nl": "Heb je moeite met het ervaren van veiligheid of geborgenheid in sociale contacten?" } }
+      ]
+    },
+    {
+      "id": "reflection",
+      "title": { "en": "Reflection and desire for change", "nl": "Reflectie en veranderwens" },
+      "questions": [
+        { "id": "ref-q1", "type": "text", "text": { "en": "What does your current situation reveal about your lifestyle or choices?", "nl": "Wat zegt je huidige toestand over je levensstijl of keuzes?" } },
+        { "id": "ref-q2", "type": "text", "text": { "en": "What would truly mean recovery or improvement for you?", "nl": "Wat zou voor jou écht herstel of verbetering betekenen?" } }
+      ]
+    }
+  ]
+}

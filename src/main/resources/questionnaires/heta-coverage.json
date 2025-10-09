@@ -1,0 +1,63 @@
+{
+  "id": "heta-coverage",
+  "title": {
+    "en": "HETA Coverage Questionnaires",
+    "nl": "HETA dekkingsvragenlijsten"
+  },
+  "description": {
+    "en": "These questions cover various topics related to your body's systems and responses.",
+    "nl": "Deze vragen gaan over verschillende onderwerpen die verband houden met de systemen en reacties van uw lichaam."
+  },
+  "sections": [
+    {
+      "id": "acth",
+      "title": { "en": "ACTH", "nl": "ACTH" },
+      "description": {
+        "en": "The following questions are about your energy levels when you wake up, your response to stress, and how your system switches between action and recovery.",
+        "nl": "De volgende vragen gaan over je energieniveau bij het opstaan, je reactie op stress en hoe je systeem schakelt tussen actie en herstel."
+      },
+      "questions": [
+        { "id": "acth-q1", "type": "text", "text": { "en": "Do you often feel exhausted when you wake up or have trouble getting going, even after enough sleep?", "nl": "Voel je je bij het opstaan vaak uitgeput of heb je moeite om op gang te komen, zelfs na voldoende slaap?" } },
+        { "id": "acth-q2", "type": "text", "text": { "en": "Do you feel like you quickly go into overdrive when stressed, or that you freeze up?", "nl": "Heb je het gevoel dat je bij stress snel in een soort overdrive schiet, of juist blokkeert?" } },
+        { "id": "acth-q3", "type": "text", "text": { "en": "Do you struggle to maintain a stable energy level throughout the day?", "nl": "Heb je moeite om over de dag heen een stabiel energieniveau te behouden?" } },
+        { "id": "acth-q4", "type": "text", "text": { "en": "Do you feel like your system no longer knows when to activate and when to recover?", "nl": "Heb je het gevoel dat je systeem niet meer weet wanneer het moet activeren en wanneer het moet herstellen?" } }
+      ]
+    },
+    {
+      "id": "dopamine",
+      "title": { "en": "Dopamine", "nl": "Dopamine" },
+      "description": {
+        "en": "The following questions are about your motivation, perseverance, energy to tackle things, and your ability to enjoy activities.",
+        "nl": "De volgende vragen gaan over je motivatie, doorzettingsvermogen, energie om dingen aan te pakken en je vermogen om plezier te beleven aan activiteiten."
+      },
+      "questions": [
+        { "id": "dopamine-q1", "type": "text", "text": { "en": "Do you experience physical sluggishness, stiffness, or reduced flexibility, especially when you feel less motivated?", "nl": "Heb je last van lichamelijke traagheid, stijfheid of verminderde soepelheid, vooral wanneer je je minder gemotiveerd voelt?" } },
+        { "id": "dopamine-q2", "type": "text", "text": { "en": "Do you often feel a lack of motivation or enjoyment, as if things you used to enjoy now bring you little satisfaction?", "nl": "Voel je vaak een gebrek aan motivatie of plezier, alsof dingen die je vroeger leuk vond je nu weinig voldoening geven?" } }
+      ]
+    },
+    {
+      "id": "serotonin",
+      "title": { "en": "Serotonin", "nl": "Serotonine" },
+      "description": {
+        "en": "The following questions are about your mood, your inner peace, your sleep quality, and your sense of connection with yourself and others.",
+        "nl": "De volgende vragen gaan over je stemming, je innerlijke rust, je slaapkwaliteit en je gevoel van verbondenheid met jezelf en anderen."
+      },
+      "questions": [
+        { "id": "serotonin-q1", "type": "text", "text": { "en": "Do you experience physical restlessness or tension, for example, due to an upset stomach or a jittery feeling for no apparent reason?", "nl": "Merk je lichamelijke onrust of gespannenheid, bijvoorbeeld door een gespannen maag of een gejaagd gevoel zonder duidelijke reden?" } },
+        { "id": "serotonin-q2", "type": "text", "text": { "en": "Do you have trouble sleeping through the night or do you wake up feeling emotionally flat or empty in the morning?", "nl": "Heb je moeite met doorslapen of voel je je ‘s ochtends bij het ontwaken emotioneel vlak of leeg?" } }
+      ]
+    },
+    {
+      "id": "cortisol",
+      "title": { "en": "Cortisol", "nl": "Cortisol" },
+      "description": {
+        "en": "The following questions are about your stress levels, energy balance during the day, recovery time after busy times, and your sleep pattern.",
+        "nl": "De volgende vragen gaan over je stressbelasting, energiebalans gedurende de dag, hersteltijd na drukte en je slaappatroon."
+      },
+      "questions": [
+        { "id": "cortisol-q1", "type": "text", "text": { "en": "Do you struggle to get going in the morning or feel exhausted after exertion or busy periods?", "nl": "Heb je moeite om in de ochtend op gang te komen of voel je een gevoel van uitputting na inspanning of drukke perioden?" } },
+        { "id": "cortisol-q2", "type": "text", "text": { "en": "Do you suffer from disrupted circadian rhythms, such as difficulty falling asleep or struggling with energy levels throughout the day?", "nl": "Heb je last van ontregelde dag-nachtritmes, bijvoorbeeld moeilijk in slaap vallen of moeite met energieniveau door de dag heen?" } }
+      ]
+    }
+  ]
+}

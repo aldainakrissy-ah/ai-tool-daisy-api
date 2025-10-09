@@ -1,0 +1,42 @@
+{
+  "id": "ethos-scan-hybrid",
+  "title": { "en": "Ethos+ Scan - Hybrid", "nl": "Ethos+ Scan - Hybride" },
+  "description": {
+    "en": "The goal of the scan is to gain insight into how well your personal core values guide your daily choices and behaviour. This questionnaire is completed by two people on the same day: Young person and Parent/supervisor.",
+    "nl": "Het doel van de scan is : Inzicht krijgen in hoe goed je persoonlijke kernwaarden je dagelijkse keuzes en gedrag sturen. Deze vragenlijst wordt door twee mensen ingevuld op dezelfde dag: Jongere en Ouder/verzorger."
+  },
+  "sections": [
+    {
+      "id": "core-values-hybrid",
+      "title": { "en": "Core Values Selection", "nl": "Kernwaarden Selectie" },
+      "questions": [
+        {
+          "id": "core-values-selection-hybrid",
+          "type": "multi-choice-selection",
+          "text": { "en": "Choose a maximum of four core values that best suit you below.", "nl": "Kies daarom samen met je verzorger / ouder hieronder maximaal 4 kernwaarden die het beste bij jou passen." },
+          "options": [
+            { "value": "connection", "label": { "en": "Connection", "nl": "Verbinding" } },
+            { "value": "integrity", "label": { "en": "Integrity", "nl": "Integriteit" } }
+          ],
+          "validation": { "minSelections": 4, "maxSelections": 4 }
+        }
+      ]
+    },
+    {
+      "id": "client-questions",
+      "title": { "en": "Client Questions", "nl": "Zelfrapportage client" },
+      "questions": [
+        { "id": "client-a1", "type": "likert-scale-5", "text": { "en": "To what extent have you acted in accordance with [Selected Core Value 1] in the past week?", "nl": "In hoeverre heb je de afgelopen week gehandeld in overeenstemming met [Gekozen kernwaarde 1]?" } },
+        { "id": "client-a2", "type": "text", "text": { "en": "Indicate in which situations it was difficult to act according to [Selected Core Value 1]?", "nl": "Geef aan in welke situaties het lastig was om volgens [Gekozen kernwaarde 1] te handelen?" } }
+      ]
+    },
+    {
+      "id": "parent-questions",
+      "title": { "en": "Parent / Supervisor Questions", "nl": "Rapportage door ouder / verzorger" },
+      "questions": [
+        { "id": "parent-a1", "type": "likert-scale-5", "text": { "en": "To what extent has the junior acted in accordance with [Selected Core Value 1] in the past week?", "nl": "In hoeverre heeft de jongere de afgelopen week gehandeld in overeenstemming met [Gekozen kernwaarde 1]?" } },
+        { "id": "parent-a2", "type": "text", "text": { "en": "Indicate in which situations it was difficult for the junior to act according to [Selected Core Value 1]?", "nl": "Geef aan in welke situaties het voor de jongere lastig was om volgens [Gekozen kernwaarde 1] te handelen?" } }
+      ]
+    }
+  ]
+}

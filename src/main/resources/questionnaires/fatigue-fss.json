@@ -1,0 +1,22 @@
+{
+  "id": "fss",
+  "title": { "en": "Questionnaire Fatigue Severity Scale (FSS)", "nl": "Vragenlijst vermoeidheid - FSS" },
+  "description": { "en": "Answer the questions below to determine the impact of fatigue on a scale of 1 to 7. (1=completely disagree, 7=completely agree)", "nl": "Beantwoord onderstaande vragen om de impact van vermoeidheid te bepalen op een schaal van 1 tot 7. (1=volledig mee oneens, 7=volledig mee eens)" },
+  "sections": [
+    {
+      "id": "fss-questions",
+      "questions": [
+        { "id": "fss-1", "type": "likert-scale-7", "text": { "en": "My fatigue affects my physical activity.", "nl": "Mijn vermoeidheid beïnvloedt mijn fysieke activiteit." } },
+        { "id": "fss-2", "type": "likert-scale-7", "text": { "en": "My fatigue interferes with my work, studies, and housework.", "nl": "Mijn vermoeidheid belemmert mijn werk, studies en huishouden." } },
+        { "id": "fss-3", "type": "likert-scale-7", "text": { "en": "My fatigue reduces my social activities.", "nl": "Mijn vermoeidheid vermindert mijn sociale activiteiten." } },
+        { "id": "fss-4", "type": "likert-scale-7", "text": { "en": "My fatigue usually throws me off balance.", "nl": "Gewoonlijk word ik door mijn vermoeidheid uit balans gebracht." } },
+        { "id": "fss-5", "type": "likert-scale-7", "text": { "en": "My fatigue interferes with my daily tasks.", "nl": "Mijn vermoeidheid hindert mijn dagelijkse taken." } },
+        { "id": "fss-6", "type": "likert-scale-7", "text": { "en": "Worsening fatigue causes me to perform less strenuous tasks.", "nl": "Verergering van vermoeidheid zorgt dat ik minder vaak inspannende taken uitvoer." } },
+        { "id": "fss-7", "type": "likert-scale-7", "text": { "en": "My fatigue is the main reason for my decreased performance.", "nl": "Mijn vermoeidheid is de voornaamste reden van mijn verminderde prestatie." } },
+        { "id": "fss-8", "type": "likert-scale-7", "text": { "en": "My fatigue hinders my movement.", "nl": "Mijn vermoeidheid belemmert mijn beweging." } },
+        { "id": "fss-9", "type": "likert-scale-7", "text": { "en": "I experience my fatigue as unavoidable.", "nl": "Ik ervaar mijn vermoeidheid als onvermijdelijk." } }
+      ]
+    }
+  ]
+}
+

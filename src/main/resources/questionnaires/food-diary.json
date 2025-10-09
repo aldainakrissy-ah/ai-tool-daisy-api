@@ -1,0 +1,34 @@
+{
+  "id": "food-diary-24h",
+  "title": {
+    "en": "24 hours Food Intake diary",
+    "nl": "24 uurs Voedingsdagboek"
+  },
+  "description": {
+    "en": "Write down during 24 hours what you eat and drink. Choose a regular day.",
+    "nl": "Noteer gedurende 1 etmaal alles wat u eet of drinkt. Kies een gewone dag."
+  },
+  "sections": [
+    {
+      "id": "diary",
+      "title": { "en": "Food and Drink Intake", "nl": "Voedsel- en Drankinname" },
+      "questions": [
+        {
+          "id": "food-table",
+          "type": "table",
+          "text": {
+            "en": "Example: 07:30 - oatmeal with milk - 50g / 200ml - filling, no hunger until lunch",
+            "nl": "Voorbeeld: 07:30 - havermout met melk - 50 g / 200 ml - vullend geen honger tot lunch"
+          },
+          "columns": [
+            { "id": "time", "label": { "en": "Time", "nl": "Tijdstip" }, "type": "time" },
+            { "id": "product", "label": { "en": "Product", "nl": "Product" }, "type": "text" },
+            { "id": "amount", "label": { "en": "Amount (gr, ml, etc)", "nl": "Hoeveelheid" }, "type": "text" },
+            { "id": "remarks", "label": { "en": "Remarks", "nl": "Opmerkingen" }, "type": "text" }
+          ]
+        }
+      ]
+    }
+  ]
+}
+

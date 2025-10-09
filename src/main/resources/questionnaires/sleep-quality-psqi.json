@@ -1,0 +1,37 @@
+{
+  "id": "psqi",
+  "title": { "en": "Questionnaire Sleep Quality (PSQI)", "nl": "Vragenlijst Slaap kwaliteit (PSQI)" },
+  "description": { "en": "This questionnaire assesses your overall sleep quality over the past month. Please indicate the average for each item.", "nl": "Deze vragenlijst bepaalt de globale slaapkwaliteit van de afgelopen maand. Vul per item in wat past bij de gemiddelde situatie." },
+  "sections": [
+    {
+      "id": "sleep-times",
+      "questions": [
+        { "id": "psqi-1", "type": "time", "text": { "en": "What time did you usually go to bed in the evening during the past month?", "nl": "Hoe laat ging u ’s avonds meestal naar bed gedurende de afgelopen maand?" } },
+        { "id": "psqi-2", "type": "number", "text": { "en": "How many minutes did it take you to fall asleep on average?", "nl": "Hoeveel minuten duurde het gemiddeld voordat je in slaap valt?" } },
+        { "id": "psqi-3", "type": "time", "text": { "en": "What time did you get up in the morning during the past month?", "nl": "Hoe laat stond u tijdens de afgelopen maand ’s morgens op?" } },
+        { "id": "psqi-4", "type": "number", "text": { "en": "How many hours of SLEEP did you get on average per night during the past month?", "nl": "Aan hoeveel uren SLAAP kwam u gemiddeld per nacht tijdens de afgelopen maand?" } }
+      ]
+    },
+    {
+      "id":"sleep-issues",
+      "title": { "en": "How often during the past month did you have difficulty sleeping because you...", "nl": "Hoe vaak had u tijdens de voorbije maand moeilijkheden met slapen, omdat u..." },
+      "questions": [
+        { "id": "psqi-5a", "type": "likert-scale-4", "text": { "en": "...couldn't fall asleep within 30 minutes?", "nl": "...niet in slaap kon vallen binnen 30 minuten?" } },
+        { "id": "psqi-5b", "type": "likert-scale-4", "text": { "en": "...woke up during the night or early in the morning?", "nl": "...'s nachts of in de vroege morgen wakker werd?" } },
+        { "id": "psqi-5c", "type": "likert-scale-4", "text": { "en": "...had to go to the toilet?", "nl": "...naar het toilet moest gaan?" } }
+      ]
+    },
+    {
+      "id":"sleep-quality-rating",
+      "questions": [
+        { "id": "psqi-6", "type": "likert-scale-4", "text": { "en": "How would you rate the quality of your sleep?", "nl": "Hoe zou je de kwaliteit van de slaap beoordelen?" }, "options": [
+          {"value": 0, "label": {"en": "excellent", "nl": "uitstekend"}},
+          {"value": 1, "label": {"en": "good", "nl": "goed"}},
+          {"value": 2, "label": {"en": "fair", "nl": "matig"}},
+          {"value": 3, "label": {"en": "poor", "nl": "slecht"}}
+        ]}
+      ]
+    }
+  ]
+}
+
