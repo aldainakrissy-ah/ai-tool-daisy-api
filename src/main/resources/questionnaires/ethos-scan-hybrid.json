@@ -1,41 +1,641 @@
 {
   "id": "ethos-scan-hybrid",
-  "title": { "en": "Ethos+ Scan - Hybrid", "nl": "Ethos+ Scan - Hybride" },
+  "title": { 
+    "en": "Ethos+ Scan - Hybrid", 
+    "nl": "Ethos+ Scan - Hybride" 
+  },
   "description": {
-    "en": "The goal of the scan is to gain insight into how well your personal core values guide your daily choices and behaviour. This questionnaire is completed by two people on the same day: Young person and Parent/supervisor.",
-    "nl": "Het doel van de scan is : Inzicht krijgen in hoe goed je persoonlijke kernwaarden je dagelijkse keuzes en gedrag sturen. Deze vragenlijst wordt door twee mensen ingevuld op dezelfde dag: Jongere en Ouder/verzorger."
+    "en": "The goal of the scan is to gain insight into how well your personal core values guide your daily choices and behaviour. This questionnaire is completed by two people on the same day:\n- Young person: You indicate how you experience things.\n- Parent/supervisor: You indicate how they see things in your life.",
+    "nl": "Het doel van de scan is: Inzicht krijgen in hoe goed je persoonlijke kernwaarden je dagelijkse keuzes en gedrag sturen. Deze vragenlijst wordt door twee mensen ingevuld op dezelfde dag:\n- Jongere: jij vult zelf in hoe jij dingen beleeft.\n- Ouder/verzorger: vult in hoe hij/zij dit bij jou ziet."
   },
   "sections": [
     {
-      "id": "core-values-hybrid",
-      "title": { "en": "Core Values Selection", "nl": "Kernwaarden Selectie" },
+      "id": "core-values-selection",
+      "title": { 
+        "en": "Core Values Selection", 
+        "nl": "Kernwaarden Selectie" 
+      },
+      "description": {
+        "en": "Core values are the driving forces that determine what you truly value in your life and work. They form your moral compass for choices and behaviour. Therefore, choose a maximum of four core values that best suit you below.",
+        "nl": "Kernwaarden zijn de drijfveren die bepalen wat jij écht belangrijk vindt in je leven en werk. Ze vormen je morele kompas bij keuzes en gedrag. Kies daarom samen met je verzorger / ouder hieronder maximaal 4 kernwaarden die het beste bij jou passen."
+      },
       "questions": [
         {
-          "id": "core-values-selection-hybrid",
+          "id": "core-values-themes",
           "type": "multi-choice-selection",
-          "text": { "en": "Choose a maximum of four core values that best suit you below.", "nl": "Kies daarom samen met je verzorger / ouder hieronder maximaal 4 kernwaarden die het beste bij jou passen." },
+          "text": {
+            "en": "Choose exactly 4 core values from the themes below:",
+            "nl": "Kies precies 4 kernwaarden uit de thema's hieronder:"
+          },
           "options": [
-            { "value": "connection", "label": { "en": "Connection", "nl": "Verbinding" } },
-            { "value": "integrity", "label": { "en": "Integrity", "nl": "Integriteit" } }
+            {
+              "theme": { "en": "Connection", "nl": "Verbinding" },
+              "values": [
+                { "en": "Collaboration", "nl": "Samenwerking" },
+                { "en": "Empathy", "nl": "Empathie" },
+                { "en": "Loyalty", "nl": "Loyaliteit" },
+                { "en": "Solidarity", "nl": "Solidariteit" }
+              ]
+            },
+            {
+              "theme": { "en": "Integrity", "nl": "Integriteit" },
+              "values": [
+                { "en": "Honesty", "nl": "Eerlijkheid" },
+                { "en": "Transparency", "nl": "Transparantie" },
+                { "en": "Reliability", "nl": "Betrouwbaarheid" },
+                { "en": "Equality", "nl": "Gelijkwaardigheid" }
+              ]
+            },
+            {
+              "theme": { "en": "Growth and Development", "nl": "Groei en Ontwikkeling" },
+              "values": [
+                { "en": "Curiosity", "nl": "Leergierigheid" },
+                { "en": "Personal Growth", "nl": "Persoonlijke groei" },
+                { "en": "Creativity", "nl": "Creativiteit" },
+                { "en": "Adventure", "nl": "Avontuur" }
+              ]
+            },
+            {
+              "theme": { "en": "Autonomy", "nl": "Autonomie" },
+              "values": [
+                { "en": "Freedom", "nl": "Vrijheid" },
+                { "en": "Self-Determination", "nl": "Zelfbeschikking" },
+                { "en": "Entrepreneurship", "nl": "Ondernemerschap" }
+              ]
+            },
+            {
+              "theme": { "en": "Results", "nl": "Resultaat" },
+              "values": [
+                { "en": "Purposefulness", "nl": "Doelgerichtheid" },
+                { "en": "Efficiency", "nl": "Efficiëntie" },
+                { "en": "Quality", "nl": "Kwaliteit" },
+                { "en": "Impact", "nl": "Impact" }
+              ]
+            },
+            {
+              "theme": { "en": "People & Care", "nl": "Mens & Zorg" },
+              "values": [
+                { "en": "Caring", "nl": "Zorgzaamheid" },
+                { "en": "Well-being", "nl": "Welzijn" },
+                { "en": "Respect", "nl": "Respect" },
+                { "en": "Safety", "nl": "Veiligheid" }
+              ]
+            },
+            {
+              "theme": { "en": "Innovation", "nl": "Innovatie" },
+              "values": [
+                { "en": "Renewal", "nl": "Vernieuwing" },
+                { "en": "Courage", "nl": "Durf" },
+                { "en": "Visionary Thinking", "nl": "Visionair denken" }
+              ]
+            },
+            {
+              "theme": { "en": "Sustainability", "nl": "Duurzaamheid" },
+              "values": [
+                { "en": "Sustainability", "nl": "Duurzaamheid" },
+                { "en": "Responsibility", "nl": "Verantwoordelijkheid" }
+              ]
+            }
           ],
-          "validation": { "minSelections": 4, "maxSelections": 4 }
+          "validation": {
+            "exactSelections": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "core-values-rating",
+      "title": {
+        "en": "Core Values Rating",
+        "nl": "Kernwaarden Beoordeling"
+      },
+      "description": {
+        "en": "Fill in your 4 most important core values below",
+        "nl": "Vul hieronder de 4 belangrijkste kernwaarden in"
+      },
+      "questions": [
+        {
+          "id": "core-value-1-rating",
+          "type": "composite",
+          "components": [
+            {
+              "id": "value-1-name",
+              "type": "text",
+              "text": {
+                "en": "Core Value 1",
+                "nl": "Kernwaarde 1"
+              }
+            },
+            {
+              "id": "value-1-importance",
+              "type": "radio",
+              "text": {
+                "en": "How important is this value",
+                "nl": "Hoe belangrijk is deze waarde"
+              },
+              "options": [
+                { "value": "1", "label": { "en": "Very unimportant", "nl": "Erg onbelangrijk" }},
+                { "value": "2", "label": { "en": "Unimportant", "nl": "Onbelangrijk" }},
+                { "value": "3", "label": { "en": "Neutral", "nl": "Neutraal" }},
+                { "value": "4", "label": { "en": "Important", "nl": "Belangrijk" }},
+                { "value": "5", "label": { "en": "Very important", "nl": "Heel belangrijk" }}
+              ]
+            }
+          ]
         }
       ]
     },
     {
       "id": "client-questions",
-      "title": { "en": "Client Questions", "nl": "Zelfrapportage client" },
-      "questions": [
-        { "id": "client-a1", "type": "likert-scale-5", "text": { "en": "To what extent have you acted in accordance with [Selected Core Value 1] in the past week?", "nl": "In hoeverre heb je de afgelopen week gehandeld in overeenstemming met [Gekozen kernwaarde 1]?" } },
-        { "id": "client-a2", "type": "text", "text": { "en": "Indicate in which situations it was difficult to act according to [Selected Core Value 1]?", "nl": "Geef aan in welke situaties het lastig was om volgens [Gekozen kernwaarde 1] te handelen?" } }
+      "title": {
+        "en": "Client Self-Report",
+        "nl": "Zelfrapportage client"
+      },
+      "description": {
+        "en": "For each core value from your Ethos⁺ Scan, there are four short questions. These questions are first completed by the client.",
+        "nl": "Voor elke kernwaarde uit je Ethos⁺-Scan zijn er vier korte vragen. Deze vragen worden eerst door de client ingevuld."
+      },
+      "subsections": [
+        {
+          "id": "core-value-1-assessment",
+          "title": {
+            "en": "Selected Core Value 1",
+            "nl": "Gekozen kernwaarde 1"
+          },
+          "questions": [
+            {
+              "id": "client-cv1-alignment",
+              "type": "radio",
+              "text": {
+                "en": "To what extent have you acted in accordance with [Selected Core Value 1] in the past week?",
+                "nl": "In hoeverre heb je de afgelopen week gehandeld in overeenstemming met [Gekozen kernwaarde 1]?"
+              },
+              "options": [
+                { "value": "1", "label": { "en": "Not at all", "nl": "Helemaal niet" }},
+                { "value": "2", "label": { "en": "Slightly", "nl": "Een beetje" }},
+                { "value": "3", "label": { "en": "Moderately", "nl": "Matig" }},
+                { "value": "4", "label": { "en": "Considerably", "nl": "Aanzienlijk" }},
+                { "value": "5", "label": { "en": "Completely", "nl": "Volledig" }}
+              ]
+            },
+            {
+              "id": "client-cv1-deviation",
+              "type": "radio",
+              "text": {
+                "en": "To what extent have you acted in deviation from [Selected Core Value 1] in the past week?",
+                "nl": "In hoeverre heb je de afgelopen week gehandeld in afwijking van [Gekozen kernwaarde 1]?"
+              },
+              "options": [
+                { "value": "1", "label": { "en": "Not at all", "nl": "Helemaal niet" }},
+                { "value": "2", "label": { "en": "Slightly", "nl": "Een beetje" }},
+                { "value": "3", "label": { "en": "Moderately", "nl": "Matig" }},
+                { "value": "4", "label": { "en": "Considerably", "nl": "Aanzienlijk" }},
+                { "value": "5", "label": { "en": "Completely", "nl": "Volledig" }}
+              ]
+            },
+            {
+              "id": "client-cv1-context",
+              "type": "text",
+              "text": {
+                "en": "Indicate in which situations it was difficult to act according to [Selected Core Value 1]? Situations include School/work (busy deadlines), family/relationships (conflicts, avoidance), friends/social media, health/energy (fatigue, pain), environmental stimuli (light, noise, deadlines), setting boundaries (people/phone). Also describe the time of day this occurred (morning, afternoon, late afternoon, evening, or late evening), the day it happened, and what the triggers were.",
+                "nl": "Geef aan in welke situaties het lastig was om volgens [Gekozen kernwaarde 1] te handelen? Situaties zijn oa: School / werk (drukte deadlines), gezin/relatie (conflicten, mijden), vrienden/sociale media, gezondheid/energie (vermoeidheid, pijn), omgevingsprikkels (licht, geluid, deadlines), grenzen stellen (mensen/telefoon). Beschrijf ook op welk tijdstip van de dag dit gebeurde (ochtend, middag, late middag, avond of late avond), op welke dag het gebeurde en wat de triggermomenten waren."
+              }
+            },
+            {
+              "id": "client-cv1-success",
+              "type": "text",
+              "text": {
+                "en": "Describe an example of a time when you acted in accordance with [Selected Core Value 1].",
+                "nl": "Beschrijf een voorbeeld van een moment waarop je juist wel in lijn met [Gekozen kernwaarde 1] hebt gehandeld."
+              }
+            }
+          ]
+        }
       ]
     },
     {
       "id": "parent-questions",
-      "title": { "en": "Parent / Supervisor Questions", "nl": "Rapportage door ouder / verzorger" },
+      "title": {
+        "en": "Parent / Supervisor Questions",
+        "nl": "Ouder / Verzorger Vragen"
+      },
+      "description": {
+        "en": "These questions are to be completed by the parent/supervisor. For each core value, you will be asked four short questions about the junior's behavior and experiences.",
+        "nl": "Deze vragen moeten door de ouder/verzorger worden ingevuld. Voor elke kernwaarde worden vier korte vragen gesteld over het gedrag en de ervaringen van de jongere."
+      },
+      "subsections": [
+        {
+          "id": "parent-cv1-assessment",
+          "title": {
+            "en": "Selected Core Value 1",
+            "nl": "Gekozen Kernwaarde 1"
+          },
+          "questions": [
+            {
+              "id": "parent-cv1-alignment",
+              "type": "radio",
+              "text": {
+                "en": "To what extent has the junior acted in accordance with [Selected Core Value 1] in the past week?",
+                "nl": "In hoeverre heeft de jongere de afgelopen week gehandeld in overeenstemming met [Gekozen kernwaarde 1]?"
+              },
+              "options": [
+                { "value": "1", "label": { "en": "Not at all", "nl": "Helemaal niet" }},
+                { "value": "2", "label": { "en": "Slightly", "nl": "Een beetje" }},
+                { "value": "3", "label": { "en": "Moderately", "nl": "Matig" }},
+                { "value": "4", "label": { "en": "Considerably", "nl": "Aanzienlijk" }},
+                { "value": "5", "label": { "en": "Completely", "nl": "Volledig" }}
+              ]
+            },
+            {
+              "id": "parent-cv1-deviation",
+              "type": "radio",
+              "text": {
+                "en": "To what extent has the junior acted in deviation from [Selected Core Value 1] in the past week?",
+                "nl": "In hoeverre is de jongere de afgelopen week afgeweken van [Gekozen kernwaarde 1]?"
+              },
+              "options": [
+                { "value": "1", "label": { "en": "Not at all", "nl": "Helemaal niet" }},
+                { "value": "2", "label": { "en": "Slightly", "nl": "Een beetje" }},
+                { "value": "3", "label": { "en": "Moderately", "nl": "Matig" }},
+                { "value": "4", "label": { "en": "Considerably", "nl": "Aanzienlijk" }},
+                { "value": "5", "label": { "en": "Completely", "nl": "Volledig" }}
+              ]
+            },
+            {
+              "id": "parent-cv1-context",
+              "type": "text",
+              "text": {
+                "en": "Indicate in which situations it was difficult for the junior to act according to [Selected Core Value 1]? Situations include School/work (busy deadlines), family/relationships (conflicts, avoidance), friends/social media, health/energy (fatigue, pain), environmental stimuli (light, noise, deadlines), setting boundaries (people/phone). Also describe the time of day this occurred (morning, afternoon, late afternoon, evening, or late evening), the day it happened, and what the triggers were.",
+                "nl": "Geef aan in welke situaties het voor de jongere moeilijk was om volgens [Gekozen kernwaarde 1] te handelen? Situaties kunnen zijn: School/werk (drukke deadlines), familie/relaties (conflicten, vermijding), vrienden/sociale media, gezondheid/energie (vermoeidheid, pijn), omgevingsprikkels (licht, geluid, deadlines), grenzen stellen (mensen/telefoon). Beschrijf ook het tijdstip waarop dit gebeurde (ochtend, middag, namiddag, avond of late avond), de dag waarop het gebeurde en wat de triggers waren."
+              }
+            },
+            {
+              "id": "parent-cv1-success",
+              "type": "text",
+              "text": {
+                "en": "Describe an example of a time when the junior acted in accordance with [Selected Core Value 1].",
+                "nl": "Beschrijf een voorbeeld van een moment waarop de jongere handelde in overeenstemming met [Gekozen kernwaarde 1]."
+              }
+            }
+          ]
+        },
+        {
+          "id": "parent-cv2-assessment",
+          "title": {
+            "en": "Selected Core Value 2",
+            "nl": "Gekozen Kernwaarde 2"
+          },
+          "questions": [
+            {
+              "id": "parent-cv2-alignment",
+              "type": "radio",
+              "text": {
+                "en": "To what extent has the junior acted in accordance with [Selected Core Value 2] in the past week?",
+                "nl": "In hoeverre heeft de jongere de afgelopen week gehandeld in overeenstemming met [Gekozen kernwaarde 2]?"
+              },
+              "options": [
+                { "value": "1", "label": { "en": "Not at all", "nl": "Helemaal niet" }},
+                { "value": "2", "label": { "en": "Slightly", "nl": "Een beetje" }},
+                { "value": "3", "label": { "en": "Moderately", "nl": "Matig" }},
+                { "value": "4", "label": { "en": "Considerably", "nl": "Aanzienlijk" }},
+                { "value": "5", "label": { "en": "Completely", "nl": "Volledig" }}
+              ]
+            },
+            {
+              "id": "parent-cv2-deviation",
+              "type": "radio",
+              "text": {
+                "en": "To what extent has the junior acted in deviation from [Selected Core Value 2] in the past week?",
+                "nl": "In hoeverre is de jongere de afgelopen week afgeweken van [Gekozen kernwaarde 2]?"
+              },
+              "options": [
+                { "value": "1", "label": { "en": "Not at all", "nl": "Helemaal niet" }},
+                { "value": "2", "label": { "en": "Slightly", "nl": "Een beetje" }},
+                { "value": "3", "label": { "en": "Moderately", "nl": "Matig" }},
+                { "value": "4", "label": { "en": "Considerably", "nl": "Aanzienlijk" }},
+                { "value": "5", "label": { "en": "Completely", "nl": "Volledig" }}
+              ]
+            },
+            {
+              "id": "parent-cv2-context",
+              "type": "text",
+              "text": {
+                "en": "Indicate in which situations it was difficult for the junior to act according to [Selected Core Value 2]? Situations include School/work (busy deadlines), family/relationships (conflicts, avoidance), friends/social media, health/energy (fatigue, pain), environmental stimuli (light, noise, deadlines), setting boundaries (people/phone). Also describe the time of day this occurred (morning, afternoon, late afternoon, evening, or late evening), the day it happened, and what the triggers were.",
+                "nl": "Geef aan in welke situaties het voor de jongere moeilijk was om volgens [Gekozen kernwaarde 2] te handelen? Situaties kunnen zijn: School/werk (drukke deadlines), familie/relaties (conflicten, vermijding), vrienden/sociale media, gezondheid/energie (vermoeidheid, pijn), omgevingsprikkels (licht, geluid, deadlines), grenzen stellen (mensen/telefoon). Beschrijf ook het tijdstip waarop dit gebeurde (ochtend, middag, namiddag, avond of late avond), de dag waarop het gebeurde en wat de triggers waren."
+              }
+            },
+            {
+              "id": "parent-cv2-success",
+              "type": "text",
+              "text": {
+                "en": "Describe an example of a time when the junior acted in accordance with [Selected Core Value 2].",
+                "nl": "Beschrijf een voorbeeld van een moment waarop de jongere handelde in overeenstemming met [Gekozen kernwaarde 2]."
+              }
+            }
+          ]
+        },
+        {
+          "id": "parent-cv3-assessment",
+          "title": {
+            "en": "Selected Core Value 3",
+            "nl": "Gekozen Kernwaarde 3"
+          },
+          "questions": [
+            {
+              "id": "parent-cv3-alignment",
+              "type": "radio",
+              "text": {
+                "en": "To what extent has the junior acted in accordance with [Selected Core Value 3] in the past week?",
+                "nl": "In hoeverre heeft de jongere de afgelopen week gehandeld in overeenstemming met [Gekozen kernwaarde 3]?"
+              },
+              "options": [
+                { "value": "1", "label": { "en": "Not at all", "nl": "Helemaal niet" }},
+                { "value": "2", "label": { "en": "Slightly", "nl": "Een beetje" }},
+                { "value": "3", "label": { "en": "Moderately", "nl": "Matig" }},
+                { "value": "4", "label": { "en": "Considerably", "nl": "Aanzienlijk" }},
+                { "value": "5", "label": { "en": "Completely", "nl": "Volledig" }}
+              ]
+            },
+            {
+              "id": "parent-cv3-deviation",
+              "type": "radio",
+              "text": {
+                "en": "To what extent has the junior acted in deviation from [Selected Core Value 3] in the past week?",
+                "nl": "In hoeverre is de jongere de afgelopen week afgeweken van [Gekozen kernwaarde 3]?"
+              },
+              "options": [
+                { "value": "1", "label": { "en": "Not at all", "nl": "Helemaal niet" }},
+                { "value": "2", "label": { "en": "Slightly", "nl": "Een beetje" }},
+                { "value": "3", "label": { "en": "Moderately", "nl": "Matig" }},
+                { "value": "4", "label": { "en": "Considerably", "nl": "Aanzienlijk" }},
+                { "value": "5", "label": { "en": "Completely", "nl": "Volledig" }}
+              ]
+            },
+            {
+              "id": "parent-cv3-context",
+              "type": "text",
+              "text": {
+                "en": "Indicate in which situations it was difficult for the junior to act according to [Selected Core Value 3]? Situations include School/work (busy deadlines), family/relationships (conflicts, avoidance), friends/social media, health/energy (fatigue, pain), environmental stimuli (light, noise, deadlines), setting boundaries (people/phone). Also describe the time of day this occurred (morning, afternoon, late afternoon, evening, or late evening), the day it happened, and what the triggers were.",
+                "nl": "Geef aan in welke situaties het voor de jongere moeilijk was om volgens [Gekozen kernwaarde 3] te handelen? Situaties kunnen zijn: School/werk (drukke deadlines), familie/relaties (conflicten, vermijding), vrienden/sociale media, gezondheid/energie (vermoeidheid, pijn), omgevingsprikkels (licht, geluid, deadlines), grenzen stellen (mensen/telefoon). Beschrijf ook het tijdstip waarop dit gebeurde (ochtend, middag, namiddag, avond of late avond), de dag waarop het gebeurde en wat de triggers waren."
+              }
+            },
+            {
+              "id": "parent-cv3-success",
+              "type": "text",
+              "text": {
+                "en": "Describe an example of a time when the junior acted in accordance with [Selected Core Value 3].",
+                "nl": "Beschrijf een voorbeeld van een moment waarop de jongere handelde in overeenstemming met [Gekozen kernwaarde 3]."
+              }
+            }
+          ]
+        },
+        {
+          "id": "parent-cv4-assessment",
+          "title": {
+            "en": "Selected Core Value 4",
+            "nl": "Gekozen Kernwaarde 4"
+          },
+          "questions": [
+            {
+              "id": "parent-cv4-alignment",
+              "type": "radio",
+              "text": {
+                "en": "To what extent has the junior acted in accordance with [Selected Core Value 4] in the past week?",
+                "nl": "In hoeverre heeft de jongere de afgelopen week gehandeld in overeenstemming met [Gekozen kernwaarde 4]?"
+              },
+              "options": [
+                { "value": "1", "label": { "en": "Not at all", "nl": "Helemaal niet" }},
+                { "value": "2", "label": { "en": "Slightly", "nl": "Een beetje" }},
+                { "value": "3", "label": { "en": "Moderately", "nl": "Matig" }},
+                { "value": "4", "label": { "en": "Considerably", "nl": "Aanzienlijk" }},
+                { "value": "5", "label": { "en": "Completely", "nl": "Volledig" }}
+              ]
+            },
+            {
+              "id": "parent-cv4-deviation",
+              "type": "radio",
+              "text": {
+                "en": "To what extent has the junior acted in deviation from [Selected Core Value 4] in the past week?",
+                "nl": "In hoeverre is de jongere de afgelopen week afgeweken van [Gekozen kernwaarde 4]?"
+              },
+              "options": [
+                { "value": "1", "label": { "en": "Not at all", "nl": "Helemaal niet" }},
+                { "value": "2", "label": { "en": "Slightly", "nl": "Een beetje" }},
+                { "value": "3", "label": { "en": "Moderately", "nl": "Matig" }},
+                { "value": "4", "label": { "en": "Considerably", "nl": "Aanzienlijk" }},
+                { "value": "5", "label": { "en": "Completely", "nl": "Volledig" }}
+              ]
+            },
+            {
+              "id": "parent-cv4-context",
+              "type": "text",
+              "text": {
+                "en": "Indicate in which situations it was difficult for the junior to act according to [Selected Core Value 4]? Situations include School/work (busy deadlines), family/relationships (conflicts, avoidance), friends/social media, health/energy (fatigue, pain), environmental stimuli (light, noise, deadlines), setting boundaries (people/phone). Also describe the time of day this occurred (morning, afternoon, late afternoon, evening, or late evening), the day it happened, and what the triggers were.",
+                "nl": "Geef aan in welke situaties het voor de jongere moeilijk was om volgens [Gekozen kernwaarde 4] te handelen? Situaties kunnen zijn: School/werk (drukke deadlines), familie/relaties (conflicten, vermijding), vrienden/sociale media, gezondheid/energie (vermoeidheid, pijn), omgevingsprikkels (licht, geluid, deadlines), grenzen stellen (mensen/telefoon). Beschrijf ook het tijdstip waarop dit gebeurde (ochtend, middag, namiddag, avond of late avond), de dag waarop het gebeurde en wat de triggers waren."
+              }
+            },
+            {
+              "id": "parent-cv4-success",
+              "type": "text",
+              "text": {
+                "en": "Describe an example of a time when the junior acted in accordance with [Selected Core Value 4].",
+                "nl": "Beschrijf een voorbeeld van een moment waarop de jongere handelde in overeenstemming met [Gekozen kernwaarde 4]."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "client-general-questions",
+      "title": {
+        "en": "General Questions - Client",
+        "nl": "Algemene vragen - Client"
+      },
+      "description": {
+        "en": "Please answer the questions below on a scale of 1-5 (1 = Strongly disagree, 2 = Disagree, 3 = Neutral, 4 = Agree, 5 = Strongly agree)",
+        "nl": "Vul onderstaande vragen in op een schaal van 1-5 (1 = Helemaal oneens, 2 = Oneens, 3 = Neutraal, 4 = Eens, 5 = Helemaal eens)"
+      },
       "questions": [
-        { "id": "parent-a1", "type": "likert-scale-5", "text": { "en": "To what extent has the junior acted in accordance with [Selected Core Value 1] in the past week?", "nl": "In hoeverre heeft de jongere de afgelopen week gehandeld in overeenstemming met [Gekozen kernwaarde 1]?" } },
-        { "id": "parent-a2", "type": "text", "text": { "en": "Indicate in which situations it was difficult for the junior to act according to [Selected Core Value 1]?", "nl": "Geef aan in welke situaties het voor de jongere lastig was om volgens [Gekozen kernwaarde 1] te handelen?" } }
+        {
+          "id": "client-mood",
+          "type": "radio",
+          "text": {
+            "en": "I had a depressed mood during the past 2 weeks",
+            "nl": "Ik had de afgelopen 2 weken een sombere stemming"
+          },
+          "options": [
+            { "value": "1", "label": { "en": "Strongly disagree", "nl": "Helemaal oneens" }},
+            { "value": "2", "label": { "en": "Disagree", "nl": "Oneens" }},
+            { "value": "3", "label": { "en": "Neutral", "nl": "Neutraal" }},
+            { "value": "4", "label": { "en": "Agree", "nl": "Eens" }},
+            { "value": "5", "label": { "en": "Strongly agree", "nl": "Helemaal eens" }}
+          ]
+        },
+        {
+          "id": "client-anxiety",
+          "type": "radio",
+          "text": {
+            "en": "I have felt anxious and panicky during the past 2 weeks",
+            "nl": "Ik voelde me de afgelopen 2 weken angstig en was paniekgevoelig"
+          },
+          "options": [
+            { "value": "1", "label": { "en": "Strongly disagree", "nl": "Helemaal oneens" }},
+            { "value": "2", "label": { "en": "Disagree", "nl": "Oneens" }},
+            { "value": "3", "label": { "en": "Neutral", "nl": "Neutraal" }},
+            { "value": "4", "label": { "en": "Agree", "nl": "Eens" }},
+            { "value": "5", "label": { "en": "Strongly agree", "nl": "Helemaal eens" }}
+          ]
+        },
+        {
+          "id": "client-self-harm",
+          "type": "radio",
+          "text": {
+            "en": "I have had self-harming thoughts during the past 2 weeks",
+            "nl": "Ik had de afgelopen 2 weken zelfbeschadigende gedachten"
+          },
+          "options": [
+            { "value": "1", "label": { "en": "Strongly disagree", "nl": "Helemaal oneens" }},
+            { "value": "2", "label": { "en": "Disagree", "nl": "Oneens" }},
+            { "value": "3", "label": { "en": "Neutral", "nl": "Neutraal" }},
+            { "value": "4", "label": { "en": "Agree", "nl": "Eens" }},
+            { "value": "5", "label": { "en": "Strongly agree", "nl": "Helemaal eens" }}
+          ]
+        },
+        {
+          "id": "client-sleep",
+          "type": "radio",
+          "text": {
+            "en": "I have slept very poorly during the past 2 weeks",
+            "nl": "Ik heb de afgelopen 2 weken heel slecht geslapen"
+          },
+          "options": [
+            { "value": "1", "label": { "en": "Strongly disagree", "nl": "Helemaal oneens" }},
+            { "value": "2", "label": { "en": "Disagree", "nl": "Oneens" }},
+            { "value": "3", "label": { "en": "Neutral", "nl": "Neutraal" }},
+            { "value": "4", "label": { "en": "Agree", "nl": "Eens" }},
+            { "value": "5", "label": { "en": "Strongly agree", "nl": "Helemaal eens" }}
+          ]
+        },
+        {
+          "id": "client-narcotics",
+          "type": "radio",
+          "text": {
+            "en": "I have used narcotics during the past 2 weeks",
+            "nl": "Ik heb de afgelopen 2 weken verdovende middelen gebruikt"
+          },
+          "options": [
+            { "value": "1", "label": { "en": "Strongly disagree", "nl": "Helemaal oneens" }},
+            { "value": "2", "label": { "en": "Disagree", "nl": "Oneens" }},
+            { "value": "3", "label": { "en": "Neutral", "nl": "Neutraal" }},
+            { "value": "4", "label": { "en": "Agree", "nl": "Eens" }},
+            { "value": "5", "label": { "en": "Strongly agree", "nl": "Helemaal eens" }}
+          ]
+        },
+        {
+          "id": "client-additional-feelings",
+          "type": "text",
+          "text": {
+            "en": "During the past 2 weeks, I have felt/been...",
+            "nl": "De afgelopen 2 weken voelde ik / was ik ..."
+          }
+        }
+      ]
+    },
+    {
+      "id": "parent-general-questions",
+      "title": {
+        "en": "General Questions - Parent/Supervisor",
+        "nl": "Algemene vragen - Ouder/Verzorger"
+      },
+      "description": {
+        "en": "Please answer the questions below on a scale of 1-5 (1 = Strongly disagree, 2 = Disagree, 3 = Neutral, 4 = Agree, 5 = Strongly agree)",
+        "nl": "Vul onderstaande vragen in op een schaal van 1-5 (1 = Helemaal oneens, 2 = Oneens, 3 = Neutraal, 4 = Eens, 5 = Helemaal eens)"
+      },
+      "questions": [
+        {
+          "id": "parent-mood",
+          "type": "radio",
+          "text": {
+            "en": "The junior had a depressed mood during the past 2 weeks",
+            "nl": "De jongere had de afgelopen 2 weken een sombere stemming"
+          },
+          "options": [
+            { "value": "1", "label": { "en": "Strongly disagree", "nl": "Helemaal oneens" }},
+            { "value": "2", "label": { "en": "Disagree", "nl": "Oneens" }},
+            { "value": "3", "label": { "en": "Neutral", "nl": "Neutraal" }},
+            { "value": "4", "label": { "en": "Agree", "nl": "Eens" }},
+            { "value": "5", "label": { "en": "Strongly agree", "nl": "Helemaal eens" }}
+          ]
+        },
+        {
+          "id": "parent-anxiety",
+          "type": "radio",
+          "text": {
+            "en": "The junior felt anxious and panicky during the past 2 weeks",
+            "nl": "De jongere voelde zich de afgelopen 2 weken angstig en was paniekgevoelig"
+          },
+          "options": [
+            { "value": "1", "label": { "en": "Strongly disagree", "nl": "Helemaal oneens" }},
+            { "value": "2", "label": { "en": "Disagree", "nl": "Oneens" }},
+            { "value": "3", "label": { "en": "Neutral", "nl": "Neutraal" }},
+            { "value": "4", "label": { "en": "Agree", "nl": "Eens" }},
+            { "value": "5", "label": { "en": "Strongly agree", "nl": "Helemaal eens" }}
+          ]
+        },
+        {
+          "id": "parent-self-harm",
+          "type": "radio",
+          "text": {
+            "en": "The junior had self-harming thoughts during the past 2 weeks",
+            "nl": "De jongere had de afgelopen 2 weken zelfbeschadigende gedachten"
+          },
+          "options": [
+            { "value": "1", "label": { "en": "Strongly disagree", "nl": "Helemaal oneens" }},
+            { "value": "2", "label": { "en": "Disagree", "nl": "Oneens" }},
+            { "value": "3", "label": { "en": "Neutral", "nl": "Neutraal" }},
+            { "value": "4", "label": { "en": "Agree", "nl": "Eens" }},
+            { "value": "5", "label": { "en": "Strongly agree", "nl": "Helemaal eens" }}
+          ]
+        },
+        {
+          "id": "parent-sleep",
+          "type": "radio",
+          "text": {
+            "en": "The junior slept very poorly during the past 2 weeks",
+            "nl": "De jongere heeft de afgelopen 2 weken heel slecht geslapen"
+          },
+          "options": [
+            { "value": "1", "label": { "en": "Strongly disagree", "nl": "Helemaal oneens" }},
+            { "value": "2", "label": { "en": "Disagree", "nl": "Oneens" }},
+            { "value": "3", "label": { "en": "Neutral", "nl": "Neutraal" }},
+            { "value": "4", "label": { "en": "Agree", "nl": "Eens" }},
+            { "value": "5", "label": { "en": "Strongly agree", "nl": "Helemaal eens" }}
+          ]
+        },
+        {
+          "id": "parent-narcotics",
+          "type": "radio",
+          "text": {
+            "en": "The junior used narcotics during the past 2 weeks",
+            "nl": "De jongere heeft de afgelopen 2 weken verdovende middelen gebruikt"
+          },
+          "options": [
+            { "value": "1", "label": { "en": "Strongly disagree", "nl": "Helemaal oneens" }},
+            { "value": "2", "label": { "en": "Disagree", "nl": "Oneens" }},
+            { "value": "3", "label": { "en": "Neutral", "nl": "Neutraal" }},
+            { "value": "4", "label": { "en": "Agree", "nl": "Eens" }},
+            { "value": "5", "label": { "en": "Strongly agree", "nl": "Helemaal eens" }}
+          ]
+        },
+        {
+          "id": "parent-additional-feelings",
+          "type": "text",
+          "text": {
+            "en": "During the past 2 weeks, the junior has felt/has been...",
+            "nl": "De afgelopen 2 weken voelde de jongere zich / was de jongere ..."
+          }
+        }
       ]
     }
   ]

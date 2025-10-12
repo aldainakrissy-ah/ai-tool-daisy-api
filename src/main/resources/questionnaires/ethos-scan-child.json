@@ -1,27 +1,127 @@
 {
-  "id": "vas-pain",
+  "id": "ethos-scan-child",
   "title": {
-    "en": "Visual Analog Scale for Pain",
-    "nl": "Visual Analog Scale voor Pijn"
+    "en": "Ethos + scan - Child",
+    "nl": "Ethos + scan - Kind"
   },
   "description": {
-    "en": "Please rate your pain on a scale of 0-10. (0 = no pain, 10 = Extreme pain.)",
-    "nl": "Vul uw pijn score in op een schaal van 0-10. (0 = geen pijn, 10 = Extreem veel pijn.)"
+    "en": "Thank you for submitting the MyHealth intake questionnaire. To better understand values-behaviour congruence, please complete the short Ethos⁺ scan.\nThis questionnaire is designed to identify the values, behaviours, and contextual influences that are important for your child's development. Please complete the questionnaire based on your own observations and experiences as a parent/supervisor.\n\nWhen your child is 12-14 years old, they can also complete simple questions (such as questions 9 and 10).",
+    "nl": "Dank voor het insturen van de MyHealth intake vragenlijst. Om je waarden-gedrag congruentie beter te begrijpen, vul je nu de korte Ethos⁺-scan in.\nDeze vragenlijst is bedoeld om de waarden, gedragingen en contextuele invloeden in kaart te brengen die belangrijk zijn voor de ontwikkeling van uw kind. Vul de vragenlijst in vanuit uw eigen observaties en ervaringen als ouder/verzorger.\n\nWanneer het kind 12-14 jaar is kunnen eenvoudige vagen (zoals vraag 9 en 10) ook door hem / haar worden ingevuld"
   },
   "sections": [
     {
-      "id": "pain-scale",
+      "id": "parent-observations",
+      "title": {
+        "en": "1 Parent Observations (Relational Ethos)",
+        "nl": "1 Ouder observaties (relationele Ethos)"
+      },
       "questions": [
         {
-          "id": "vas-score",
-          "type": "slider",
+          "id": "daily-importance",
+          "type": "text",
+          "number": "1",
           "text": {
-            "en": "How much pain are you experiencing right now?",
-            "nl": "Hoeveel pijn ervaar je op dit moment?"
-          },
-          "validation": {
-            "min": 0,
-            "max": 10
+            "en": "What does your child find most important in daily life? (For example: playing, safety, learning, being together, etc.)",
+            "nl": "Wat vindt uw kind het belangrijkste in het dagelijks leven? (bijvoorbeeld: spelen, veiligheid, leren, samen zijn, …)"
+          }
+        },
+        {
+          "id": "upset-calming",
+          "type": "text",
+          "number": "2",
+          "text": {
+            "en": "When does your child get upset easily, and what helps them calm down?",
+            "nl": "Wanneer raakt uw kind snel van slag, en wat helpt dan om weer rustig te worden?"
+          }
+        },
+        {
+          "id": "family-values",
+          "type": "text",
+          "number": "3",
+          "text": {
+            "en": "Which values or rules within the family are visibly important to your child?",
+            "nl": "Welke waarden of regels binnen het gezin zijn voor uw kind zichtbaar belangrijk?"
+          }
+        },
+        {
+          "id": "injustice-reaction",
+          "type": "text",
+          "number": "4",
+          "text": {
+            "en": "How does your child react to injustice or situations that seem unfair?",
+            "nl": "Hoe reageert uw kind op onrecht of op situaties die 'oneerlijk' lijken?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "contextual-values",
+      "title": {
+        "en": "2 Contextual value fields",
+        "nl": "2 Contextuele waardenvelden"
+      },
+      "questions": [
+        {
+          "id": "school-friends-role",
+          "type": "text",
+          "number": "5",
+          "text": {
+            "en": "How would you describe the role of school and/or friends in your child's well-being?",
+            "nl": "Hoe beschrijft u de rol van school en/of vriendenkring in het welzijn van uw kind?"
+          }
+        },
+        {
+          "id": "extended-family",
+          "type": "text",
+          "number": "6",
+          "text": {
+            "en": "What influence does the extended family (grandparents, siblings) have on your child's sense of security?",
+            "nl": "Welke invloed heeft de bredere familie (grootouders, broers/zussen) op het gevoel van veiligheid van uw kind?"
+          }
+        },
+        {
+          "id": "recurring-themes",
+          "type": "text",
+          "number": "7",
+          "text": {
+            "en": "Are there recurring themes in your child's behavior that you consider \"typical\" or \"characteristic\"? If so, please describe them.",
+            "nl": "Zijn er terugkerende thema's in het gedrag van uw kind die u als 'typisch' of 'karakteristiek' ervaart?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "narrative-symbolic",
+      "title": {
+        "en": "3 Narrative-symbolic",
+        "nl": "3 Narratief-symbolisch"
+      },
+      "questions": [
+        {
+          "id": "story-recognition",
+          "type": "text",
+          "number": "8",
+          "text": {
+            "en": "Can you give an example of a story, game, or fantasy that your child recognizes in themselves?",
+            "nl": "Kunt u een voorbeeld geven van een verhaal, spel of fantasie waarin uw kind zichzelf herkent?"
+          }
+        },
+        {
+          "id": "dreams-fears",
+          "type": "text",
+          "number": "9",
+          "text": {
+            "en": "What dreams, fears, or wishes does your child sometimes express?",
+            "nl": "Welke dromen, angsten of wensen benoemt uw kind zelf wel eens?"
+          }
+        },
+        {
+          "id": "three-words",
+          "type": "text",
+          "number": "10",
+          "text": {
+            "en": "If you could describe your child in three words, what would they be?",
+            "nl": "Als u uw kind in drie woorden zou typeren, welke zouden dat zijn?"
           }
         }
       ]

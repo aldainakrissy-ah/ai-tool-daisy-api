@@ -8,72 +8,195 @@
     "en": "This questionnaire helps you get a more complete picture of your health, your symptoms, how you feel, and how this is developing in your life. Take your time and write in your own words. Everything you provide is valuable.",
     "nl": "Deze vragenlijst helpt om een completer beeld te krijgen van uw gezondheid, de klachten, hoe u zich voelt, en hoe dat zich ontwikkelt in uw leven. Neem de tijd en schrijf in je eigen woorden. Alles wat u invult is waardevol."
   },
+  "instructions": {
+    "en": "Answer the questions calmly and as completely as possible. Some questions may seem a bit unusual, but they help you see connections between physical symptoms, emotions, and events in your life. Describe your physical and emotional experiences as fully as possible. Even things you consider minor or vague can be important. Trust what comes to mind.",
+    "nl": "Beantwoord de vragen rustig en zo volledig mogelijk. Sommige vragen lijken misschien wat bijzonder, maar ze helpen om verbanden te zien tussen lichamelijke klachten, emoties en gebeurtenissen in uw leven. Beschrijf hier zo volledig mogelijk wat uw lichamelijk en emotioneel ervaart. Ook dingen die u klein of vaag vindt, kunnen belangrijk zijn. Vertrouw op wat in u opkomt."
+  },
   "sections": [
     {
       "id": "general-orientation",
-      "title": { "en": "General Orientation and Well-Being", "nl": "Algemene oriëntatie en welbevinden" },
+      "title": { 
+        "en": "1. General Orientation and Well-Being", 
+        "nl": "1. Algemene oriëntatie en welbevinden" 
+      },
       "questions": [
-        { "id": "gen-q1", "type": "text", "text": { "en": "How would you describe your current state in your own words?", "nl": "Hoe zou je je huidige toestand omschrijven in je eigen woorden?" } },
-        { "id": "gen-q2", "type": "text", "text": { "en": "What are you most worried about right now?", "nl": "Waar maak je je op dit moment het meeste zorgen over?" } },
-        { "id": "gen-q3", "type": "text", "text": { "en": "How do you usually feel when you wake up?", "nl": "Hoe voel je je meestal bij het wakker worden?" } },
-        { "id": "gen-q4", "type": "text", "text": { "en": "What physical symptoms are you experiencing?", "nl": "Welke lichamelijke klachten ervaar je?" } },
-        { "id": "gen-q5", "type": "text", "text": { "en": "How has your sleep pattern been over the past few weeks?", "nl": "Hoe is je slaappatroon de afgelopen weken geweest?" } },
-        { "id": "gen-q6", "type": "text", "text": { "en": "Who do you share your daily life with (alone, partner, family, others)?", "nl": "Met wie deel je je dagelijkse leven (alleen, partner, gezin, anderen)?" } },
-        { "id": "gen-q7", "type": "text", "text": { "en": "Are you experiencing internal conflicts (thoughts, emotions) or in your environment?", "nl": "Heb je last van interne conflicten (gedachten, emoties) of in je omgeving?" } },
-        { "id": "gen-q8", "type": "text", "text": { "en": "How does your living and working environment (e.g., home, work, nature, screens) influence your recovery or well-being?", "nl": "Hoe beïnvloed je woon- en werkomgeving (bijv. huis, werk, natuur, schermen) je herstel of welzijn?" } }
+        { "id": "gen-q1", "type": "text", "text": { "en": "1.1 How would you describe your current state in your own words?", "nl": "1.1 Hoe zou je je huidige toestand omschrijven in je eigen woorden?" } },
+        { "id": "gen-q2", "type": "text", "text": { "en": "1.2 What are you most worried about right now?", "nl": "1.2 Waar maak je je op dit moment het meeste zorgen over?" } },
+        { "id": "gen-q3", "type": "text", "text": { "en": "1.3 How do you usually feel when you wake up?", "nl": "1.3 Hoe voel je je meestal bij het wakker worden?" } },
+        { "id": "gen-q4", "type": "text", "text": { "en": "1.4 What physical symptoms are you experiencing?", "nl": "1.4 Welke lichamelijke klachten ervaar je?" } },
+        { "id": "gen-q5", "type": "text", "text": { "en": "1.5 How has your sleep pattern been over the past few weeks?", "nl": "1.5 Hoe is je slaappatroon de afgelopen weken geweest?" } },
+        { "id": "gen-q6", "type": "text", "text": { "en": "1.6 Who do you share your daily life with (alone, partner, family, others)?", "nl": "1.6 Met wie deel je je dagelijkse leven (alleen, partner, gezin, anderen)?" } },
+        { "id": "gen-q7", "type": "text", "text": { "en": "1.7 Are you experiencing internal conflicts (thoughts, emotions) or in your environment?", "nl": "1.7 Heb je last van interne conflicten (gedachten, emoties) of in je omgeving?" } },
+        { "id": "gen-q8", "type": "text", "text": { "en": "1.8 How does your living and working environment (e.g., home, work, nature, screens) influence your recovery or well-being?", "nl": "1.8 Hoe beïnvloed je woon- en werkomgeving (bijv. huis, werk, natuur, schermen) je herstel of welzijn?" } }
       ]
     },
     {
       "id": "symptoms-energy",
-      "title": { "en": "Symptoms: Energy and fatigue", "nl": "Symptomen: Energie en vermoeidheid" },
+      "title": { 
+        "en": "2.1 Symptoms: Energy and fatigue", 
+        "nl": "2.1 Energie en vermoeidheid" 
+      },
       "questions": [
-        { "id": "energy-symptoms", "type": "yes-no", "text": { "en": "Do you have any symptoms?", "nl": "Heb je klachten?" } },
-        { "id": "energy-extent", "type": "likert-scale-3", "text": { "en": "If so, to what extent?", "nl": "Zo ja, in welke mate?" }, "options": [{ "value": "mild", "label": { "en": "Mild", "nl": "Licht" } }, { "value": "moderate", "label": { "en": "Moderate", "nl": "Matig" } }, { "value": "severe", "label": { "en": "Severe", "nl": "Ernstig" } }] },
-        { "id": "energy-impact", "type": "text", "text": { "en": "How do you notice this in your daily activities?", "nl": "Hoe merk je dit terug in je dagelijkse bezigheden?" } },
-        { "id": "energy-duration", "type": "text", "text": { "en": "How long have you been experiencing this, and how does it develop over time?", "nl": "Sinds wanneer ervaar je dit en hoe ontwikkelt zich dat in de tijd?" } },
-        { "id": "energy-q5", "type": "yes-no", "text": { "en": "Do you have trouble committing yourself to something, even when you know it's important to you?", "nl": "Heb je moeite om jezelf ergens toe te zetten, ook als je weet dat het belangrijk voor je is?" } },
-        { "id": "energy-q6", "type": "yes-no", "text": { "en": "Do you often experience a feeling of emptiness after pursuing something that initially seemed motivating?", "nl": "Ervaar je vaak een gevoel van leegte na het nastreven van iets wat eerst motiverend leek?" } }
+        { "id": "energy-q1", "type": "yes-no", "text": { "en": "2.1.1 Do you have any symptoms?", "nl": "2.1.1 Heb je klachten?" } },
+        { "id": "energy-q2", "type": "likert-scale-3", "text": { "en": "2.1.2 If so, to what extent?", "nl": "2.1.2 Zo ja, in welke mate?" }, "options": [{ "value": "mild", "label": { "en": "Mild", "nl": "Licht" } }, { "value": "moderate", "label": { "en": "Moderate", "nl": "Matig" } }, { "value": "severe", "label": { "en": "Severe", "nl": "Ernstig" } }] },
+        { "id": "energy-q3", "type": "text", "text": { "en": "2.1.3 How do you notice this in your daily activities?", "nl": "2.1.3 Hoe merk je dit terug in je dagelijkse bezigheden?" } },
+        { "id": "energy-q4", "type": "text", "text": { "en": "2.1.4 How long have you been experiencing this, and how does it develop over time?", "nl": "2.1.4 Sinds wanneer ervaar je dit en hoe ontwikkelt zich dat in de tijd?" } },
+        { "id": "energy-q5", "type": "yes-no", "text": { "en": "2.1.5 Do you have trouble committing yourself to something, even when you know it's important to you?", "nl": "2.1.5 Heb je moeite om jezelf ergens toe te zetten, ook als je weet dat het belangrijk voor je is?" } },
+        { "id": "energy-q6", "type": "yes-no", "text": { "en": "2.1.6 Do you often experience a feeling of emptiness after pursuing something that initially seemed motivating?", "nl": "2.1.6 Ervaar je vaak een gevoel van leegte na het nastreven van iets wat eerst motiverend leek?" } }
       ]
     },
     {
       "id": "symptoms-sleep",
-      "title": { "en": "Symptoms: Sleep and recovery", "nl": "Symptomen: Slaap en herstel" },
+      "title": { 
+        "en": "2.2 Symptoms: Sleep and recovery", 
+        "nl": "2.2 Slaap en herstel" 
+      },
       "questions": [
-        { "id": "sleep-symptoms", "type": "yes-no", "text": { "en": "Do you have any symptoms?", "nl": "Heb je klachten?" } },
-        { "id": "sleep-q1", "type": "yes-no", "text": { "en": "Do you find it difficult to switch from activity to relaxation, even when you have time to rest?", "nl": "Kun je moeilijk schakelen van actief zijn naar ontspanning, zelfs als je tijd hebt om te rusten?" } },
-        { "id": "sleep-q2", "type": "yes-no", "text": { "en": "Do you often feel overwhelmed by stimuli such as light, noise, or social situations?", "nl": "Voel je je vaak snel overweldigd door prikkels zoals licht, geluid of sociale situaties?" } }
+        { "id": "sleep-q1", "type": "yes-no", "text": { "en": "2.2.1 Do you have any symptoms?", "nl": "2.2.1 Heb je klachten?" } },
+        { "id": "sleep-q2", "type": "likert-scale-3", "text": { "en": "2.2.2 If so, to what extent?", "nl": "2.2.2 Zo ja, in welke mate?" }, "options": [{ "value": "mild", "label": { "en": "Mild", "nl": "Licht" } }, { "value": "moderate", "label": { "en": "Moderate", "nl": "Matig" } }, { "value": "severe", "label": { "en": "Severe", "nl": "Ernstig" } }] },
+        { "id": "sleep-q3", "type": "text", "text": { "en": "2.2.3 How do you notice this in your daily activities?", "nl": "2.2.3 Hoe merk je dit terug in je dagelijkse bezigheden?" } },
+        { "id": "sleep-q4", "type": "text", "text": { "en": "2.2.4 How long have you been experiencing this, and how does it develop over time?", "nl": "2.2.4 Sinds wanneer ervaar je dit en hoe ontwikkelt zich dat in de tijd?" } },
+        { "id": "sleep-q5", "type": "yes-no", "text": { "en": "2.2.5 Do you find it difficult to switch from activity to relaxation, even when you have time to rest?", "nl": "2.2.5 Kun je moeilijk schakelen van actief zijn naar ontspanning, zelfs als je tijd hebt om te rusten?" } },
+        { "id": "sleep-q6", "type": "yes-no", "text": { "en": "2.2.6 Do you often feel overwhelmed by stimuli such as light, noise, or social situations?", "nl": "2.2.6 Voel je je vaak snel overweldigd door prikkels zoals licht, geluid of sociale situaties?" } }
+      ]
+    },
+    {
+      "id": "symptoms-emotional",
+      "title": { 
+        "en": "2.3 Symptoms: Emotional stimuli and stress", 
+        "nl": "2.3 Emotionele prikkels en stress" 
+      },
+      "questions": [
+        { "id": "emotional-q1", "type": "yes-no", "text": { "en": "2.3.1 Do you have any symptoms?", "nl": "2.3.1 Heb je klachten?" } },
+        { "id": "emotional-q2", "type": "likert-scale-3", "text": { "en": "2.3.2 If so, to what extent?", "nl": "2.3.2 Zo ja, in welke mate?" }, "options": [{ "value": "mild", "label": { "en": "Mild", "nl": "Licht" } }, { "value": "moderate", "label": { "en": "Moderate", "nl": "Matig" } }, { "value": "severe", "label": { "en": "Severe", "nl": "Ernstig" } }] },
+        { "id": "emotional-q3", "type": "text", "text": { "en": "2.3.3 How do you notice this in your daily activities?", "nl": "2.3.3 Hoe merk je dit terug in je dagelijkse bezigheden?" } },
+        { "id": "emotional-q4", "type": "yes-no", "text": { "en": "2.3.4 Do you sometimes feel that your emotions are 'flattened out,' as if you're not truly affected?", "nl": "2.3.4 Heb je het gevoel dat emotie soms 'afgevlakt' aanvoelen, alsof je niet echt wordt geraakt?" } },
+        { "id": "emotional-q5", "type": "yes-no", "text": { "en": "2.3.5 Do you often feel emotionally vulnerable or unstable with minor setbacks?", "nl": "2.3.5 Voel je je vaak emotioneel kwetsbaar of instabiel bij kleine tegenslagen?" } },
+        { "id": "emotional-q6", "type": "text", "text": { "en": "2.3.6 How long have you been experiencing this, and how does it develop over time?", "nl": "2.3.6 Sinds wanneer ervaar je dit en hoe ontwikkelt zich dat in de tijd?" } },
+        { "id": "emotional-q7", "type": "yes-no", "text": { "en": "2.3.7 Do you feel like you're constantly 'on', even in quiet moments?", "nl": "2.3.7 Heb je het gevoel voortdurend 'aan te staan', zelfs in rustige momenten?" } },
+        { "id": "emotional-q8", "type": "yes-no", "text": { "en": "2.3.8 Do you notice that you startle easily or remain alert after a stressful experience?", "nl": "2.3.8 Merk je dat je snel schrikt of alert blijft na een stressvolle ervaring?" } }
+      ]
+    },
+    {
+      "id": "symptoms-muscle",
+      "title": { 
+        "en": "2.4 Symptoms: Muscle tension and movement", 
+        "nl": "2.4 Spierspanning en beweging" 
+      },
+      "questions": [
+        { "id": "muscle-q1", "type": "yes-no", "text": { "en": "2.4.1 Do you have any symptoms?", "nl": "2.4.1 Heb je klachten?" } },
+        { "id": "muscle-q2", "type": "likert-scale-3", "text": { "en": "2.4.2 If so, to what extent?", "nl": "2.4.2 Zo ja, in welke mate?" }, "options": [{ "value": "mild", "label": { "en": "Mild", "nl": "Licht" } }, { "value": "moderate", "label": { "en": "Moderate", "nl": "Matig" } }, { "value": "severe", "label": { "en": "Severe", "nl": "Ernstig" } }] },
+        { "id": "muscle-q3", "type": "text", "text": { "en": "2.4.3 How do you notice this in your daily activities?", "nl": "2.4.3 Hoe merk je dit terug in je dagelijkse bezigheden?" } },
+        { "id": "muscle-q4", "type": "text", "text": { "en": "2.4.4 How long have you been experiencing this, and how does it develop over time?", "nl": "2.4.4 Sinds wanneer ervaar je dit en hoe ontwikkelt zich dat in de tijd?" } }
+      ]
+    },
+    {
+      "id": "symptoms-digestive",
+      "title": { 
+        "en": "2.5 Symptoms: Gastrointestinal rhythm and digestion", 
+        "nl": "2.5 Maag-darm ritme en spijsvertering" 
+      },
+      "questions": [
+        { "id": "digestive-q1", "type": "yes-no", "text": { "en": "2.5.1 Do you have any symptoms?", "nl": "2.5.1 Heb je klachten?" } },
+        { "id": "digestive-q2", "type": "likert-scale-3", "text": { "en": "2.5.2 If so, to what extent?", "nl": "2.5.2 Zo ja, in welke mate?" }, "options": [{ "value": "mild", "label": { "en": "Mild", "nl": "Licht" } }, { "value": "moderate", "label": { "en": "Moderate", "nl": "Matig" } }, { "value": "severe", "label": { "en": "Severe", "nl": "Ernstig" } }] },
+        { "id": "digestive-q3", "type": "text", "text": { "en": "2.5.3 How do you notice this in your daily activities?", "nl": "2.5.3 Hoe merk je dit terug in je dagelijkse bezigheden?" } },
+        { "id": "digestive-q4", "type": "text", "text": { "en": "2.5.4 How long have you been experiencing this, and how does it develop over time?", "nl": "2.5.4 Sinds wanneer ervaar je dit en hoe ontwikkelt zich dat in de tijd?" } }
+      ]
+    },
+    {
+      "id": "symptoms-skin",
+      "title": { 
+        "en": "2.6 Symptoms: Skin and sensitivities (pain, itching, tingling)", 
+        "nl": "2.6 Huid en gevoeligheden (pijn, jeuk, tintelingen)" 
+      },
+      "questions": [
+        { "id": "skin-q1", "type": "yes-no", "text": { "en": "2.6.1 Do you have any symptoms?", "nl": "2.6.1 Heb je klachten?" } },
+        { "id": "skin-q2", "type": "likert-scale-3", "text": { "en": "2.6.2 If so, to what extent?", "nl": "2.6.2 Zo ja, in welke mate?" }, "options": [{ "value": "mild", "label": { "en": "Mild", "nl": "Licht" } }, { "value": "moderate", "label": { "en": "Moderate", "nl": "Matig" } }, { "value": "severe", "label": { "en": "Severe", "nl": "Ernstig" } }] },
+        { "id": "skin-q3", "type": "text", "text": { "en": "2.6.3 How do you notice this in your daily activities?", "nl": "2.6.3 Hoe merk je dit terug in je dagelijkse bezigheden?" } },
+        { "id": "skin-q4", "type": "text", "text": { "en": "2.6.4 How long have you been experiencing this, and how does it develop over time?", "nl": "2.6.4 Sinds wanneer ervaar je dit en hoe ontwikkelt zich dat in de tijd?" } }
+      ]
+    },
+    {
+      "id": "symptoms-cardiac",
+      "title": { 
+        "en": "2.7 Symptoms: Heart rate and breathing", 
+        "nl": "2.7 Hartslag en ademhaling" 
+      },
+      "questions": [
+        { "id": "cardiac-q1", "type": "yes-no", "text": { "en": "2.7.1 Do you have any symptoms?", "nl": "2.7.1 Heb je klachten?" } },
+        { "id": "cardiac-q2", "type": "likert-scale-3", "text": { "en": "2.7.2 If so, to what extent?", "nl": "2.7.2 Zo ja, in welke mate?" }, "options": [{ "value": "mild", "label": { "en": "Mild", "nl": "Licht" } }, { "value": "moderate", "label": { "en": "Moderate", "nl": "Matig" } }, { "value": "severe", "label": { "en": "Severe", "nl": "Ernstig" } }] },
+        { "id": "cardiac-q3", "type": "text", "text": { "en": "2.7.3 How do you notice this in your daily activities?", "nl": "2.7.3 Hoe merk je dit terug in je dagelijkse bezigheden?" } },
+        { "id": "cardiac-q4", "type": "text", "text": { "en": "2.7.4 How long have you been experiencing this, and how does it develop over time?", "nl": "2.7.4 Sinds wanneer ervaar je dit en hoe ontwikkelt zich dat in de tijd?" } }
+      ]
+    },
+    {
+      "id": "symptoms-cognitive",
+      "title": { 
+        "en": "2.8 Symptoms: Thinking speed and concentration", 
+        "nl": "2.8 Denktempo en concentratievermogen" 
+      },
+      "questions": [
+        { "id": "cognitive-q1", "type": "yes-no", "text": { "en": "2.8.1 Do you have any symptoms?", "nl": "2.8.1 Heb je klachten?" } },
+        { "id": "cognitive-q2", "type": "likert-scale-3", "text": { "en": "2.8.2 If so, to what extent?", "nl": "2.8.2 Zo ja, in welke mate?" }, "options": [{ "value": "mild", "label": { "en": "Mild", "nl": "Licht" } }, { "value": "moderate", "label": { "en": "Moderate", "nl": "Matig" } }, { "value": "severe", "label": { "en": "Severe", "nl": "Ernstig" } }] },
+        { "id": "cognitive-q3", "type": "text", "text": { "en": "2.8.3 How do you notice this in your daily activities?", "nl": "2.8.3 Hoe merk je dit terug in je dagelijkse bezigheden?" } },
+        { "id": "cognitive-q4", "type": "text", "text": { "en": "2.8.4 How long have you been experiencing this, and how does it develop over time?", "nl": "2.8.4 Sinds wanneer ervaar je dit en hoe ontwikkelt zich dat in de tijd?" } }
       ]
     },
     {
       "id": "metaphors",
-      "title": { "en": "Self-Image and metaphors", "nl": "Zelfbeeld en metaforen" },
+      "title": { 
+        "en": "3. Self-Image and metaphors", 
+        "nl": "3. Zelfbeeld en metaforen" 
+      },
       "questions": [
-        { "id": "meta-q1", "type": "text", "text": { "en": "Choose three metaphors (e.g., animals, landscapes, objects) that best describe your current state.", "nl": "Kies drie metaforen (bijv. dieren, landschappen, voorwerpen) die jouw huidige toestand het beste beschrijven)." } },
-        { "id": "meta-q2", "type": "text", "text": { "en": "If your body were a landscape, what would it look like?", "nl": "Als je lichaam een landschap was, hoe zou dat er uit zien?" } }
+        { "id": "meta-q1", "type": "text", "text": { "en": "3.1 Choose three metaphors (e.g., animals, landscapes, objects) that best describe your current state.", "nl": "3.1 Kies drie metaforen (bijv. dieren, landschappen, voorwerpen) die jouw huidige toestand het beste beschrijven)." } },
+        { "id": "meta-q2", "type": "text", "text": { "en": "3.2 If your body were a landscape, what would it look like?", "nl": "3.2 Als je lichaam een landschap was, hoe zou dat er uit zien?" } },
+        { "id": "meta-q3", "type": "text", "text": { "en": "3.3 What role do you take within your family, work or social circle?", "nl": "3.3 Welke rol neem je in binnen je gezin, werk of sociale kring?" } },
+        { "id": "meta-q4", "type": "text", "text": { "en": "3.4 Where in your body is there the most tension or emptiness?", "nl": "3.4 Waar in je lichaam zit de meeste spanning of juiste leegte?" } },
+        { "id": "meta-q5", "type": "text", "text": { "en": "3.5 If your situation had a sound or color, what would it be?", "nl": "3.5 Als jouw situatie een geluid of kleur had wat zou dat zijn?" } }
       ]
     },
     {
       "id": "timeline",
-      "title": { "en": "Timeline and life events", "nl": "Tijdspad en levensgebeurtenissen" },
+      "title": { 
+        "en": "4. Timeline and life events", 
+        "nl": "4. Tijdspad en levensgebeurtenissen" 
+      },
       "questions": [
-        { "id": "time-q1", "type": "text", "text": { "en": "How long have you been experiencing the symptoms you mentioned?", "nl": "Hoe lang ervaar de al de klachten die je hebt aangegeven?" } },
-        { "id": "time-q2", "type": "text", "text": { "en": "Do you see recurring phases or cycles in your symptoms or well-being?", "nl": "Zie je terugkerende fases of cycli in klachten of je welzijn?" } }
+        { "id": "time-q1", "type": "text", "text": { "en": "4.1 How long have you been experiencing the symptoms you mentioned?", "nl": "4.1 Hoe lang ervaar de al de klachten die je hebt aangegeven?" } },
+        { "id": "time-q2", "type": "text", "text": { "en": "4.2 Have there been moments when it was clearly better or worse?", "nl": "4.2 Zijn er momenten geweest waarop het duidelijk beter of juist slechter ging?" } },
+        { "id": "time-q3", "type": "text", "text": { "en": "4.3 What life events (e.g., moving, loss, important choices) might have influenced this?", "nl": "4.3 Welke levensgebeurtenissen (bijv. verhuizing, verlies, belangrijke keuzes) kunnen hier invloed op hebben gehad?" } },
+        { "id": "time-q4", "type": "text", "text": { "en": "4.4 Are there strategies or treatments that worked temporarily, but later proved less effective?", "nl": "4.4 Zijn er strategieën of behandelingen die tijdelijk gewerkt hebben, maar later minder effectief bleken?" } },
+        { "id": "time-q5", "type": "text", "text": { "en": "4.5 Do you see recurring phases or cycles in your symptoms or well-being?", "nl": "4.5 Zie je terugkerende fases of cycli in klachten of je welzijn?" } }
       ]
     },
     {
       "id": "relationships",
-      "title": { "en": "Relationships and past impact", "nl": "Relaties en impact uit het verleden" },
+      "title": { 
+        "en": "5. Relationships and past impact", 
+        "nl": "5. Relaties en impact uit het verleden" 
+      },
       "questions": [
-        { "id": "rel-q1", "type": "text", "text": { "en": "How do you experience your relationships in general (secure base, restless, withdrawn)?", "nl": "Hoe ervaar je je relaties in het algemeen (veilige basis, onrustig, teruggetrokken)?" } },
-        { "id": "rel-q2", "type": "yes-no", "text": { "en": "Do you struggle to feel safe or secure in social interactions?", "nl": "Heb je moeite met het ervaren van veiligheid of geborgenheid in sociale contacten?" } }
+        { "id": "rel-q1", "type": "text", "text": { "en": "5.1 How do you experience your relationships in general (secure base, restless, withdrawn)?", "nl": "5.1 Hoe ervaar je je relaties in het algemeen (veilige basis, onrustig, teruggetrokken)?" } },
+        { "id": "rel-q2", "type": "text", "text": { "en": "5.2 Was there prolonged stress, illness or loss during your childhood?", "nl": "5.2 Was er tijdens je kindertijd sprake van langdurige stress, ziekte of verlies." } },
+        { "id": "rel-q3", "type": "text", "text": { "en": "5.3 How do you react to closeness or distance in contact with others?", "nl": "5.3 Hoe reageer je op nabijheid of juist afstand in contact met anderen?" } },
+        { "id": "rel-q4", "type": "text", "text": { "en": "5.4 What role do personal boundaries, autonomy and trust play in your life now?", "nl": "5.4 Welke rol spelen persoonlijke grenzen, autonomie en vertrouwen in je leven nu?" } },
+        { "id": "rel-q5", "type": "text", "text": { "en": "5.5 Do you often feel emotionally distant from others, even when you are physically with them?", "nl": "5.5 Voel je je vaak emotioneel op afstand van anderen, ook als je fysiek bij hen bent?" } },
+        { "id": "rel-q6", "type": "text", "text": { "en": "5.6 Do you struggle to feel safe or secure in social interactions?", "nl": "5.6 Heb je moeite met het ervaren van veiligheid of geborgenheid in sociale contacten?" } },
+        { "id": "rel-q7", "type": "text", "text": { "en": "5.7 Did you use medication in your youth or earlier, or have long-term illnesses?", "nl": "5.7 Heb je in je jeugd of eerder medicatie gebruikt, of langdurige ziektes gehad?" } }
       ]
     },
     {
       "id": "reflection",
-      "title": { "en": "Reflection and desire for change", "nl": "Reflectie en veranderwens" },
+      "title": { 
+        "en": "6. Reflection and desire for change", 
+        "nl": "6. Reflectie en veranderwens" 
+      },
       "questions": [
-        { "id": "ref-q1", "type": "text", "text": { "en": "What does your current situation reveal about your lifestyle or choices?", "nl": "Wat zegt je huidige toestand over je levensstijl of keuzes?" } },
-        { "id": "ref-q2", "type": "text", "text": { "en": "What would truly mean recovery or improvement for you?", "nl": "Wat zou voor jou écht herstel of verbetering betekenen?" } }
+        { "id": "ref-q1", "type": "text", "text": { "en": "6.1 What does your current situation reveal about your lifestyle or choices?", "nl": "6.1 Wat zegt je huidige toestand over je levensstijl of keuzes?" } },
+        { "id": "ref-q2", "type": "text", "text": { "en": "6.2 Have you developed certain ways to deal with your symptoms?", "nl": "6.2 Heb je bepaalde manieren ontwikkeld om met je klachten om te gaan?" } },
+        { "id": "ref-q3", "type": "text", "text": { "en": "6.3 What do you expect from a (treatment) process or guidance?", "nl": "6.3 Wat verwacht je van een (behandelings)traject of begeleiding?" } },
+        { "id": "ref-q4", "type": "text", "text": { "en": "6.4 What would truly mean recovery or improvement for you?", "nl": "6.4 Wat zou voor jou écht herstel of verbetering betekenen?" } }
       ]
     }
   ]

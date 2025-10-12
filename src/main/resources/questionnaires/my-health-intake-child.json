@@ -5,74 +5,150 @@
     "nl": "Intake vragenlijst kind"
   },
   "description": {
-    "en": "This questionnaire will help you get a more complete picture of your health, your symptoms, how you feel, and how these things are developing in your life. Take your time and write in your own words. Everything you provide is valuable.",
-    "nl": "Deze vragenlijst helpt om een completer beeld te krijgen van uw gezondheid, de klachten, hoe u zich voelt, en hoe dat zich ontwikkelt in uw leven. Neem de tijd en schrijf in je eigen woorden. Alles wat u invult is waardevol."
+    "en": "This questionnaire helps you get a more complete picture of your child's health, symptoms, how they feel, and how this is developing in their life. Take your time and write in your own words. Everything you provide is valuable.",
+    "nl": "Deze vragenlijst helpt om een completer beeld te krijgen van de gezondheid van uw kind, de klachten, hoe het zich voelt, en hoe dat zich ontwikkelt in het leven. Neem de tijd en schrijf in je eigen woorden. Alles wat u invult is waardevol."
+  },
+  "instructions": {
+    "en": "Answer the questions calmly and as completely as possible. Some questions may seem a bit unusual, but they help you see connections between physical symptoms, emotions, and events in your child's life. Even things you consider minor or vague can be important. Trust what comes to mind.",
+    "nl": "Beantwoord de vragen rustig en zo volledig mogelijk. Sommige vragen lijken misschien wat bijzonder, maar ze helpen om verbanden te zien tussen lichamelijke klachten, emoties en gebeurtenissen in het leven van uw kind. Ook dingen die u klein of vaag vindt, kunnen belangrijk zijn. Vertrouw op wat in u opkomt."
   },
   "sections": [
     {
       "id": "pregnancy-imprinting",
-      "title": { "en": "Pregnancy and Early Imprinting", "nl": "Zwangerschap en vroege imprinting" },
-       "description": {
+      "title": { 
+        "en": "1. Pregnancy and Early Imprinting", 
+        "nl": "1. Zwangerschap en vroege imprinting" 
+      },
+      "description": {
         "en": "The circumstances of pregnancy and birth can have a lasting impact on a child's development. These questions help you reflect on this important period. Answer the questions as best you can, even if it was a while ago. Your experience and memories are valuable information.",
         "nl": "De omstandigheden tijdens de zwangerschap en de geboorte kunnen blijvende invloed hebben op de ontwikkeling van een kind. In deze vragen helpen we je om terug te kijken op die belangrijke periode. Beantwoord de vragen zo goed mogelijk, ook als het al een tijd geleden is. Jouw ervaring en herinnering zijn waardevolle informatie."
       },
       "questions": [
-        { "id": "preg-q1", "type": "text", "text": { "en": "How did you experience your child's pregnancy?", "nl": "Hoe heb je de zwangerschap van je kind ervaren?" } },
-        { "id": "preg-q2", "type": "text", "text": { "en": "Did you have any physical complaints during pregnancy that you found noticeable or hindering? If yes, please describe.", "nl": "Heb je tijdens de zwangerschap lichamelijke klachten gehad die je als opvallend of belemmerend hebt ervaren? Indien ja, svp beschrijven." } },
-        { "id": "preg-q3", "type": "text", "text": { "en": "Did you experience emotional stress, anxiety, or tension during pregnancy? If yes, please describe.", "nl": "Had je tijdens de zwangerschap last van emotionele stress, angst of spanning? Indien ja, svp beschrijven." } }
+        { "id": "preg-q1", "type": "text", "text": { "en": "1.1 How did you experience your child's pregnancy?", "nl": "1.1 Hoe heb je de zwangerschap van je kind ervaren?" } },
+        { "id": "preg-q2", "type": "text", "text": { "en": "1.2 Did you have any physical complaints during pregnancy that you found noticeable or hindering? If yes, please describe.", "nl": "1.2 Heb je tijdens de zwangerschap lichamelijke klachten gehad die je als opvallend of belemmerend hebt ervaren? Indien ja, svp beschrijven." } },
+        { "id": "preg-q3", "type": "text", "text": { "en": "1.3 Did you experience emotional stress, anxiety, or tension during pregnancy? If yes, please describe.", "nl": "1.3 Had je tijdens de zwangerschap last van emotionele stress, angst of spanning? Indien ja, svp beschrijven." } },
+        { "id": "preg-q4", "type": "text", "text": { "en": "1.4 Was there any loss, trauma, or life-changing events during pregnancy? If yes, please describe.", "nl": "1.4 Was er sprake van verlies, trauma of ingrijpende gebeurtenissen tijdens de zwangerschap? Indien ja, svp beschrijven." } },
+        { "id": "preg-q5", "type": "text", "text": { "en": "1.5 Did you use any medication or supplements during pregnancy? If yes, please describe.", "nl": "1.5 Heb je tijdens de zwangerschap medicatie of supplementen gebruikt? Indien ja, svp beschrijven." } },
+        { "id": "preg-q6", "type": "text", "text": { "en": "1.6 Did you smoke, drink alcohol, or use drugs during pregnancy? If yes, please describe.", "nl": "1.6 Heb je tijdens de zwangerschap gerookt, alcohol gedronken of drugs gebruikt? Indien ja, svp beschrijven." } },
+        { "id": "preg-q7", "type": "text", "text": { "en": "1.7 Is there anything you, as a mother (or parent/caregiver), intuitively sensed about your child during pregnancy that you would like to mention? If yes, please describe.", "nl": "1.7 Is er iets wat je als moeder (of ouder/verzorger) intuïtief hebt aangevoeld tijdens de zwangerschap over je kind dat je wilt benoemen? Indien ja, svp beschrijven." } }
       ]
     },
     {
       "id": "birth-beginning",
-      "title": { "en": "Birth and the Beginning of Life", "nl": "Geboorte en start van het leven" },
-       "description": {
+      "title": { 
+        "en": "2. Birth and the Beginning of Life", 
+        "nl": "2. Geboorte en start van het leven" 
+      },
+      "description": {
         "en": "The way a child is born and the first few days or weeks afterward can significantly impact their physical and emotional basic regulation. These questions explore the birth and early life.",
         "nl": "De manier waarop een kind ter wereld komt en de eerste dagen of weken daarna verlopen, kan veel invloed hebben op de lichamelijke en emotionele basisregulatie. In deze vragen kijken we naar het verloop van de bevalling en de eerste levensperiode."
       },
       "questions": [
-        { "id": "birth-q1", "type": "text", "text": { "en": "How did the birth go?", "nl": "Hoe is de bevalling verlopen?" } },
-        { "id": "birth-q2", "type": "text", "text": { "en": "Was your child born on time?", "nl": "Was je kind op tijd geboren?" } },
-        { "id": "birth-q3", "type": "text", "text": { "en": "Did you breastfeed?", "nl": "Heb je borstvoeding gegeven?" } }
+        { "id": "birth-q1", "type": "text", "text": { "en": "2.1 How did the birth go?", "nl": "2.1 Hoe is de bevalling verlopen?" } },
+        { "id": "birth-q2", "type": "text", "text": { "en": "2.2 Was your child born on time?", "nl": "2.2 Was je kind op tijd geboren?" } },
+        { "id": "birth-q3", "type": "text", "text": { "en": "2.3 What was your child's birth weight?", "nl": "2.3 Wat was het geboortegewicht van je kind?" } },
+        { "id": "birth-q4", "type": "text", "text": { "en": "2.4 Did you require medical support immediately after birth?", "nl": "2.4 Was er medische ondersteuning nodig direct na de geboorte?" } },
+        { "id": "birth-q5", "type": "text", "text": { "en": "2.5 Did your child have difficulty drinking, crying, sleeping, or regulating their own weight after birth?", "nl": "2.5 Had je kind na de geboorte moeite met drinken, huilen, slapen of reguleren?" } },
+        { "id": "birth-q6", "type": "text", "text": { "en": "2.6 How do you look back on the first days or weeks with your child?", "nl": "2.6 Hoe kijk je terug op de eerste dagen of weken met je kind?" } },
+        { "id": "birth-q7", "type": "text", "text": { "en": "2.7 Did your child stay with you from the beginning, or was there separation (e.g., medical reason, hospital stay)?", "nl": "2.7 Is je kind vanaf het begin bij jou gebleven of was er sprake van scheiding (bijv. medische reden, ziekenhuis)?" } },
+        { "id": "birth-q8", "type": "text", "text": { "en": "2.8 Did you breastfeed?", "nl": "2.8 Heb je borstvoeding gegeven?" } },
+        { "id": "birth-q9", "type": "text", "text": { "en": "2.9 Were there any problems with breastfeeding or bottle-feeding (with the child or the mother)?", "nl": "2.9 Waren er bij de borstvoeding of flesvoeding problemen (bij kind of moeder)?" } }
       ]
     },
     {
       "id": "nutrition-digestion",
-      "title": { "en": "Nutrition, Digestion, and Physical Regulation", "nl": "Voeding, spijsvertering en lichamelijke regulatie" },
+      "title": { 
+        "en": "3. Nutrition, Digestion, and Physical Regulation", 
+        "nl": "3. Voeding, spijsvertering en lichamelijke regulatie" 
+      },
+      "description": {
+        "en": "How a child eats, sleeps, and regulates their body reveals a lot about their internal balance. These questions help to gain insight into possible signs of overload, sensitivity, or disruption.",
+        "nl": "Hoe een kind eet, slaapt en zijn lichaam reguleert, vertelt veel over zijn of haar interne balans. Deze vragen helpen om zicht te krijgen op mogelijke signalen van overbelasting, gevoeligheid of verstoring."
+      },
       "questions": [
-        { "id": "nutrition-q1", "type": "text", "text": { "en": "How did the transition to solid food go?", "nl": "Hoe verliep de overgang naar vaste voeding?" } },
-        { "id": "nutrition-q2", "type": "text", "text": { "en": "Are there (or were there) any known food intolerances or allergies?", "nl": "Zijn er (of waren er) voedselintoleranties of allergieën bekend?" } }
+        { "id": "nutrition-q1", "type": "text", "text": { "en": "3.1 How did the transition to solid food go?", "nl": "3.1 Hoe verliep de overgang naar vaste voeding?" } },
+        { "id": "nutrition-q2", "type": "text", "text": { "en": "3.2 Are there (or were there) any known food intolerances or allergies?", "nl": "3.2 Zijn er (of waren er) voedselintoleranties of allergieën bekend?" } },
+        { "id": "nutrition-q3", "type": "text", "text": { "en": "3.3 Are there any digestive problems (abdominal pain, constipation, diarrhea, flatulence)?", "nl": "3.3 Zijn er problemen met de spijsvertering (buikpijn, obstipatie, diarree, winderigheid)?" } },
+        { "id": "nutrition-q4", "type": "text", "text": { "en": "3.4 Is your child picky or averse to certain foods?", "nl": "3.4 Is je kind kieskeurig of afwijzend ten opzichte van bepaalde voedingsmiddelen?" } },
+        { "id": "nutrition-q5", "type": "text", "text": { "en": "3.5 What is your child's sleep pattern like (falling asleep, sleeping through the night, nightmares, waking up)?", "nl": "3.5 Hoe is het slaappatroon van je kind (inslapen, doorslapen, nachtmerries, wakker worden)?" } },
+        { "id": "nutrition-q6", "type": "text", "text": { "en": "3.6 Does your child have noticeably high or low energy levels?", "nl": "3.6 Heeft je kind opvallend veel of juist weinig energie?" } },
+        { "id": "nutrition-q7", "type": "text", "text": { "en": "3.7 Are there any noticeable physical complaints without a clear cause (headache, stomachache, eczema, etc.)?", "nl": "3.7 Zijn er opvallende fysieke klachten zonder duidelijke oorzaak (hoofdpijn, buikpijn, eczeem, etc.)?" } }
       ]
     },
-     {
+    {
       "id": "emotional-relational",
-      "title": { "en": "Emotional and Relational Development", "nl": "Emotionele en relationele ontwikkeling" },
+      "title": { 
+        "en": "4. Emotional and Relational Development", 
+        "nl": "4. Emotionele en relationele ontwikkeling" 
+      },
+      "description": {
+        "en": "Children develop their sense of safety, trust, and connection in relation to their environment. These questions focus on the emotional foundation and how your child copes with closeness, stress, anger, and sadness.",
+        "nl": "Kinderen ontwikkelen hun gevoel van veiligheid, vertrouwen en verbondenheid in relatie tot hun omgeving. Deze vragen richten zich op de emotionele basis en hoe je kind omgaat met nabijheid, stress, boosheid en verdriet."
+      },
       "questions": [
-        { "id": "emotional-q1", "type": "text", "text": { "en": "How does your child seek contact or closeness with parents or caregivers?", "nl": "Hoe zoekt je kind contact of nabijheid bij ouders of verzorgers?" } },
-        { "id": "emotional-q2", "type": "text", "text": { "en": "How does your child show anger or frustration?", "nl": "Hoe toont je kind boosheid of frustratie?" } }
+        { "id": "emotional-q1", "type": "text", "text": { "en": "4.1 How does your child seek contact or closeness with parents or caregivers?", "nl": "4.1 Hoe zoekt je kind contact of nabijheid bij ouders of verzorgers?" } },
+        { "id": "emotional-q2", "type": "text", "text": { "en": "4.2 How does your child react to stressful or unexpected situations?", "nl": "4.2 Hoe reageert je kind op stressvolle of onverwachte situaties?" } },
+        { "id": "emotional-q3", "type": "text", "text": { "en": "4.3 Can your child easily calm down after tension or overstimulation?", "nl": "4.3 Kan je kind gemakkelijk tot rust komen na spanning of overprikkeling?" } },
+        { "id": "emotional-q4", "type": "text", "text": { "en": "4.4 How does your child show anger or frustration?", "nl": "4.4 Hoe toont je kind boosheid of frustratie?" } },
+        { "id": "emotional-q5", "type": "text", "text": { "en": "4.5 How does your child show sadness or hurt feelings?", "nl": "4.5 Hoe toont je kind verdriet of zich gekwetst voelen?" } },
+        { "id": "emotional-q6", "type": "text", "text": { "en": "4.6 Is your child easily anxious or vigilant in social situations?", "nl": "4.6 Is je kind snel angstig of waakzaam in sociale situaties?" } },
+        { "id": "emotional-q7", "type": "text", "text": { "en": "4.7 How does your child experience saying goodbye or changes in the environment?", "nl": "4.7 Hoe ervaart je kind afscheid nemen of veranderingen in de omgeving?" } }
       ]
     },
     {
       "id": "behavior-play",
-      "title": { "en": "Behaviour, Play, and Development", "nl": "Gedrag, spel en ontwikkeling" },
+      "title": { 
+        "en": "5. Behaviour, Play, and Development", 
+        "nl": "5. Gedrag, spel en ontwikkeling" 
+      },
+      "description": {
+        "en": "A child's behaviour and play provide insight into how they develop, learn, and interact with the world. These questions explore this.",
+        "nl": "Het gedrag en spel van een kind geven zicht op de manier waarop het zich ontwikkelt, leert, en met de wereld omgaat. In deze vragen brengen we dat in kaart."
+      },
       "questions": [
-        { "id": "behavior-q1", "type": "text", "text": { "en": "How would you describe your child's behaviour in daily life?", "nl": "Hoe zou je het gedrag van je kind in het dagelijks leven omschrijven?" } },
-        { "id": "behavior-q2", "type": "text", "text": { "en": "How does your child play (alone, together, imaginatively, repetitively, following rules, testing boundaries)?", "nl": "Hoe speelt je kind (alleen, samen, fantasierijk, herhalend, regels volgend, grenzen zoekend)?" } }
+        { "id": "behavior-q1", "type": "text", "text": { "en": "5.1 How would you describe your child's behaviour in daily life?", "nl": "5.1 Hoe zou je het gedrag van je kind in het dagelijks leven omschrijven?" } },
+        { "id": "behavior-q2", "type": "text", "text": { "en": "5.2 Which developmental milestones occurred noticeably quickly or delayed (motor skills, language, toilet training)?", "nl": "5.2 Welke ontwikkelingsmijlpalen verliepen opvallend snel of juist vertraagd (motoriek, taal, zindelijkheid)?" } },
+        { "id": "behavior-q3", "type": "text", "text": { "en": "5.3 How does your child play (alone, together, imaginatively, repetitively, following rules, testing boundaries)?", "nl": "5.3 Hoe speelt je kind (alleen, samen, fantasierijk, herhalend, regels volgend, grenzen zoekend)?" } },
+        { "id": "behavior-q4", "type": "text", "text": { "en": "5.4 Can your child concentrate well or is he or she easily distracted?", "nl": "5.4 Kan je kind zich goed concentreren of is het snel afgeleid?" } },
+        { "id": "behavior-q5", "type": "text", "text": { "en": "5.5 How does your child respond to structure, expectations, and rules?", "nl": "5.5 Hoe reageert je kind op structuur, verwachtingen en regels?" } },
+        { "id": "behavior-q6", "type": "text", "text": { "en": "5.6 Have there been any concerns about their development that you have ever discussed with the child health clinic, school, or social services?", "nl": "5.6 Zijn er zorgen geweest over de ontwikkeling die je ooit hebt besproken met consultatiebureau, school of hulpverlening?" } }
       ]
     },
     {
       "id": "health-medication",
-      "title": { "en": "Health, Medication, and Physical Stress", "nl": "Gezondheid, medicatie en lichamelijke belasting" },
+      "title": { 
+        "en": "6. Health, Medication, and Physical Stress", 
+        "nl": "6. Gezondheid, medicatie en lichamelijke belasting" 
+      },
+      "description": {
+        "en": "In this section, we gather information about your child's general health, medication use, and genetics. This helps you understand the bigger picture.",
+        "nl": "In deze sectie verzamelen we informatie over de algemene gezondheid van je kind, medicatiegebruik en erfelijke belasting. Dit helpt om het grotere plaatje te begrijpen."
+      },
       "questions": [
-        { "id": "health-q1", "type": "text", "text": { "en": "Does your child have any chronic conditions or recurring symptoms?", "nl": "Heeft je kind chronische aandoeningen of terugkerende klachten?" } },
-        { "id": "health-q2", "type": "text", "text": { "en": "Are there any health problems in the family that you consider important to mention (mental, physical, or behavioural)?", "nl": "Zijn er in de familie gezondheidsproblemen die je belangrijk vindt om te vermelden (psychisch, lichamelijk of gedragsmatig)?" } }
+        { "id": "health-q1", "type": "text", "text": { "en": "6.1 Does your child have any chronic conditions or recurring symptoms?", "nl": "6.1 Heeft je kind chronische aandoeningen of terugkerende klachten?" } },
+        { "id": "health-q2", "type": "text", "text": { "en": "6.2 Is your child currently taking medication or has he or she previously taken medication long-term?", "nl": "6.2 Gebruikt je kind momenteel medicatie of heeft het eerder langdurig medicatie gebruikt?" } },
+        { "id": "health-q3", "type": "text", "text": { "en": "6.3 Have any vaccinations caused a noticeable reaction in your child?", "nl": "6.3 Zijn er vaccinaties geweest waarbij je kind opvallend reageerde?" } },
+        { "id": "health-q4", "type": "text", "text": { "en": "6.4 Are there any health problems in the family that you consider important to mention (mental, physical, or behavioural)?", "nl": "6.4 Zijn er in de familie gezondheidsproblemen die je belangrijk vindt om te vermelden (psychisch, lichamelijk of gedragsmatig)?" } },
+        { "id": "health-q5", "type": "text", "text": { "en": "6.5 Did the mother take long-term medication during pregnancy (such as antidepressants, thyroid medication, antibiotics, etc.)?", "nl": "6.5 Heeft de moeder tijdens de zwangerschap langdurig medicatie gebruikt (zoals antidepressiva, schildkliermedicatie, antibiotica, etc.)?" } },
+        { "id": "health-q6", "type": "text", "text": { "en": "6.6 Are there other factors in the child's environment (e.g., smoking at home, severe stress, violence, divorce) that you think may have had an influence?", "nl": "6.6 Zijn er andere factoren uit de omgeving van het kind (bijv. roken in huis, zware stress, geweld, scheiding) die volgens jou invloed hebben gehad?" } }
       ]
     },
     {
       "id": "parent-perspective",
-      "title": { "en": "What do you see as a parent/caregiver?", "nl": "Wat zie jij als ouder / verzorger?" },
+      "title": { 
+        "en": "7. What do you see as a parent/caregiver?", 
+        "nl": "7. Wat zie jij als ouder/verzorger?" 
+      },
+      "description": {
+        "en": "You know your child better than anyone. In these final questions, we'd love to hear what you've noticed, what affects you, what worries you, or what gives you hope.",
+        "nl": "Jij kent je kind als geen ander. In deze laatste vragen horen we graag wat jou is opgevallen, raakt, zorgen baart of juist hoop geeft."
+      },
       "questions": [
-        { "id": "parent-q1", "type": "text", "text": { "en": "What do you notice about your child in how they feel, behave, or develop?", "nl": "Wat valt je op aan je kind in hoe het zich voelt, gedraagt of ontwikkelt?" } },
-        { "id": "parent-q2", "type": "text", "text": { "en": "What worries you most?", "nl": "Waar maak je je het meeste zorgen over?" } }
+        { "id": "parent-q1", "type": "text", "text": { "en": "7.1 What do you notice about your child in how they feel, behave, or develop?", "nl": "7.1 Wat valt je op aan je kind in hoe het zich voelt, gedraagt of ontwikkelt?" } },
+        { "id": "parent-q2", "type": "text", "text": { "en": "7.2 Are there any recurring themes or patterns you see in your child?", "nl": "7.2 Zijn er terugkerende thema's of patronen die je ziet bij je kind?" } },
+        { "id": "parent-q3", "type": "text", "text": { "en": "7.3 What personally affects you most about your child's behavior or development?", "nl": "7.3 Wat raakt je persoonlijk het meest in het gedrag of de ontwikkeling van je kind?" } },
+        { "id": "parent-q4", "type": "text", "text": { "en": "7.4 What worries you most?", "nl": "7.4 Waar maak je je het meeste zorgen over?" } },
+        { "id": "parent-q5", "type": "text", "text": { "en": "7.5 Where do you see your child's strengths or unique qualities most clearly expressed?", "nl": "7.5 Waarin zie je de kracht of unieke kwaliteiten van je kind het sterkst tot uiting?" } }
       ]
     }
   ]
