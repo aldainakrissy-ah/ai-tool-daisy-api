@@ -2,7 +2,6 @@ package com.example.ai.tool.analysis.ai_tool_daisy_api.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 
 import java.util.List;
@@ -46,22 +45,5 @@ public class Prompt1Result {
 
         @JsonProperty("heta_modules")
         private List<String> hetaModules;
-    }
-
-    public enum EthosVariant {
-        Volwassene,
-        Kind,
-        Hybride,
-        Adult, Child, Hybrid
-    }
-
-    private static final ObjectMapper mapper = new ObjectMapper();
-
-    public static Prompt1Result fromJson(String json) {
-        try {
-            return mapper.readValue(json, Prompt1Result.class);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to parse JSON to Prompt1Result", e);
-        }
     }
 }

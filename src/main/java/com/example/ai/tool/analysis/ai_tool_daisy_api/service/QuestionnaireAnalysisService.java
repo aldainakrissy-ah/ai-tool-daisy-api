@@ -1,15 +1,17 @@
 package com.example.ai.tool.analysis.ai_tool_daisy_api.service;
 
-import com.example.ai.tool.analysis.ai_tool_daisy_api.constant.QuestionnaireInstructions;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1ResultEntity;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1Result;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.Prompt1ResultRepository;
-import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openai.client.OpenAIClient;
+import com.openai.errors.OpenAIException;
 import com.openai.models.ChatModel;
-import com.openai.models.responses.ResponseCreateParams;
 
+import com.openai.models.responses.StructuredResponse;
+import com.openai.models.responses.StructuredResponseCreateParams;
+import com.openai.models.responses.StructuredResponseOutputMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -17,9 +19,10 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -34,11 +37,9 @@ public class QuestionnaireAnalysisService {
 
     private final Prompt1ResultRepository prompt1ResultRepository;
 
-    public static final String FILE_ID = "vs_68ca996f20ec8191974741691b169cae";
+    private final ObjectMapper objectMapper;
 
-    private static final ObjectMapper MAPPER = new ObjectMapper()
-            .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
-            .configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    public static final String FILE_ID = "vs_68ca996f20ec8191974741691b169cae";
 
     /**
      * Processes the uploaded PDF file, extracts its content, and sends it to the OpenAI API for analysis.
@@ -57,28 +58,35 @@ public class QuestionnaireAnalysisService {
         try (PDDocument document = PDDocument.load(file.getInputStream())) {
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String content = pdfStripper.getText(document);
-            ResponseCreateParams params = ResponseCreateParams.builder()
+            StructuredResponseCreateParams<Prompt1Result> params = StructuredResponseCreateParams.<Prompt1Result>builder()
                     .model(ChatModel.GPT_5)
                     .addFileSearchTool(Collections.singletonList(FILE_ID))
-                    .instructions(QuestionnaireInstructions.PROMPT1_INSTRUCTION)
-                    .input("Process the intake questionnaire and demographic data with prompt 1 and respond in JSON format. Here is the content:\n" + content)
+                    .input("Process the intake questionnaire and demographic data with prompt 1. Here is the content:\n" + content)
+                    .text(Prompt1Result.class)
                     .build();
-
-            String response = processOpenAIResponse(params);
+            StructuredResponse<Prompt1Result> response = client.responses().create(params);
             log.debug("OpenAI response: {}", response);
-            Prompt1Result result = Prompt1Result.fromJson(response);
+            return response.output().stream()
+                    .flatMap(item -> item.message().stream())
+                    .flatMap(msg -> msg.content().stream())
+                    .map(StructuredResponseOutputMessage.Content::asOutputText)
+                    .findFirst().map(text -> {
+                        Prompt1ResultEntity entity = new Prompt1ResultEntity();
+                        entity.setPatientId(text.getPatientId());
+                        try {
+                            entity.setResultJson(objectMapper.writeValueAsString(text));
+                        } catch (JsonProcessingException e) {
+                            log.error("Error serializing Prompt1Result to JSON", e);
+                            throw new RuntimeException("Serialization error", e);
+                        }
+                        prompt1ResultRepository.save(entity);
+                        return text;
+                    })
+                    .orElseThrow(() -> new RuntimeException("No valid response from OpenAI"));
 
-            log.info("Successfully received response from OpenAI for patient id: {}", result.getPatientId());
-            String json = MAPPER.writeValueAsString(result);
-            Prompt1ResultEntity entity = new Prompt1ResultEntity();
-            entity.setPatientId(result.getPatientId());
-            entity.setResultJson(json);
-            prompt1ResultRepository.save(entity);
-
-            return result;
-
-        } catch (Exception e) {
-            throw new RuntimeException("Error processing PDF file for healthcare analysis: " + e.getMessage());
+        } catch (IOException | OpenAIException e) {
+            log.error("Error processing PDF file for healthcare analysis", e);
+            throw new RuntimeException("Error processing PDF file for healthcare analysis: " + e.getMessage(), e);
         }
     }
     /**
@@ -91,16 +99,5 @@ public class QuestionnaireAnalysisService {
     public List<Prompt1ResultEntity> getPrompt1ResultByPatientId(String patientId) {
         log.info("Fetching Prompt1 results for patient id: {}", patientId);
         return prompt1ResultRepository.findByPatientId(patientId);
-    }
-
-    private String processOpenAIResponse(ResponseCreateParams params) {
-        return client.responses()
-                .create(params)
-                .output()
-                .stream()
-                .flatMap(item -> item.message().stream())
-                .flatMap(msg -> msg.content().stream())
-                .map(responseOutputText -> responseOutputText.asOutputText().text())
-                .collect(Collectors.joining("\n"));
     }
 }

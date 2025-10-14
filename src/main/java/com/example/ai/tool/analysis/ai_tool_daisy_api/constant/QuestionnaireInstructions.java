@@ -12,7 +12,7 @@ public final class QuestionnaireInstructions {
             "    \"data_gaps\": [\"Identificeer eventuele significante datalacunes.\"]\n" +
             "  },\n" +
             "  \"routing\": {\n" +
-            "    \"additional_questionnaires\": [\"Stel voor welke aanvullende gevalideerde vragenlijsten noodzakelijk zijn.\"],\n" +
+            "    \"additional_questionnaires\": [\"Stel voor welke aanvullende gevalideerde vragenlijstcodes noodzakelijk zijn.\"],\n" +
             "    \"ethos_variant\": \"Bepaal welke ETHOS-variant (Volwassene, Kind, Hybride) het meest passend is.\",\n" +
             "    \"heta_modules\": [\"Stel voor welke HETA-modules (Daisy-modulaire vragenlijsten) geactiveerd moeten worden.\"]\n" +
             "  }\n" +
