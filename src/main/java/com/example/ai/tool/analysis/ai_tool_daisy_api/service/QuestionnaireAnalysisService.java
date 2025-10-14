@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Service class responsible for processing PDF files and interacting with the OpenAI API.
@@ -47,8 +48,9 @@ public class QuestionnaireAnalysisService {
      * @param file the uploaded PDF file as a {@link MultipartFile}.
      * @return the response from the OpenAI API as a {@link String}.
      */
+    @Async
     @Transactional
-    public Prompt1Result generatePreIntakeAnalysis(MultipartFile file) {
+    public CompletableFuture<Prompt1Result> generatePreIntakeAnalysis(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("PDF file cannot be empty");
         }
@@ -66,7 +68,8 @@ public class QuestionnaireAnalysisService {
                     .build();
             StructuredResponse<Prompt1Result> response = client.responses().create(params);
             log.debug("OpenAI response: {}", response);
-            return response.output().stream()
+
+            return CompletableFuture.supplyAsync(() -> response.output().stream()
                     .flatMap(item -> item.message().stream())
                     .flatMap(msg -> msg.content().stream())
                     .map(StructuredResponseOutputMessage.Content::asOutputText)
@@ -82,7 +85,8 @@ public class QuestionnaireAnalysisService {
                         prompt1ResultRepository.save(entity);
                         return text;
                     })
-                    .orElseThrow(() -> new RuntimeException("No valid response from OpenAI"));
+                    .orElseThrow(() -> new RuntimeException("No valid response from OpenAI"))).thenApply(result -> result);
+
 
         } catch (IOException | OpenAIException e) {
             log.error("Error processing PDF file for healthcare analysis", e);
