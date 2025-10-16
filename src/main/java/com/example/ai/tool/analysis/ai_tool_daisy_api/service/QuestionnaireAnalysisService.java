@@ -3,15 +3,11 @@ package com.example.ai.tool.analysis.ai_tool_daisy_api.service;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1ResultEntity;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1Result;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.Prompt1ResultRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openai.client.OpenAIClient;
 import com.openai.errors.OpenAIException;
-import com.openai.models.ChatModel;
 
-import com.openai.models.responses.StructuredResponse;
-import com.openai.models.responses.StructuredResponseCreateParams;
-import com.openai.models.responses.StructuredResponseOutputMessage;
+import com.openai.models.ChatModel;
+import com.openai.models.responses.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -37,8 +33,6 @@ public class QuestionnaireAnalysisService {
     private final OpenAIClient client;
 
     private final Prompt1ResultRepository prompt1ResultRepository;
-
-    private final ObjectMapper objectMapper;
 
     public static final String FILE_ID = "vs_68ca996f20ec8191974741691b169cae";
 
@@ -73,17 +67,13 @@ public class QuestionnaireAnalysisService {
                     .flatMap(item -> item.message().stream())
                     .flatMap(msg -> msg.content().stream())
                     .map(StructuredResponseOutputMessage.Content::asOutputText)
-                    .findFirst().map(text -> {
-                        Prompt1ResultEntity entity = new Prompt1ResultEntity();
-                        entity.setPatientId(text.getPatientId());
-                        try {
-                            entity.setResultJson(objectMapper.writeValueAsString(text));
-                        } catch (JsonProcessingException e) {
-                            log.error("Error serializing Prompt1Result to JSON", e);
-                            throw new RuntimeException("Serialization error", e);
-                        }
-                        prompt1ResultRepository.save(entity);
-                        return text;
+                    .findFirst().map(prompt1Result -> {
+                        Prompt1ResultEntity prompt1ResultEntity = new Prompt1ResultEntity();
+                        prompt1ResultEntity.setPatientId(prompt1Result.getPatientId());
+                        prompt1ResultEntity.setResultJson(prompt1Result.toString());
+
+                        prompt1ResultRepository.save(prompt1ResultEntity);
+                        return prompt1Result;
                     })
                     .orElseThrow(() -> new RuntimeException("No valid response from OpenAI"))).thenApply(result -> result);
 
