@@ -1,34 +1,135 @@
 {
-  "id": "food-diary-24h",
-  "title": {
-    "en": "24 hours Food Intake diary",
-    "nl": "24 uurs Voedingsdagboek"
-  },
+  "id": "ssq-6",
+  "title": { "en": "Social Support Questionnaire (SSQ-6)", "nl": "Social Support vragenlijst (SSQ-6)" },
   "description": {
-    "en": "Write down during 24 hours what you eat and drink. Choose a regular day.",
-    "nl": "Noteer gedurende 1 etmaal alles wat u eet of drinkt. Kies een gewone dag."
+    "en": "The following six questions are about people in your life who offer you help or support. Each question consists of two parts. In the first part, list all the people you know who you can rely on for help or support in the manner described. List no more than one person next to each number below the question. In the second part of the question, indicate how satisfied you are with the overall support you receive. If you don't have any support for a question, choose the words 'with no one,' but still indicate how satisfied you are. List no more than nine people per question. Answer all questions to the best of your ability.",
+    "nl": "De volgende 6 vragen gaan over mensen in je leven die je hulp of steun bieden. Elke vraag bestaat uit twee delen. Noem in het eerste deel alle mensen die je kent op wie je kunt rekenen voor hulp of steun op de beschreven manier. Noem niet meer dan één persoon naast elk van de nummers onder de vraag. Geef in het tweede deel van de vraag aan hoe tevreden je bent met de algehele steun die je krijgt. Als je geen steun hebt voor een vraag, kies dan de woorden 'bij niemand', maar geef nog steeds aan hoe tevreden je bent. Noem niet meer dan negen personen per vraag. Beantwoord alle vragen zo goed mogelijk."
   },
   "sections": [
     {
-      "id": "diary",
-      "title": { "en": "Food and Drink Intake", "nl": "Voedsel- en Drankinname" },
+      "id": "ssq6-questions",
       "questions": [
         {
-          "id": "food-table",
-          "type": "table",
-          "text": {
-            "en": "Example: 07:30 - oatmeal with milk - 50g / 200ml - filling, no hunger until lunch",
-            "nl": "Voorbeeld: 07:30 - havermout met melk - 50 g / 200 ml - vullend geen honger tot lunch"
-          },
-          "columns": [
-            { "id": "time", "label": { "en": "Time", "nl": "Tijdstip" }, "type": "time" },
-            { "id": "product", "label": { "en": "Product", "nl": "Product" }, "type": "text" },
-            { "id": "amount", "label": { "en": "Amount (gr, ml, etc)", "nl": "Hoeveelheid" }, "type": "text" },
-            { "id": "remarks", "label": { "en": "Remarks", "nl": "Opmerkingen" }, "type": "text" }
-          ]
+          "id": "ssq6-1a",
+          "type": "names-list",
+          "maxNames": 9,
+          "text": { "en": "Who can you turn to when you feel unhappy or sad?", "nl": "Bij wie kun je terecht als je je ongelukkig of verdrietig voelt?" },
+          "options": ["With no one", "bij niemand"]
+        },
+        {
+          "id": "ssq6-1b",
+          "type": "radio",
+          "options": [
+            {"value": 0, "label": {"en": "Very dissatisfied", "nl": "Zeer ontevreden"}},
+            {"value": 1, "label": {"en": "Fairly dissatisfied", "nl": "Tamelijk ontevreden"}},
+            {"value": 2, "label": {"en": "Slightly dissatisfied", "nl": "Een beetje ontevreden"}},
+            {"value": 3, "label": {"en": "Slightly satisfied", "nl": "Een beetje tevreden"}},
+            {"value": 4, "label": {"en": "Fairly satisfied", "nl": "Tamelijk tevreden"}},
+            {"value": 5, "label": {"en": "Very satisfied", "nl": "Zeer tevreden"}}
+          ],
+          "text": { "en": "Overall, how satisfied are you with the social support you receive from these people?", "nl": "Hoe tevreden bent u over het algemeen over de sociale steun die u van deze mensen krijgt?" }
+        },
+        {
+          "id": "ssq6-2a",
+          "type": "names-list",
+          "maxNames": 9,
+          "text": { "en": "Who can you turn to if you want to talk about important decisions you have to make?", "nl": "Bij wie kun je terecht als je wilt praten over belangrijke beslissingen die je moet nemen?" },
+          "options": ["With no one", "bij niemand"]
+        },
+        {
+          "id": "ssq6-2b",
+          "type": "radio",
+          "options": [
+            {"value": 0, "label": {"en": "Very dissatisfied", "nl": "Zeer ontevreden"}},
+            {"value": 1, "label": {"en": "Fairly dissatisfied", "nl": "Tamelijk ontevreden"}},
+            {"value": 2, "label": {"en": "Slightly dissatisfied", "nl": "Een beetje ontevreden"}},
+            {"value": 3, "label": {"en": "Slightly satisfied", "nl": "Een beetje tevreden"}},
+            {"value": 4, "label": {"en": "Fairly satisfied", "nl": "Tamelijk tevreden"}},
+            {"value": 5, "label": {"en": "Very satisfied", "nl": "Zeer tevreden"}}
+          ],
+          "text": { "en": "Overall, how satisfied are you with the social support you receive from these people?", "nl": "Hoe tevreden bent u over het algemeen over de sociale steun die u van deze mensen krijgt?" }
+        },
+        {
+          "id": "ssq6-3a",
+          "type": "names-list",
+          "maxNames": 9,
+          "text": { "en": "Who can you turn to if you need advice or help with daily problems (work, study, household)?", "nl": "Bij wie kun je terecht als je advies of hulp nodig hebt bij dagelijkse problemen (werk, studie, huishouden)?" },
+          "options": ["With no one", "bij niemand"]
+        },
+        {
+          "id": "ssq6-3b",
+          "type": "radio",
+          "options": [
+            {"value": 0, "label": {"en": "Very dissatisfied", "nl": "Zeer ontevreden"}},
+            {"value": 1, "label": {"en": "Fairly dissatisfied", "nl": "Tamelijk ontevreden"}},
+            {"value": 2, "label": {"en": "Slightly dissatisfied", "nl": "Een beetje ontevreden"}},
+            {"value": 3, "label": {"en": "Slightly satisfied", "nl": "Een beetje tevreden"}},
+            {"value": 4, "label": {"en": "Fairly satisfied", "nl": "Tamelijk tevreden"}},
+            {"value": 5, "label": {"en": "Very satisfied", "nl": "Zeer tevreden"}}
+          ],
+          "text": { "en": "Overall, how satisfied are you with the social support you receive from these people?", "nl": "Hoe tevreden bent u over het algemeen over de sociale steun die u van deze mensen krijgt?" }
+        },
+        {
+          "id": "ssq6-4a",
+          "type": "names-list",
+          "maxNames": 9,
+          "text": { "en": "Who can you turn to when you feel lonely or isolated?", "nl": "Bij wie kun je terecht als je je eenzaam of geïsoleerd voelt?" },
+          "options": ["With no one", "bij niemand"]
+        },
+        {
+          "id": "ssq6-4b",
+          "type": "radio",
+          "options": [
+            {"value": 0, "label": {"en": "Very dissatisfied", "nl": "Zeer ontevreden"}},
+            {"value": 1, "label": {"en": "Fairly dissatisfied", "nl": "Tamelijk ontevreden"}},
+            {"value": 2, "label": {"en": "Slightly dissatisfied", "nl": "Een beetje ontevreden"}},
+            {"value": 3, "label": {"en": "Slightly satisfied", "nl": "Een beetje tevreden"}},
+            {"value": 4, "label": {"en": "Fairly satisfied", "nl": "Tamelijk tevreden"}},
+            {"value": 5, "label": {"en": "Very satisfied", "nl": "Zeer tevreden"}}
+          ],
+          "text": { "en": "Overall, how satisfied are you with the social support you receive from these people?", "nl": "Hoe tevreden bent u over het algemeen over de sociale steun die u van deze mensen krijgt?" }
+        },
+        {
+          "id": "ssq6-5a",
+          "type": "names-list",
+          "maxNames": 9,
+          "text": { "en": "Who can you turn to when you want to celebrate something or when you feel good?", "nl": "Bij wie kun je terecht als je iets wilt vieren of je goed voelt?" },
+          "options": ["With no one", "bij niemand"]
+        },
+        {
+          "id": "ssq6-5b",
+          "type": "radio",
+          "options": [
+            {"value": 0, "label": {"en": "Very dissatisfied", "nl": "Zeer ontevreden"}},
+            {"value": 1, "label": {"en": "Fairly dissatisfied", "nl": "Tamelijk ontevreden"}},
+            {"value": 2, "label": {"en": "Slightly dissatisfied", "nl": "Een beetje ontevreden"}},
+            {"value": 3, "label": {"en": "Slightly satisfied", "nl": "Een beetje tevreden"}},
+            {"value": 4, "label": {"en": "Fairly satisfied", "nl": "Tamelijk tevreden"}},
+            {"value": 5, "label": {"en": "Very satisfied", "nl": "Zeer tevreden"}}
+          ],
+          "text": { "en": "Overall, how satisfied are you with the social support you receive from these people?", "nl": "Hoe tevreden bent u over het algemeen over de sociale steun die u van deze mensen krijgt?" }
+        },
+        {
+          "id": "ssq6-6a",
+          "type": "names-list",
+          "maxNames": 9,
+          "text": { "en": "Who can you turn to when you need support in stressful situations?", "nl": "Bij wie kun je terecht als je een steuntje in de rug nodig hebt in stressvolle situaties?" },
+          "options": ["With no one", "bij niemand"]
+        },
+        {
+          "id": "ssq6-6b",
+          "type": "radio",
+          "options": [
+            {"value": 0, "label": {"en": "Very dissatisfied", "nl": "Zeer ontevreden"}},
+            {"value": 1, "label": {"en": "Fairly dissatisfied", "nl": "Tamelijk ontevreden"}},
+            {"value": 2, "label": {"en": "Slightly dissatisfied", "nl": "Een beetje ontevreden"}},
+            {"value": 3, "label": {"en": "Slightly satisfied", "nl": "Een beetje tevreden"}},
+            {"value": 4, "label": {"en": "Fairly satisfied", "nl": "Tamelijk tevreden"}},
+            {"value": 5, "label": {"en": "Very satisfied", "nl": "Zeer tevreden"}}
+          ],
+          "text": { "en": "Overall, how satisfied are you with the social support you receive from these people?", "nl": "Hoe tevreden bent u over het algemeen over de sociale steun die u van deze mensen krijgt?" }
         }
       ]
     }
   ]
 }
-

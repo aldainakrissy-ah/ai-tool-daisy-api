@@ -37,7 +37,9 @@
       "id": "sitting",
       "title": { "en": "Sitting", "nl": "Zitten" },
       "questions": [
-        { "id": "sit-hours", "type": "number", "text": { "en": "How many hours (total) did you sit on average per day?", "nl": "Op hoeveel uur (totaal) zat je gemiddeld per dag?" }, "validation": { "min": 0 } }
+        { "id": "sit-hours", "type": "number", "text": { "en": "How many hours (total) did you sit on average per day?", "nl": "Op hoeveel uur (totaal) zat je gemiddeld per dag?" }, "validation": { "min": 0 } },
+        { "id": "sit-days", "type": "number", "text": { "en": "Number of days", "nl": "Aantal dagen" }, "validation": { "min": 0, "max": 7 } },
+        { "id": "sit-minutes", "type": "number", "text": { "en": "Average number of minutes per day", "nl": "Gemiddeld aantal minuten per dag" }, "validation": { "min": 0 } }
       ]
     }
   ]
