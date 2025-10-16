@@ -55,9 +55,10 @@ public class QuestionnaireAnalysisService {
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String content = pdfStripper.getText(document);
             StructuredResponseCreateParams<Prompt1Result> params = StructuredResponseCreateParams.<Prompt1Result>builder()
-                    .model(ChatModel.GPT_5)
+                    .model(ChatModel.GPT_4_1)
                     .addFileSearchTool(Collections.singletonList(FILE_ID))
                     .input("Process the intake questionnaire and demographic data with prompt 1. Here is the content:\n" + content)
+                    .temperature(0.2)
                     .text(Prompt1Result.class)
                     .build();
             StructuredResponse<Prompt1Result> response = client.responses().create(params);
