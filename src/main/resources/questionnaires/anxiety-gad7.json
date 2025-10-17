@@ -12,13 +12,13 @@
     {
       "id": "gad7-questions",
       "questions": [
-        { "id": "gad7-1", "type": "radio", "options": [0, 1, 2, 3], "text": { "en": "Tendency to feel nervous, anxious, or restless", "nl": "Neiging om me nerveus, angstig of onrustig te voelen" } },
-        { "id": "gad7-2", "type": "radio", "options": [0, 1, 2, 3], "text": { "en": "Difficulty stopping or controlling worries", "nl": "Moeite met stoppen of beheersen van zorgen" } },
-        { "id": "gad7-3", "type": "radio", "options": [0, 1, 2, 3], "text": { "en": "Excessive worry about various things", "nl": "Overmatige zorgen over verschillende zaken" } },
-        { "id": "gad7-4", "type": "radio", "options": [0, 1, 2, 3], "text": { "en": "Difficulty relaxing", "nl": "Moeite met ontspannen" } },
-        { "id": "gad7-5", "type": "radio", "options": [0, 1, 2, 3], "text": { "en": "Restlessness, inability to sit still", "nl": "Rusteloosheid, niet stil kunnen zitten" } },
-        { "id": "gad7-6", "type": "radio", "options": [0, 1, 2, 3], "text": { "en": "Irritable", "nl": "Prikkelbaar" } },
-        { "id": "gad7-7", "type": "radio", "options": [0, 1, 2, 3], "text": { "en": "Fear that something terrible might happen", "nl": "Angst dat er iets verschrikkelijks kan gebeuren" } }
+        { "id": "gad7-1", "type": "radio", "options": [ { "value": 0 }, { "value": 1 }, { "value": 2 }, { "value": 3 } ], "text": { "en": "Tendency to feel nervous, anxious, or restless", "nl": "Neiging om me nerveus, angstig of onrustig te voelen" } },
+        { "id": "gad7-2", "type": "radio", "options": [ { "value": 0 }, { "value": 1 }, { "value": 2 }, { "value": 3 } ], "text": { "en": "Difficulty stopping or controlling worries", "nl": "Moeite met stoppen of beheersen van zorgen" } },
+        { "id": "gad7-3", "type": "radio", "options": [ { "value": 0 }, { "value": 1 }, { "value": 2 }, { "value": 3 } ], "text": { "en": "Excessive worry about various things", "nl": "Overmatige zorgen over verschillende zaken" } },
+        { "id": "gad7-4", "type": "radio", "options": [ { "value": 0 }, { "value": 1 }, { "value": 2 }, { "value": 3 } ], "text": { "en": "Difficulty relaxing", "nl": "Moeite met ontspannen" } },
+        { "id": "gad7-5", "type": "radio", "options": [ { "value": 0 }, { "value": 1 }, { "value": 2 }, { "value": 3 } ], "text": { "en": "Restlessness, inability to sit still", "nl": "Rusteloosheid, niet stil kunnen zitten" } },
+        { "id": "gad7-6", "type": "radio", "options": [ { "value": 0 }, { "value": 1 }, { "value": 2 }, { "value": 3 } ], "text": { "en": "Irritable", "nl": "Prikkelbaar" } },
+        { "id": "gad7-7", "type": "radio", "options": [ { "value": 0 }, { "value": 1 }, { "value": 2 }, { "value": 3 } ], "text": { "en": "Fear that something terrible might happen", "nl": "Angst dat er iets verschrikkelijks kan gebeuren" } }
       ]
     }
   ]
