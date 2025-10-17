@@ -97,6 +97,15 @@ public class QuestionnaireService {
                     .map(this::convertOptionToDto)
                     .collect(Collectors.toList()));
         }
+        if (question.getColumns() != null) {
+            dto.setColumns(question.getColumns().stream()
+                    .map(this::convertColumnToDto)
+                    .collect(Collectors.toList()));
+        }
+        dto.setValidation(convertValidationToDto(question.getValidation()));
+        dto.setMaxNames(question.getMaxNames());
+        dto.setRequired(question.getRequired());
+        dto.setSortOrder(question.getSortOrder());
         return dto;
     }
 
@@ -104,6 +113,30 @@ public class QuestionnaireService {
         OptionDto dto = new OptionDto();
         dto.setValue(option.getValue());
         dto.setLabel(toLocalizedTextDto(option.getLabel()));
+        return dto;
+    }
+
+    private QuestionColumnDto convertColumnToDto(QuestionColumn column) {
+        QuestionColumnDto dto = new QuestionColumnDto();
+        dto.setId(column.getId());
+        dto.setLabel(toLocalizedTextDto(column.getLabel()));
+        dto.setType(column.getType().name().toLowerCase());
+        dto.setSortOrder(column.getSortOrder());
+        return dto;
+    }
+
+    private ValidationRulesDto convertValidationToDto(ValidationRules validation) {
+        if (validation == null)
+            return null;
+        ValidationRulesDto dto = new ValidationRulesDto();
+        dto.setMin(validation.getMin());
+        dto.setMax(validation.getMax());
+        dto.setRequired(validation.getRequired());
+        dto.setPattern(validation.getPattern());
+        dto.setMinLength(validation.getMinLength());
+        dto.setMaxLength(validation.getMaxLength());
+        dto.setMinDate(validation.getMinDate());
+        dto.setMaxDate(validation.getMaxDate());
         return dto;
     }
 
@@ -171,6 +204,8 @@ public class QuestionnaireService {
         question.setId(dto.getId());
         question.setType(dto.getType());
         question.setText(toLocalizedText(dto.getText()));
+
+        // Handle options
         if (dto.getOptions() != null) {
             AtomicInteger optionOrder = new AtomicInteger(0);
             List<Option> options = dto.getOptions().stream()
@@ -182,7 +217,53 @@ public class QuestionnaireService {
                     .collect(Collectors.toList());
             question.setOptions(options);
         }
+
+        // Handle columns
+        if (dto.getColumns() != null) {
+            AtomicInteger columnOrder = new AtomicInteger(0);
+            List<QuestionColumn> columns = dto.getColumns().stream()
+                    .map(columnDto -> {
+                        QuestionColumn column = convertColumnToEntity(columnDto);
+                        column.setSortOrder(columnOrder.getAndIncrement());
+                        column.setQuestion(question); // Set up bidirectional relationship
+                        return column;
+                    })
+                    .collect(Collectors.toList());
+            question.setColumns(columns);
+        }
+
+        // Handle other fields
+        if (dto.getValidation() != null) {
+            question.setValidation(convertValidationToEntity(dto.getValidation()));
+        }
+        question.setMaxNames(dto.getMaxNames());
+        question.setRequired(dto.getRequired());
+        question.setSortOrder(dto.getSortOrder());
+
         return question;
+    }
+
+    private QuestionColumn convertColumnToEntity(QuestionColumnDto dto) {
+        QuestionColumn column = new QuestionColumn();
+        column.setId(dto.getId() != null ? dto.getId() : UUID.randomUUID().toString());
+        column.setLabel(toLocalizedText(dto.getLabel()));
+        column.setType(QuestionColumn.ColumnType.valueOf(dto.getType().toUpperCase()));
+        return column;
+    }
+
+    private ValidationRules convertValidationToEntity(ValidationRulesDto dto) {
+        if (dto == null)
+            return null;
+        ValidationRules validation = new ValidationRules();
+        validation.setMin(dto.getMin());
+        validation.setMax(dto.getMax());
+        validation.setRequired(dto.getRequired());
+        validation.setPattern(dto.getPattern());
+        validation.setMinLength(dto.getMinLength());
+        validation.setMaxLength(dto.getMaxLength());
+        validation.setMinDate(dto.getMinDate());
+        validation.setMaxDate(dto.getMaxDate());
+        return validation;
     }
 
     private Option convertOptionToEntity(OptionDto dto) {
@@ -264,6 +345,8 @@ public class QuestionnaireService {
                         question.setType(questionDto.getType());
                         question.setText(toLocalizedText(questionDto.getText()));
                         question.setSortOrder(questionOrder.getAndIncrement());
+                        question.setRequired(questionDto.getRequired());
+                        question.setMaxNames(questionDto.getMaxNames());
                         question.setSection(updatedSection); // Maintain bidirectional relationship
 
                         // Handle options
@@ -279,8 +362,32 @@ public class QuestionnaireService {
                                     })
                                     .collect(Collectors.toList());
 
-                            question.clearOptions();
-                            question.addOptions(updatedOptions);
+                            question.getOptions().clear();
+                            question.getOptions().addAll(updatedOptions);
+                        }
+
+                        // Handle columns
+                        if (questionDto.getColumns() != null) {
+                            AtomicInteger columnOrder = new AtomicInteger(0);
+                            List<QuestionColumn> updatedColumns = questionDto.getColumns().stream()
+                                    .map(columnDto -> {
+                                        QuestionColumn column = convertColumnToEntity(columnDto);
+                                        column.setSortOrder(columnOrder.getAndIncrement());
+                                        column.setQuestion(question); // Maintain bidirectional relationship
+                                        return column;
+                                    })
+                                    .collect(Collectors.toList());
+
+                            if (question.getColumns() == null) {
+                                question.setColumns(new ArrayList<>());
+                            }
+                            question.getColumns().clear();
+                            question.getColumns().addAll(updatedColumns);
+                        }
+
+                        // Handle validation
+                        if (questionDto.getValidation() != null) {
+                            question.setValidation(convertValidationToEntity(questionDto.getValidation()));
                         }
 
                         updatedSection.getQuestions().add(question);

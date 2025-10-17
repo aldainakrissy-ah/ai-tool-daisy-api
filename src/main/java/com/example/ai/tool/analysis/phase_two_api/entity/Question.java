@@ -13,8 +13,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import jakarta.persistence.CascadeType;
 import org.hibernate.annotations.BatchSize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -53,8 +55,8 @@ public class Question {
     @BatchSize(size = 100)
     private List<Option> options = new ArrayList<>();
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "question_columns", joinColumns = @JoinColumn(name = "question_id", foreignKey = @ForeignKey(name = "fk_question_columns")), indexes = @Index(name = "idx_question_columns", columnList = "question_id"))
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "question_id")
     @OrderBy("sortOrder ASC")
     @BatchSize(size = 20)
     private List<QuestionColumn> columns = new ArrayList<>();
@@ -102,6 +104,26 @@ public class Question {
     public void clearOptions() {
         if (options != null) {
             options.clear();
+        }
+    }
+
+    public void addColumn(QuestionColumn column) {
+        if (columns == null) {
+            columns = new ArrayList<>();
+        }
+        columns.add(column);
+    }
+
+    public void addColumns(List<QuestionColumn> newColumns) {
+        if (columns == null) {
+            columns = new ArrayList<>();
+        }
+        columns.addAll(newColumns);
+    }
+
+    public void clearColumns() {
+        if (columns != null) {
+            columns.clear();
         }
     }
 }

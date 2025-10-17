@@ -8,7 +8,8 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QuestionColumnDto {
-    private String value;
+    private String id;
     private LocalizedTextDto label;
+    private String type;
     private Integer sortOrder;
 }
