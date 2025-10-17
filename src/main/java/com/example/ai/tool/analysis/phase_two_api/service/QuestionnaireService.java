@@ -216,41 +216,83 @@ public class QuestionnaireService {
         // Update sections if provided
         if (dto.getSections() != null) {
             // Create a map of existing sections by ID for easy lookup
-            Map<String, Section> existingSectionsMap = existing.getSections() != null
-                    ? existing.getSections().stream().collect(Collectors.toMap(Section::getId, s -> s, (s1, s2) -> s1))
-                    : new HashMap<>();
+            Map<String, Section> existingSectionsMap = existing.getSections().stream()
+                    .collect(Collectors.toMap(Section::getId, s -> s));
 
+            // Create new sections list
             AtomicInteger sectionOrder = new AtomicInteger(0);
-            List<Section> updatedSections = dto.getSections().stream()
-                    .map(sectionDto -> {
-                        // Check if section with this ID already exists
-                        Section existingSection = existingSectionsMap.get(sectionDto.getId());
-                        if (existingSection != null) {
-                            // Update existing section
-                            existingSection.setTitle(toLocalizedText(sectionDto.getTitle()));
-                            if (sectionDto.getQuestions() != null) {
-                                AtomicInteger questionOrder = new AtomicInteger(0);
-                                List<Question> updatedQuestions = sectionDto.getQuestions().stream()
-                                        .map(questionDto -> {
-                                            Question question = convertQuestionToEntity(questionDto);
-                                            question.setSection(existingSection);
-                                            question.setSortOrder(questionOrder.getAndIncrement());
-                                            return question;
-                                        })
-                                        .collect(Collectors.toList());
-                                existingSection.setQuestions(updatedQuestions);
-                            }
-                            existingSection.setSortOrder(sectionOrder.getAndIncrement());
-                            return existingSection;
+            List<Section> updatedSections = new ArrayList<>();
+
+            dto.getSections().forEach(sectionDto -> {
+                final Section section = existingSectionsMap.get(sectionDto.getId());
+                final Section updatedSection = section != null ? section : new Section();
+
+                // Set or update section ID
+                if (updatedSection.getId() == null) {
+                    updatedSection
+                            .setId(sectionDto.getId() != null ? sectionDto.getId() : UUID.randomUUID().toString());
+                }
+
+                // Update section fields
+                updatedSection.setTitle(toLocalizedText(sectionDto.getTitle()));
+                updatedSection.setSortOrder(sectionOrder.getAndIncrement());
+
+                // Handle questions
+                List<Question> currentQuestions = new ArrayList<>(updatedSection.getQuestions());
+                updatedSection.getQuestions().clear(); // Clear existing questions safely
+
+                if (sectionDto.getQuestions() != null) {
+                    AtomicInteger questionOrder = new AtomicInteger(0);
+                    sectionDto.getQuestions().forEach(questionDto -> {
+                        final Question question;
+                        if (questionDto.getId() != null) {
+                            // Try to find existing question
+                            question = currentQuestions.stream()
+                                    .filter(q -> q.getId().equals(questionDto.getId()))
+                                    .findFirst()
+                                    .orElseGet(() -> {
+                                        Question q = new Question();
+                                        q.setId(UUID.randomUUID().toString());
+                                        return q;
+                                    });
                         } else {
-                            // Create new section
-                            Section newSection = convertSectionToEntity(sectionDto, existing);
-                            newSection.setSortOrder(sectionOrder.getAndIncrement());
-                            return newSection;
+                            question = new Question();
+                            question.setId(UUID.randomUUID().toString());
                         }
-                    })
-                    .collect(Collectors.toList());
-            existing.setSections(updatedSections);
+
+                        // Update question fields
+                        question.setType(questionDto.getType());
+                        question.setText(toLocalizedText(questionDto.getText()));
+                        question.setSortOrder(questionOrder.getAndIncrement());
+                        question.setSection(updatedSection); // Maintain bidirectional relationship
+
+                        // Handle options
+                        if (questionDto.getOptions() != null) {
+                            AtomicInteger optionOrder = new AtomicInteger(0);
+                            List<Option> updatedOptions = questionDto.getOptions().stream()
+                                    .map(optionDto -> {
+                                        Option option = new Option();
+                                        option.setValue(optionDto.getValue());
+                                        option.setLabel(toLocalizedText(optionDto.getLabel()));
+                                        option.setSortOrder(optionOrder.getAndIncrement());
+                                        return option;
+                                    })
+                                    .collect(Collectors.toList());
+
+                            question.clearOptions();
+                            question.addOptions(updatedOptions);
+                        }
+
+                        updatedSection.getQuestions().add(question);
+                    });
+                }
+
+                updatedSections.add(updatedSection);
+            });
+
+            // Clear and update the sections collection
+            existing.getSections().clear();
+            existing.getSections().addAll(updatedSections);
         }
     }
 }

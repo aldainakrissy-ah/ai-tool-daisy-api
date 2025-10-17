@@ -42,8 +42,8 @@ public class Questionnaire {
         })
         private LocalizedText instructions;
 
-        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-        @JoinColumn(name = "questionnaire_id")
+        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+        @JoinColumn(name = "questionnaire_id", nullable = false)
         @OrderBy("sortOrder ASC")
         @BatchSize(size = 50)
         private List<Section> sections = new ArrayList<>();

@@ -84,4 +84,24 @@ public class Question {
 
     @Column(name = "sort_order", nullable = true)
     private Integer sortOrder;
+
+    public void addOption(Option option) {
+        if (options == null) {
+            options = new ArrayList<>();
+        }
+        options.add(option);
+    }
+
+    public void addOptions(List<Option> newOptions) {
+        if (options == null) {
+            options = new ArrayList<>();
+        }
+        options.addAll(newOptions);
+    }
+
+    public void clearOptions() {
+        if (options != null) {
+            options.clear();
+        }
+    }
 }
