@@ -17,13 +17,13 @@
           "id": "food-table",
           "type": "table",
           "text": {
-            "en": "Example: 07:30 - oatmeal with milk - 50g / 200ml - filling, no hunger until lunch",
-            "nl": "Voorbeeld: 07:30 - havermout met melk - 50 g / 200 ml - vullend geen honger tot lunch"
+            "en": "EXAMPLE: 07:30 oat meal with milk, 50gram, 200 ml, enough volume, no hunger until lunch",
+            "nl": "VOORBEELD: 07:30 havermout met melk, 50 gram, 200 ml, genoeg volume, geen honger tot lunch"
           },
           "columns": [
             { "id": "time", "label": { "en": "Time", "nl": "Tijdstip" }, "type": "time" },
             { "id": "product", "label": { "en": "Product", "nl": "Product" }, "type": "text" },
-            { "id": "amount", "label": { "en": "Amount (gr, ml, etc)", "nl": "Hoeveelheid" }, "type": "text" },
+            { "id": "amount", "label": { "en": "Amount (gr, ml, etc)", "nl": "Hoeveelheid (gr, ml, etc)" }, "type": "text" },
             { "id": "remarks", "label": { "en": "Remarks", "nl": "Opmerkingen" }, "type": "text" }
           ]
         }

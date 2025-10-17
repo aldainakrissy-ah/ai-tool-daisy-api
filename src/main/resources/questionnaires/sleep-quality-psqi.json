@@ -6,30 +6,61 @@
     {
       "id": "sleep-times",
       "questions": [
-        { "id": "psqi-1", "type": "time", "text": { "en": "What time did you usually go to bed in the evening during the past month?", "nl": "Hoe laat ging u ’s avonds meestal naar bed gedurende de afgelopen maand?" } },
-        { "id": "psqi-2", "type": "number", "text": { "en": "How many minutes did it take you to fall asleep on average?", "nl": "Hoeveel minuten duurde het gemiddeld voordat je in slaap valt?" } },
-        { "id": "psqi-3", "type": "time", "text": { "en": "What time did you get up in the morning during the past month?", "nl": "Hoe laat stond u tijdens de afgelopen maand ’s morgens op?" } },
-        { "id": "psqi-4", "type": "number", "text": { "en": "How many hours of SLEEP did you get on average per night during the past month?", "nl": "Aan hoeveel uren SLAAP kwam u gemiddeld per nacht tijdens de afgelopen maand?" } }
+        { "id": "psqi-1", "type": "time", "text": { "en": "What time did you usually go to bed in the evening during the past month? (hours:minutes)", "nl": "Hoe laat ging u ’s avonds meestal naar bed gedurende de afgelopen maand? (uur:min)" } },
+        { "id": "psqi-2", "type": "time", "text": { "en": "How many minutes did it take you to fall asleep on average? (hours:minutes)", "nl": "Hoeveel minuten duurde het gemiddeld voordat je in slaap valt? (uur:min)" } },
+        { "id": "psqi-3", "type": "time", "text": { "en": "What time did you get up in the morning during the past month? (hours:minutes)", "nl": "Hoe laat stond u tijdens de afgelopen maand ’s morgens op? (uur:min)" } },
+        { "id": "psqi-4", "type": "number", "text": { "en": "How many hours of SLEEP did you get on average per night during the past month? (hours)", "nl": "Aan hoeveel uren SLAAP kwam u gemiddeld per nacht tijdens de afgelopen maand? (uur)" } }
       ]
     },
     {
-      "id":"sleep-issues",
-      "title": { "en": "How often during the past month did you have difficulty sleeping because you...", "nl": "Hoe vaak had u tijdens de voorbije maand moeilijkheden met slapen, omdat u..." },
+      "id": "sleep-issues",
+      "title": { "en": "How often during the past month did you have difficulty sleeping because you... (0 = never, 1 = <1x per week, 2 = 1-2x per week, 3 = >3 per week)", "nl": "Hoe vaak had u tijdens de voorbije maand moeilijkheden met slapen, omdat u... (0 = nooit, 1 = < 1x per week, 2 = 1-2x per week, 3 = >3 per week)" },
       "questions": [
-        { "id": "psqi-5a", "type": "likert-scale-4", "text": { "en": "...couldn't fall asleep within 30 minutes?", "nl": "...niet in slaap kon vallen binnen 30 minuten?" } },
-        { "id": "psqi-5b", "type": "likert-scale-4", "text": { "en": "...woke up during the night or early in the morning?", "nl": "...'s nachts of in de vroege morgen wakker werd?" } },
-        { "id": "psqi-5c", "type": "likert-scale-4", "text": { "en": "...had to go to the toilet?", "nl": "...naar het toilet moest gaan?" } }
+        { "id": "psqi-5a", "type": "radio", "options": [0,1,2,3], "text": { "en": "couldn't fall asleep within 30 minutes?", "nl": "niet in slaap kon vallen binnen 30 minuten?" } },
+        { "id": "psqi-5b", "type": "radio", "options": [0,1,2,3], "text": { "en": "woke up during the night or early in the morning?", "nl": "'s nachts of in de vroege morgen wakker werd?" } },
+        { "id": "psqi-5c", "type": "radio", "options": [0,1,2,3], "text": { "en": "had to go to the toilet?", "nl": "naar het toilet moest gaan?" } },
+        { "id": "psqi-5d", "type": "radio", "options": [0,1,2,3], "text": { "en": "had difficulty breathing?", "nl": "niet makkelijk kon ademhalen?" } },
+        { "id": "psqi-5e", "type": "radio", "options": [0,1,2,3], "text": { "en": "coughed loudly or snored?", "nl": "luid hoestte of snurkte?" } },
+        { "id": "psqi-5f", "type": "radio", "options": [0,1,2,3], "text": { "en": "Was it too cold?", "nl": "het te koud had?" } },
+        { "id": "psqi-5g", "type": "radio", "options": [0,1,2,3], "text": { "en": "Was it too hot?", "nl": "het te warm had?" } },
+        { "id": "psqi-5h", "type": "radio", "options": [0,1,2,3], "text": { "en": "Had nightmares?", "nl": "nachtmerries had?" } },
+        { "id": "psqi-5i-text", "type": "text", "text": { "en": "Other, please specify", "nl": "Anders, svp specificeren" } },
+        { "id": "psqi-5i", "type": "radio", "options": [0,1,2,3], "text": { "en": "Other (frequency)", "nl": "Anders (frequentie)" } }
       ]
     },
     {
-      "id":"sleep-quality-rating",
+      "id": "sleep-quality-rating",
       "questions": [
-        { "id": "psqi-6", "type": "likert-scale-4", "text": { "en": "How would you rate the quality of your sleep?", "nl": "Hoe zou je de kwaliteit van de slaap beoordelen?" }, "options": [
-          {"value": 0, "label": {"en": "excellent", "nl": "uitstekend"}},
-          {"value": 1, "label": {"en": "good", "nl": "goed"}},
-          {"value": 2, "label": {"en": "fair", "nl": "matig"}},
-          {"value": 3, "label": {"en": "poor", "nl": "slecht"}}
-        ]}
+        { "id": "psqi-6", "type": "radio", "options": [0,1,2,3], "text": { "en": "How would you rate the quality of your sleep? (0 = excellent, 1 = good, 2 = fair, 3 = poor)", "nl": "Hoe zou je de kwaliteit van de slaap beoordelen? (0 = uitstekend, 1 = goed, 2 = matig, 3 = slecht)" } }
+      ]
+    },
+    {
+      "id": "medication",
+      "questions": [
+        { "id": "psqi-7", "type": "radio", "options": [0,1,2,3], "text": { "en": "How often during the past month did you take medication (prescribed or over-the-counter) to help you sleep? (0 = never, 1 = < 1x per week, 2 = 1-2x per week, 3 = >=3 per week)", "nl": "Hoe vaak nam u gedurende de afgelopen maand medicijnen in (al dan niet voor- geschreven) als hulp bij het slapen? (0 = nooit, 1 =< 1x per week, 2 = 1-2x per week, 3 = >=3 per week)" } }
+      ]
+    },
+    {
+      "id": "daytime-sleepiness",
+      "questions": [
+        { "id": "psqi-8", "type": "radio", "options": [0,1,2,3], "text": { "en": "How often during the past month did you have trouble staying awake while doing various activities, such as eating or participating in social activities? (0 = never, 1 = < 1x per week, 2 = 1-2x per week, 3 = >=3 per week)", "nl": "Hoe vaak had u het de voorbije maand om wakker te blijven tijdens verschillende bezigheden, zoals eten of deelname aan sociale activiteiten? (0 = nooit, 1 =< 1x per week, 2 = 1-2x per week, 3 = >=3 per week)" } }
+      ]
+    },
+    {
+      "id": "daily-enthusiasm",
+      "questions": [
+        { "id": "psqi-9", "type": "radio", "options": [0,1,2,3], "text": { "en": "To what extent was it a problem for you during the past month to perform your daily activities with sufficient enthusiasm? (0 = no problem at all, 1 = a slight problem, 2 = somewhat of a problem, 3 = a big problem)", "nl": "In welke mate was het de afgelopen maand voor u een probleem om met voldoende enthousiasme uw dagelijkse activiteiten uit te voeren? (0 = helemaal geen probleem, 1 een klein probleem, 2 = enigszins een probleem, 3 = een groot probleem)" } }
+      ]
+    },
+    {
+      "id": "roommate-partner",
+      "title": { "en": "If you have a roommate or bed partner, ask them how often during the past month you: (0 = never, 1 = < 1x per week, 2 = 1-2x per week, 3 = >= 3x per week)", "nl": "Indien u een kamergenoot of bedpartner hebt, vraag hem/haar hoe vaak u tijdens de afgelopen maand: (0 = nooit, 1 =< 1x per week, 2 = 1-2x per week, 3 = >=3 per week)" },
+      "questions": [
+        { "id": "psqi-10a", "type": "radio", "options": [0,1,2,3], "text": { "en": "Snored loudly.", "nl": "Luid snurkte." } },
+        { "id": "psqi-10b", "type": "radio", "options": [0,1,2,3], "text": { "en": "Had long pauses in breathing during sleep.", "nl": "Lange ademhalingspauzes had tijdens het slapen." } },
+        { "id": "psqi-10c", "type": "radio", "options": [0,1,2,3], "text": { "en": "Had twitching or kicking legs during sleep.", "nl": "Trekkende of schoppende benen had tijdens het slapen." } },
+        { "id": "psqi-10d", "type": "radio", "options": [0,1,2,3], "text": { "en": "Had periods of confusion during sleep.", "nl": "Periodes van verwardheid had tijdens het slapen." } },
+        { "id": "psqi-10e-text", "type": "text", "text": { "en": "Had any other restlessness during sleep; describe", "nl": "Een andere rusteloosheid had tijdens het slapen, omschrijf" } }
       ]
     }
   ]

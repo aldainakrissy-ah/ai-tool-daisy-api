@@ -24,39 +24,1668 @@
       ]
     },
     {
+      "id": "9cra",
+      "title": { 
+        "en": "9-cis-retinolzuur", 
+        "nl": "9-cis-retinolzuur" 
+      },
+      "description": {
+        "en": "The following questions are about your recovery capacity, skin and mucous membrane condition, visual acuity in low light, and your mental clarity.",
+        "nl": "De volgende vragen gaan over je herstelvermogen, huid- en slijmvliesconditie, visuele scherpte bij weinig licht en je mentale helderheid."
+      },
+      "questions": [
+        {
+          "id": "retinol-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that wounds or skin irritations heal slowly, or that you are more prone to dry skin or mucous membranes?",
+            "nl": "Merk je dat wondjes of huidirritaties bij jou traag genezen of dat je sneller last hebt van droge huid of slijmvliezen?"
+          }
+        },
+        {
+          "id": "retinol-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you're experiencing brain fog or slow thinking and concentration, especially when you're tired?",
+            "nl": "Heb je het gevoel dat je last hebt van een brain fog of traagheid in denken en concentratie, vooral wanneer je vermoeid bent?"
+          }
+        },
+        {
+          "id": "retinol-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer from night blindness, or do you notice that your visual acuity is noticeably reduced in the evening or night?",
+            "nl": "Heb je last van nachtblindheid of merk je dat je visuele scherpte in de avond of nacht duidelijk verminderd is?"
+          }
+        },
+        {
+          "id": "retinol-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system isn't recovering or rejuvenating sufficiently, as if repair mechanisms aren't cleaning or renewing themselves sufficiently?",
+            "nl": "Heb je het gevoel dat je systeem onvoldoende herstelt of verjongt, alsof herstelmechanismen niet voldoende opschonen of vernieuwen?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "noradrenaline",
+      "title": { 
+        "en": "Noradrenaline", 
+        "nl": "Noradrenaline" 
+      },
+      "description": {
+        "en": "The following questions are about your focus, alertness, sensitivity to stimuli, and your ability to switch between wakefulness and relaxation.",
+        "nl": "De volgende vragen gaan over je focus, alertheid, gevoeligheid voor prikkels en je vermogen om te schakelen tussen waakzaamheid en ontspanning."
+      },
+      "questions": [
+        {
+          "id": "noradrenaline-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience a rapid heartbeat or tense muscles, especially in stressful or unexpected situations?",
+            "nl": "Heb je last van een snelle hartslag of gespannen spieren, vooral in stressvolle of onverwachte situaties?"
+          }
+        },
+        {
+          "id": "noradrenaline-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you struggle to stay focused on tasks or find yourself easily distracted, even when you want to focus?",
+            "nl": "Heb je moeite om je aandacht bij taken te houden of merk je dat je snel afgeleid bent, zelfs wanneer je wilt focussen?"
+          }
+        },
+        {
+          "id": "noradrenaline-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you find it difficult to unwind in the evening or do you find yourself in a kind of heightened state of alertness, even when you want to relax?",
+            "nl": "Vind je het lastig om 's avonds tot rust te komen of blijf je in een soort verhoogde staat van paraatheid hangen, ook wanneer je wilt ontspannen?"
+          }
+        },
+        {
+          "id": "noradrenaline-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you're always on or have trouble getting into a calm, safe state?",
+            "nl": "Heb je het gevoel dat je 'altijd aan' staat of moeite hebt om jezelf in een rustige, veilige modus te brengen?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "acetylcholine",
+      "title": {
+        "en": "Acetylcholine",
+        "nl": "Acetylcholine"
+      },
+      "description": {
+        "en": "The following questions are about your concentration, memory, muscle tension, and your ability to function clearly and relaxed.",
+        "nl": "De volgende vragen gaan over je concentratievermogen, geheugen, spierspanning en je vermogen om helder en ontspannen te functioneren."
+      },
+      "questions": [
+        {
+          "id": "acetylcholine-q1",
+          "type": "text",
+          "text": {
+            "en": "Are you experiencing increased muscle tension or weakness, without a clear physical explanation?",
+            "nl": "Ervaar je last van verhoogde spierspanning of juist spierzwakte, zonder duidelijke lichamelijke verklaring?"
+          }
+        },
+        {
+          "id": "acetylcholine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you notice your memory failing you more often or that you have difficulty absorbing new information?",
+            "nl": "Merk je dat je geheugen je vaker in de steek laat of dat je moeite hebt om nieuwe informatie goed op te nemen?"
+          }
+        },
+        {
+          "id": "acetylcholine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you have moments when you suddenly \"slow down\" mentally, such as sudden lethargy or mental sluggishness during the day?",
+            "nl": "Heb je momenten dat je plotseling mentaal 'wegzakt', zoals plotselinge loomheid of mentale traagheid gedurende de dag?"
+          }
+        },
+        {
+          "id": "acetylcholine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your mental sharpness has decreased, as if you're \"foggy\" or slower in thinking and acting than you actually are?",
+            "nl": "Heb je het gevoel dat je mentale scherpte is afgenomen, alsof je 'mistig' of trager bent in denken en handelen dan je eigenlijk bent?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "crh",
+      "title": {
+        "en": "CRH",
+        "nl": "CRH"
+      },
+      "description": {
+        "en": "The following questions are about your response to acute stress, your tendency to rapid activation or anxiety spikes, and your ability to calm down again.",
+        "nl": "De volgende vragen gaan over je reactie op acute stress, je neiging tot snelle activatie of angstpieken, en je vermogen om weer tot rust te komen."
+      },
+      "questions": [
+        {
+          "id": "crh-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you notice your body quickly becoming tense and agitated when unexpected events occur?",
+            "nl": "Merk je dat je lichaam snel in een gespannen, gejaagde toestand schiet bij onverwachte gebeurtenissen?"
+          }
+        },
+        {
+          "id": "crh-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you regularly experience feelings of panic or sudden anxiety reactions, even with relatively minor triggers?",
+            "nl": "Heb je geregeld last van paniekgevoelens of plotselinge angstreacties, zelfs bij relatief kleine triggers?"
+          }
+        },
+        {
+          "id": "crh-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you have trouble relaxing quickly after a stressful situation, for example, in the evening after a busy day?",
+            "nl": "Heb je moeite om je na een stressvolle situatie weer snel te ontspannen, bijvoorbeeld 's avonds na een drukke dag?"
+          }
+        },
+        {
+          "id": "crh-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system is overreacting to stress, as if your alarm button is being pressed too quickly?",
+            "nl": "Heb je het gevoel dat je systeem 'overgevoelig' reageert op stress, alsof je alarmknop te snel wordt ingedrukt?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "vasopressine",
+      "title": {
+        "en": "Vasopressine",
+        "nl": "Vasopressine"
+      },
+      "description": {
+        "en": "The following questions are about your fluid balance, your stress resistance in social situations and your ability to let go of control.",
+        "nl": "De volgende vragen gaan over je vochtbalans, je stressbestendigheid in sociale situaties en je vermogen om controle los te laten."
+      },
+      "questions": [
+        {
+          "id": "vasopressine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you regularly experience bloating, water retention, or excessive thirst without a clear explanation?",
+            "nl": "Heb je regelmatig last van een opgeblazen gevoel, vocht vasthouden of juist overmatige dorst zonder duidelijke verklaring?"
+          }
+        },
+        {
+          "id": "vasopressine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you tend to want to maintain control over situations or people, and feel anxious when you can't?",
+            "nl": "Heb je de neiging om controle te willen houden over situaties of mensen, en voel je onrust als dat niet lukt?"
+          }
+        },
+        {
+          "id": "vasopressine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that you become irritated or tense more quickly than you'd like, especially in social interactions?",
+            "nl": "Merk je dat je vooral in sociale interacties sneller geprikkeld of gespannen raakt dan je zou willen?"
+          }
+        },
+        {
+          "id": "vasopressine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system struggles to move smoothly in relationships or situations, as if you're stuck in tension or control?",
+            "nl": "Heb je het gevoel dat je systeem moeite heeft om soepel mee te bewegen in relaties of situaties, alsof je vastloopt in spanning of controle?"
+          }
+        }
+      ]
+    },
+    {
       "id": "dopamine",
-      "title": { "en": "Dopamine", "nl": "Dopamine" },
+      "title": {
+        "en": "Dopamine",
+        "nl": "Dopamine"
+      },
       "description": {
         "en": "The following questions are about your motivation, perseverance, energy to tackle things, and your ability to enjoy activities.",
         "nl": "De volgende vragen gaan over je motivatie, doorzettingsvermogen, energie om dingen aan te pakken en je vermogen om plezier te beleven aan activiteiten."
       },
       "questions": [
-        { "id": "dopamine-q1", "type": "text", "text": { "en": "Do you experience physical sluggishness, stiffness, or reduced flexibility, especially when you feel less motivated?", "nl": "Heb je last van lichamelijke traagheid, stijfheid of verminderde soepelheid, vooral wanneer je je minder gemotiveerd voelt?" } },
-        { "id": "dopamine-q2", "type": "text", "text": { "en": "Do you often feel a lack of motivation or enjoyment, as if things you used to enjoy now bring you little satisfaction?", "nl": "Voel je vaak een gebrek aan motivatie of plezier, alsof dingen die je vroeger leuk vond je nu weinig voldoening geven?" } }
+        {
+          "id": "dopamine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience physical sluggishness, stiffness, or reduced flexibility, especially when you feel less motivated?",
+            "nl": "Heb je last van lichamelijke traagheid, stijfheid of verminderde soepelheid, vooral wanneer je je minder gemotiveerd voelt?"
+          }
+        },
+        {
+          "id": "dopamine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you often feel a lack of motivation or enjoyment, as if things you used to enjoy now bring you little satisfaction?",
+            "nl": "Voel je vaak een gebrek aan motivatie of plezier, alsof dingen die je vroeger leuk vond je nu weinig voldoening geven?"
+          }
+        },
+        {
+          "id": "dopamine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you find it difficult to boost your energy levels during the day, even after rest or sleep, or that you quickly feel drained?",
+            "nl": "Merk je dat je energiepeil gedurende de dag moeilijk stijgt, zelfs na rust of slaap, of dat je je snel 'leeggelopen' voelt?"
+          }
+        },
+        {
+          "id": "dopamine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you lack the drive to actively participate in life, as if your system is struggling to get itself moving?",
+            "nl": "Heb je het gevoel dat je 'de drive mist' om actief deel te nemen aan het leven, alsof je systeem moeite heeft om zichzelf in beweging te zetten?"
+          }
+        }
       ]
     },
     {
-      "id": "serotonin",
-      "title": { "en": "Serotonin", "nl": "Serotonine" },
+      "id": "estradiol",
+      "title": {
+        "en": "Estradiol",
+        "nl": "Estradiol"
+      },
+      "description": {
+        "en": "The following questions are about your feminine health, your cycle, your mood in relation to hormonal changes and your sense of feminine vitality.",
+        "nl": "De volgende vragen gaan over je vrouwelijke gezondheid, je cyclus, je stemming in relatie tot hormonale veranderingen en je gevoel van vrouwelijke vitaliteit."
+      },
+      "questions": [
+        {
+          "id": "estradiol-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience physical complaints that you feel strongly connected to your cycle, such as painful periods, tender breasts, or fatigue around menstruation?",
+            "nl": "Heb je last van lichamelijke klachten die je sterk verbonden voelt met je cyclus, zoals pijnlijke menstruaties, gevoelige borsten of vermoeidheid rond de menstruatie?"
+          }
+        },
+        {
+          "id": "estradiol-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that your mood is strongly influenced by your cycle, for example, by periods of irritability, sadness, or emotional instability?",
+            "nl": "Merk je dat je stemming sterk beïnvloed wordt door je cyclus, bijvoorbeeld door periodes van prikkelbaarheid, somberte of emotionele labiliteit?"
+          }
+        },
+        {
+          "id": "estradiol-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer from irregular cycles or notice that the usual rhythms of your female body, such as menstruation or ovulation, seem disrupted?",
+            "nl": "Heb je last van onregelmatige cycli of merk je dat de gebruikelijke ritmes van je vrouwelijke lichaam, zoals menstruatie of ovulatie, verstoord lijken?"
+          }
+        },
+        {
+          "id": "estradiol-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel that your feminine energy, your feminine power, or your sense of womanhood is diminished, for example, due to exhaustion, menstrual problems, or hormonal imbalance?",
+            "nl": "Heb je het gevoel dat je vrouwelijke energie, je vrouwelijke kracht of je gevoel van vrouw-zijn verminderd is, bijvoorbeeld door uitputting, cyclusproblemen of hormonale disbalans?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "histamine",
+      "title": {
+        "en": "Histamine",
+        "nl": "Histamine"
+      },
+      "description": {
+        "en": "The following questions are about your sensitivity to stimuli, allergies, your sleep quality and your physical reactions to external influences.",
+        "nl": "De volgende vragen gaan over je gevoeligheid voor prikkels, allergieën, je slaapkwaliteit en je lichamelijke reacties op externe invloeden."
+      },
+      "questions": [
+        {
+          "id": "histamine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience allergic reactions such as itching, sneezing, rashes, or shortness of breath, especially when in contact with certain substances or with seasonal changes?",
+            "nl": "Heb je last van allergische reacties zoals jeuk, niezen, huiduitslag of benauwdheid, vooral bij contact met bepaalde stoffen of seizoensveranderingen?"
+          }
+        },
+        {
+          "id": "histamine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that you become overstimulated more easily, for example, by noise, light, or social situations, and that this affects your emotional balance?",
+            "nl": "Merk je dat je sneller overprikkeld bent, bijvoorbeeld door geluid, licht of sociale situaties, en dat dit je emotionele balans beïnvloedt?"
+          }
+        },
+        {
+          "id": "histamine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you have trouble sleeping through the night or do you wake up frequently during the night for no apparent reason?",
+            "nl": "Heb je moeite om goed door te slapen of wordt je 's nachts regelmatig wakker zonder duidelijke aanleiding?"
+          }
+        },
+        {
+          "id": "histamine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system is on high alert, as if your body is constantly alert or sensitive to internal or external stimuli?",
+            "nl": "Heb je het gevoel dat je systeem 'op scherp staat', alsof je lichaam continu alert of gevoelig is voor interne of externe prikkels?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bradykinine",
+      "title": {
+        "en": "Bradykinine",
+        "nl": "Bradykinine"
+      },
+      "description": {
+        "en": "The following questions are about your sensitivity to inflammation, pain reactions, swelling and your physical resilience after exertion.",
+        "nl": "De volgende vragen gaan over je gevoeligheid voor ontsteking, pijnreacties, zwelling en je lichamelijke veerkracht na belasting."
+      },
+      "questions": [
+        {
+          "id": "bradykinine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience rapid swelling or redness, for example, from insect bites, minor injuries, or pressure sores?",
+            "nl": "Heb je last van snel optredende zwelling of roodheid bij bijvoorbeeld insectenbeten, kleine blessures of drukplekken?"
+          }
+        },
+        {
+          "id": "bradykinine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that physical complaints (such as pain or swelling) affect your mood more quickly, for example, due to irritation or emotional irritability?",
+            "nl": "Merk je dat lichamelijke klachten (zoals pijn of zwelling) je stemming sneller beïnvloeden, bijvoorbeeld door irritatie of emotionele prikkelbaarheid?"
+          }
+        },
+        {
+          "id": "bradykinine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body is stuck in an inflammatory response for a longer period of time, for example, after an injury or infection?",
+            "nl": "Heb je het gevoel dat je lichaam langer 'blijft hangen' in een ontstekingsreactie, bijvoorbeeld na een blessure of infectie?"
+          }
+        },
+        {
+          "id": "bradykinine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body is overreacting too quickly to minor stimuli, as if your natural healing balance has been disrupted?",
+            "nl": "Heb je het gevoel dat je lichaam te snel in een 'overreactie' schiet op kleine prikkels, alsof je natuurlijke herstelbalans verstoord is?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "glycine",
+      "title": {
+        "en": "Glycine",
+        "nl": "Glycine"
+      },
+      "description": {
+        "en": "The following questions are about your muscle relaxation, sleep quality, wound healing, and your ability to relax physically and mentally.",
+        "nl": "De volgende vragen gaan over je spierontspanning, slaapkwaliteit, wondherstel en je vermogen om lichamelijk en geestelijk tot rust te komen."
+      },
+      "questions": [
+        {
+          "id": "glycine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience increased muscle tension or stiffness, especially at rest or after exertion?",
+            "nl": "Heb je last van verhoogde spierspanning of stijfheid, vooral in rust of na inspanning?"
+          }
+        },
+        {
+          "id": "glycine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you find yourself restless or having difficulty relaxing deeply, even when you consciously take the time to do so?",
+            "nl": "Merk je dat je onrustig bent of moeilijk diep kunt ontspannen, ook wanneer je daar bewust tijd voor neemt?"
+          }
+        },
+        {
+          "id": "glycine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you struggle to sleep deeply and restoratively, for example, due to frequent waking or restless nights?",
+            "nl": "Heb je moeite om diep en herstellend te slapen, bijvoorbeeld door vaak wakker worden of onrustige nachten?"
+          }
+        },
+        {
+          "id": "glycine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body recovers less well after exertion or minor injuries, as if the recovery process is slowed down?",
+            "nl": "Heb je het gevoel dat je lichaam minder goed herstelt na inspanning of kleine blessures, alsof het herstelproces vertraagd verloopt?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "galanine",
+      "title": {
+        "en": "Galanine",
+        "nl": "Galanine"
+      },
+      "description": {
+        "en": "The following questions are about your resting capacity, sleep recovery, stress relief, and your relationship with food (particularly high-fat foods).",
+        "nl": "De volgende vragen gaan over je rustvermogen, slaapherstel, stressontlading en je relatie tot voeding (met name vetrijke voeding)."
+      },
+      "questions": [
+        {
+          "id": "galanine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you have difficulty physically relaxing after exertion or stress, for example, due to muscle tension or internal tension?",
+            "nl": "Heb je moeite om lichamelijk tot rust te komen na inspanning of stress, bijvoorbeeld door onrust in spieren of inwendige spanning?"
+          }
+        },
+        {
+          "id": "galanine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you find yourself regularly craving fatty or comforting foods, especially during periods of stress or fatigue?",
+            "nl": "Merk je dat je geregeld behoefte hebt aan vetrijke of troostrijke voeding, vooral in periodes van stress of vermoeidheid?"
+          }
+        },
+        {
+          "id": "galanine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you sleep restlessly or find it difficult to fall into deep, restorative sleep?",
+            "nl": "Slaap je onrustig of merk je dat je moeite hebt om in een diepe, herstellende slaap te komen?"
+          }
+        },
+        {
+          "id": "galanine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your recovery capacity is under pressure, as if your system can't relax or regenerate sufficiently?",
+            "nl": "Heb je het gevoel dat je herstelvermogen onder druk staat, alsof je systeem onvoldoende kan ontspannen of regenereren?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "serotonine",
+      "title": {
+        "en": "Serotonine",
+        "nl": "Serotonine"
+      },
       "description": {
         "en": "The following questions are about your mood, your inner peace, your sleep quality, and your sense of connection with yourself and others.",
         "nl": "De volgende vragen gaan over je stemming, je innerlijke rust, je slaapkwaliteit en je gevoel van verbondenheid met jezelf en anderen."
       },
       "questions": [
-        { "id": "serotonin-q1", "type": "text", "text": { "en": "Do you experience physical restlessness or tension, for example, due to an upset stomach or a jittery feeling for no apparent reason?", "nl": "Merk je lichamelijke onrust of gespannenheid, bijvoorbeeld door een gespannen maag of een gejaagd gevoel zonder duidelijke reden?" } },
-        { "id": "serotonin-q2", "type": "text", "text": { "en": "Do you have trouble sleeping through the night or do you wake up feeling emotionally flat or empty in the morning?", "nl": "Heb je moeite met doorslapen of voel je je ‘s ochtends bij het ontwaken emotioneel vlak of leeg?" } }
+        {
+          "id": "serotonine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience physical restlessness or tension, for example, due to an upset stomach or a jittery feeling for no apparent reason?",
+            "nl": "Merk je lichamelijke onrust of gespannenheid, bijvoorbeeld door een gespannen maag of een gejaagd gevoel zonder duidelijke reden?"
+          }
+        },
+        {
+          "id": "serotonine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer from recurring sadness, irritability, or a sense of emotional instability?",
+            "nl": "Heb je last van terugkerende somberheid, prikkelbaarheid of een gevoel van emotionele instabiliteit?"
+          }
+        },
+        {
+          "id": "serotonine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you have trouble sleeping through the night or do you wake up feeling emotionally flat or empty in the morning?",
+            "nl": "Heb je moeite met doorslapen of voel je je 's ochtends bij het ontwaken emotioneel vlak of leeg?"
+          }
+        },
+        {
+          "id": "serotonine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you're struggling to truly connect with yourself or others, as if your emotional resilience has weakened?",
+            "nl": "Heb je het gevoel dat je moeite hebt om echt contact te maken met jezelf of anderen, alsof je emotionele veerkracht verzwakt is?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "melatonine",
+      "title": {
+        "en": "Melatonine",
+        "nl": "Melatonine"
+      },
+      "description": {
+        "en": "The following questions are about your sleep quality, ability to fall asleep, nighttime recovery, and your sense of circadian rhythm.",
+        "nl": "De volgende vragen gaan over je slaapkwaliteit, inslaapvermogen, nachtelijk herstel en je gevoel voor dag-nachtritme."
+      },
+      "questions": [
+        {
+          "id": "melatonine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you have trouble falling asleep at night, even when you're tired?",
+            "nl": "Heb je moeite om 's avonds in slaap te vallen, zelfs wanneer je moe bent?"
+          }
+        },
+        {
+          "id": "melatonine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you often wake up feeling unrefreshed, lethargic, or groggy?",
+            "nl": "Voel je je regelmatig 's ochtends niet hersteld wakker worden, met een loom of suf gevoel?"
+          }
+        },
+        {
+          "id": "melatonine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you notice your circadian rhythm easily disrupted, for example, by time differences, seasonal changes, or irregular work hours?",
+            "nl": "Merk je dat je bioritme makkelijk ontregeld raakt, bijvoorbeeld bij tijdsverschil, seizoenswisselingen of onregelmatige werktijden?"
+          }
+        },
+        {
+          "id": "melatonine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your internal clock isn't properly calibrated, as if your system no longer experiences a natural flow between day and night?",
+            "nl": "Heb je het gevoel dat je interne klok niet goed afgestemd is, alsof je systeem geen natuurlijke 'flow' meer ervaart tussen dag en nacht?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "igf1",
+      "title": {
+        "en": "IGF-1",
+        "nl": "IGF-1"
+      },
+      "description": {
+        "en": "The following questions are about your strength, recovery after exercise, sense of youthfulness, and structural resilience of your body.",
+        "nl": "De volgende vragen gaan over je kracht, herstel na inspanning, gevoel van jeugdigheid en structurele veerkracht van je lichaam."
+      },
+      "questions": [
+        {
+          "id": "igf1-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that your recovery after physical exertion is slow, or that you experience muscle soreness or loss of strength more quickly?",
+            "nl": "Merk je dat je herstel na fysieke inspanning traag is of dat je sneller last hebt van spierpijn of krachtverlies?"
+          }
+        },
+        {
+          "id": "igf1-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel your physical strength or vitality declining, even when you exercise enough?",
+            "nl": "Heb je het gevoel dat je lichamelijke kracht of vitaliteit achteruitgaat, ook als je voldoende beweegt?"
+          }
+        },
+        {
+          "id": "igf1-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you feel your body responding less smoothly or vitally to physical challenges than you used to, for example, in the morning or after a longer rest period?",
+            "nl": "Voel je dat je lichaam minder soepel of vitaal reageert op fysieke uitdagingen dan je gewend was, bijvoorbeeld in de ochtend of na langere rust?"
+          }
+        },
+        {
+          "id": "igf1-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you're \"aging\" or deteriorating in structural vitality, as if your system is less able to rejuvenate or strengthen itself?",
+            "nl": "Heb je het gevoel dat je 'veroudert' of achteruitgaat in structurele vitaliteit, alsof je systeem minder goed in staat is zichzelf te verjongen of versterken?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "substancep",
+      "title": {
+        "en": "Substance P",
+        "nl": "Substance P"
+      },
+      "description": {
+        "en": "The following questions are about your sensitivity to pain, sensitivity to stress stimuli, recovery from pain experiences and your ability to regulate stimuli properly.",
+        "nl": "De volgende vragen gaan over je pijngevoeligheid, gevoeligheid voor stressprikkels, herstel na pijnervaringen en je vermogen om prikkels goed te reguleren."
+      },
+      "questions": [
+        {
+          "id": "substancep-q1",
+          "type": "text",
+          "text": {
+            "en": "Are you easily affected by pain stimuli, or do you experience prolonged pain, even after seemingly minor physical triggers?",
+            "nl": "Heb je snel last van pijnprikkels of blijf je langdurig last houden van pijn, ook na ogenschijnlijk kleine fysieke triggers?"
+          }
+        },
+        {
+          "id": "substancep-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel that stress exacerbates your physical symptoms, for example, that you are more likely to experience headaches, muscle pain, or joint pain?",
+            "nl": "Heb je het gevoel dat stress je fysieke klachten verergert, bijvoorbeeld dat je sneller last krijgt van hoofdpijn, spierpijn of gewrichtspijn?"
+          }
+        },
+        {
+          "id": "substancep-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system has difficulty exiting pain mode, for example, that pain lingers for a long time after exertion?",
+            "nl": "Heb je het idee dat je systeem moeite heeft om uit een pijn-modus te komen, bijvoorbeeld dat pijn lang 'blijft hangen' na belasting?"
+          }
+        },
+        {
+          "id": "substancep-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body experiences pain more quickly and struggles to return to a pain-free, relaxed state?",
+            "nl": "Heb je het gevoel dat je lichaam sneller 'in de pijn schiet' en moeite heeft om terug te keren naar een pijnvrije, ontspannen staat?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "glucose",
+      "title": {
+        "en": "Glucose",
+        "nl": "Glucose"
+      },
+      "description": {
+        "en": "The following questions are about your energy levels throughout the day, your need for quick energy, your sensitivity to hunger swings, and your stability in focus and mood.",
+        "nl": "De volgende vragen gaan over je energieniveau door de dag heen, je behoefte aan snelle energie, je gevoeligheid voor hongerschommelingen en je stabiliteit in focus en stemming."
+      },
+      "questions": [
+        {
+          "id": "glucose-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you regularly experience sudden energy dips or dizziness when you haven't eaten for a long time?",
+            "nl": "Heb je geregeld last van plotselinge energiedips of duizeligheid wanneer je langere tijd niets eet?"
+          }
+        },
+        {
+          "id": "glucose-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you experience mood swings or irritability just before you get hungry or when you're feeling low?",
+            "nl": "Heb je stemmingswisselingen of prikkelbaarheid die je merkt vlak voor je honger krijgt of wanneer je 'laag' in je energie zit?"
+          }
+        },
+        {
+          "id": "glucose-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you find it difficult to maintain a stable energy level throughout the day, with a tendency to experience rapid peaks and troughs in energy or cravings?",
+            "nl": "Merk je dat je moeilijk een stabiel energieniveau kunt behouden over de dag, met neiging tot snelle pieken en dalen in energie of trek?"
+          }
+        },
+        {
+          "id": "glucose-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you've become dependent on quick energy boosts like sugar, coffee, or snacks to keep you going?",
+            "nl": "Heb je het gevoel dat je afhankelijk bent geworden van snelle energie-oppepper zoals suiker, koffie of snacks om je 'aan de gang te houden'?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "glp1",
+      "title": {
+        "en": "GLP-1",
+        "nl": "GLP-1"
+      },
+      "description": {
+        "en": "The following questions are about your feeling of fullness, your need for food between meals, your sensitivity to sugars and your energy after eating.",
+        "nl": "De volgende vragen gaan over je verzadigingsgevoel, je behoefte aan eten tussen maaltijden door, je gevoeligheid voor suikers en je energie na het eten."
+      },
+      "questions": [
+        {
+          "id": "glp1-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you struggle to feel full after a meal, causing you to continue eating or quickly become hungry again?",
+            "nl": "Heb je moeite om je verzadigd te voelen na een maaltijd, waardoor je blijft dooreten of snel weer trek krijgt?"
+          }
+        },
+        {
+          "id": "glp1-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you often feel lethargic, sleepy, or mentally sluggish after eating, especially after larger or carbohydrate-rich meals?",
+            "nl": "Voel je je vaak loom, slaperig of mentaal traag na het eten, vooral na grotere of koolhydraatrijke maaltijden?"
+          }
+        },
+        {
+          "id": "glp1-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer from irregular eating patterns or the feeling of constantly needing to eat something without actually being hungry?",
+            "nl": "Heb je last van onregelmatige eetpatronen of het gevoel voortdurend 'iets te moeten eten' zonder echte honger?"
+          }
+        },
+        {
+          "id": "glp1-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body doesn't communicate well when it's had enough, as if your satiety signal isn't functioning properly?",
+            "nl": "Heb je het gevoel dat je lichaam slecht communiceert wanneer het genoeg heeft gehad, alsof je verzadigingssignaal niet goed functioneert?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "t3",
+      "title": {
+        "en": "T3",
+        "nl": "T3"
+      },
+      "description": {
+        "en": "The following questions are about your energy balance, temperature sensitivity, speed of thought, and physical recovery capacity.",
+        "nl": "De volgende vragen gaan over je energiebalans, gevoeligheid voor temperatuur, snelheid van denken en lichamelijke herstelcapaciteit."
+      },
+      "questions": [
+        {
+          "id": "t3-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience chills or cold extremities, even when others feel comfortable?",
+            "nl": "Heb je last van kouwelijkheid of koude ledematen, zelfs wanneer anderen zich comfortabel voelen qua temperatuur?"
+          }
+        },
+        {
+          "id": "t3-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you notice a decrease in your mental acuity, for example, difficulty concentrating, slow thinking, or a \"cotton-like feeling\"?",
+            "nl": "Merk je dat je mentale scherpte verminderd is, bijvoorbeeld moeite met concentratie, traag denken of 'watten in je hoofd'?"
+          }
+        },
+        {
+          "id": "t3-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system struggles to \"get going\" in the morning or that your recovery after exertion is slow?",
+            "nl": "Heb je het idee dat je systeem moeite heeft om 'op gang te komen' in de ochtend of dat je herstel na inspanning traag is?"
+          }
+        },
+        {
+          "id": "t3-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you're functioning at a low ebb, as if your internal fire has gone out?",
+            "nl": "Heb je het gevoel dat je 'op een laag pitje' functioneert, alsof je interne vuurtje gedoofd is?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "adenosine",
+      "title": {
+        "en": "Adenosine",
+        "nl": "Adenosine"
+      },
+      "description": {
+        "en": "The following questions are about your post-exertion energy drop, your recovery rate, your ability to resume activity, and your susceptibility to persistent fatigue.",
+        "nl": "De volgende vragen gaan over je energie daling na belasting, je hersteltempo, je vermogen om weer actief te worden en je gevoeligheid voor aanhoudende vermoeidheid."
+      },
+      "questions": [
+        {
+          "id": "adenosine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience severe, slow fatigue after physical or mental exertion, which isn't improved by rest or sleep?",
+            "nl": "Heb je last van zware, trage vermoeidheid na fysieke of mentale inspanning, die niet verbetert door rust of slaap?"
+          }
+        },
+        {
+          "id": "adenosine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you're more likely to give up on tasks or have little mental motivation to stay active, especially after exertion?",
+            "nl": "Heb je het gevoel dat je sneller 'afhaakt' bij taken of dat je weinig mentale motivatie voelt om actief te blijven, vooral na inspanning?"
+          }
+        },
+        {
+          "id": "adenosine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you find it difficult to emerge from periods of recovery or rest, as if your system is struggling to \"switch back on\"?",
+            "nl": "Merk je dat je moeilijk uit periodes van herstel of rust komt, alsof je systeem moeite heeft om 'weer aan te gaan'?"
+          }
+        },
+        {
+          "id": "adenosine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body has put itself into a kind of \"saving mode,\" making it difficult to truly rebuild your energy?",
+            "nl": "Heb je het gevoel dat je lichaam zichzelf in een soort 'spaarstand' heeft gezet, waardoor je moeite hebt om je energie weer echt op te bouwen?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "testosteron",
+      "title": {
+        "en": "Testosteron",
+        "nl": "Testosteron"
+      },
+      "description": {
+        "en": "The following questions are about your sense of strength, physical resilience, motivation, and sexual energy. For women, this also includes your sense of physical strength, perseverance, and healthy assertiveness.",
+        "nl": "De volgende vragen gaan over je krachtgevoel, fysieke veerkracht, motivatie en seksuele energie. Voor vrouwen gaat dit ook over je gevoel van fysieke stevigheid, doorzettingsvermogen en gezonde assertiviteit."
+      },
+      "questions": [
+        {
+          "id": "testosteron-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you notice a decrease in your muscle strength or physical endurance, even when you try to stay active?",
+            "nl": "Merk je dat je spierkracht of fysieke uithoudingsvermogen verminderd is, ook wanneer je actief probeert te blijven?"
+          }
+        },
+        {
+          "id": "testosteron-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel less driven to take initiative or actively pursue goals?",
+            "nl": "Heb je het gevoel minder 'drive' te hebben om initiatief te nemen of actief doelen na te streven?"
+          }
+        },
+        {
+          "id": "testosteron-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you notice a decrease in morning energy or drive, for example, reduced alertness or muscle strength upon waking?",
+            "nl": "Merk je een afname van ochtendenergie of ochtenddrive, bijvoorbeeld verminderde alertheid of spierkracht bij het opstaan?"
+          }
+        },
+        {
+          "id": "testosteron-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel your strength and vitality as a person are declining, as if your system is functioning less powerfully or decisively?",
+            "nl": "Heb je het gevoel dat je kracht en vitaliteit als persoon afneemt, alsof je systeem minder krachtig of minder daadkrachtig functioneert?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "glutamate",
+      "title": {
+        "en": "Glutamate",
+        "nl": "Glutamaat"
+      },
+      "description": {
+        "en": "The following questions are about your mental acuity, sensitivity to overstimulation, speed of thinking, and your ability to calm down mentally.",
+        "nl": "De volgende vragen gaan over je mentale scherpte, gevoeligheid voor overprikkeling, snelheid van denken en je vermogen om mentaal tot rust te komen."
+      },
+      "questions": [
+        {
+          "id": "glutamate-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience physical restlessness or increased muscle tension, particularly during mental activity or stressful moments?",
+            "nl": "Heb je lichamelijke onrust of verhoogde spierspanning die vooral opkomt bij mentale activiteit of stressmomenten?"
+          }
+        },
+        {
+          "id": "glutamate-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer from racing thoughts, worrying, or difficulty clearing your head?",
+            "nl": "Heb je last van gedachten die blijven doordraaien, piekeren of moeite om je hoofd leeg te maken?"
+          }
+        },
+        {
+          "id": "glutamate-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you have trouble calming down mentally in the evening or after exertion, perhaps due to a hyperactive mind?",
+            "nl": "Heb je moeite om 's avonds of na inspanning mentaal tot rust te komen, bijvoorbeeld door een hyperactieve geest?"
+          }
+        },
+        {
+          "id": "glutamate-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your brain is constantly \"on,\" as if your system no longer has a natural rest or recovery mode?",
+            "nl": "Heb je het gevoel dat je brein voortdurend 'aan staat', alsof je systeem geen natuurlijke rust- of herstelmodus meer kent?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "vip",
+      "title": {
+        "en": "VIP",
+        "nl": "VIP"
+      },
+      "description": {
+        "en": "The following questions are about your ability to recover, your sensitivity to inflammation, your sleep quality and your perception of social calm.",
+        "nl": "De volgende vragen gaan over je vermogen om te herstellen, je gevoeligheid voor ontstekingsklachten, je slaapkwaliteit en je sociale rustbeleving."
+      },
+      "questions": [
+        {
+          "id": "vip-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience symptoms related to low-grade inflammation, such as stiffness, pain, or a feeling of being \"agitated,\" especially during rest periods?",
+            "nl": "Heb je last van klachten die samenhangen met laaggradige ontsteking, zoals stijfheid, pijn of 'opgejaagdheid' in je lijf, vooral in rustmomenten?"
+          }
+        },
+        {
+          "id": "vip-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you struggle to feel connected in social situations, for example, because you become overstimulated or withdraw easily?",
+            "nl": "Heb je moeite om je verbonden te voelen in sociale situaties, bijvoorbeeld doordat je snel overprikkeld raakt of je terugtrekt?"
+          }
+        },
+        {
+          "id": "vip-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you sleep restlessly or find yourself struggling to sleep deeply, with frequent nighttime awakenings or restless mornings?",
+            "nl": "Slaap je onrustig of merk je dat je moeite hebt om 'diep' te slapen, met veel nachtelijk ontwaken of een onrustige ochtend?"
+          }
+        },
+        {
+          "id": "vip-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system struggles to truly enter a deep recovery mode, as if you're always \"on\" or in a low-level alert state?",
+            "nl": "Heb je het gevoel dat je systeem moeite heeft om echt in een diepe herstelstand te komen, alsof je altijd 'aan staat' of in een laaggradige alarmtoestand verkeert?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bh4",
+      "title": {
+        "en": "BH4",
+        "nl": "BH4"
+      },
+      "description": {
+        "en": "The following questions are about your mental energy, mood stability, motivation to exercise, and recovery after exercise.",
+        "nl": "De volgende vragen gaan over je mentale energie, stabiliteit van stemming, je motivatie om in beweging te komen en je herstel na inspanning."
+      },
+      "questions": [
+        {
+          "id": "bh4-q1",
+          "type": "text",
+          "text": {
+            "en": "Despite rest, do you often feel deeply physically or mentally drained, as if your system isn't properly refueling?",
+            "nl": "Voel je ondanks rust vaak een diep lichamelijk of geestelijk uitgeput gevoel, alsof je systeem niet goed 'bijtankt'?"
+          }
+        },
+        {
+          "id": "bh4-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer from a flat mood, reduced resilience, or the feeling of going through the day \"flat\" without any real emotional peaks?",
+            "nl": "Heb je last van een vlakke stemming, verminderde veerkracht of het gevoel 'vlak' door de dag heen te gaan zonder echte emotionele pieken?"
+          }
+        },
+        {
+          "id": "bh4-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you struggle to get your energy going in the morning, or do you tend to experience dips throughout the day?",
+            "nl": "Heb je moeite om in de ochtend energie op gang te krijgen, of juist een neiging tot energiedalingen gedurende de dag?"
+          }
+        },
+        {
+          "id": "bh4-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system is functioning at half capacity, as if something isn't working properly in your basal energy production or mood?",
+            "nl": "Heb je het gevoel dat je systeem 'op halve kracht' functioneert, alsof er iets in je basale energieproductie of stemming niet goed aangaat?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "prolactine",
+      "title": {
+        "en": "Prolactine",
+        "nl": "Prolactine"
+      },
+      "description": {
+        "en": "The following questions are about your sense of recovery from stress, your ability to feel calm, your caring attitude, and your hormonal balance.",
+        "nl": "De volgende vragen gaan over je gevoel van herstel na stress, je innerlijke rustvermogen, je zorggerichtheid en je hormonale balans."
+      },
+      "questions": [
+        {
+          "id": "prolactine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you find yourself slow to get going or more likely to linger in a passive, sluggish state, even when you want to activate?",
+            "nl": "Merk je dat je traag op gang komt of juist sneller in een passieve, trage toestand blijft hangen, ook wanneer je wilt activeren?"
+          }
+        },
+        {
+          "id": "prolactine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel a decrease in caring, emotional connection, or motivation to connect socially?",
+            "nl": "Voel je een afname van zorgzaamheid, affectieve verbinding of motivatie om je sociaal te verbinden?"
+          }
+        },
+        {
+          "id": "prolactine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you notice disruptions in your hormonal rhythms, such as irregular cycles (for women), loss of libido, or fluctuations in satiety or appetite?",
+            "nl": "Merk je verstoringen in je hormonale ritmes, zoals onregelmatigheid van cyclus (vrouwen), libidoverlies of schommelingen in verzadiging of eetlust?"
+          }
+        },
+        {
+          "id": "prolactine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system is \"stuck\" in recovery mode or inhibited in spontaneous activation and zest for life?",
+            "nl": "Heb je het gevoel dat je systeem 'vastloopt' in herstelmodus of geremd raakt in spontane activatie en levenslust?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "gaba",
+      "title": {
+        "en": "GABA",
+        "nl": "GABA"
+      },
+      "description": {
+        "en": "The following questions are about your inner peace, your ability to sleep well, your sensitivity to overstimulation and your ability to recover.",
+        "nl": "De volgende vragen gaan over je innerlijke rust, je vermogen om goed te slapen, je gevoeligheid voor overprikkeling en je herstelvermogen."
+      },
+      "questions": [
+        {
+          "id": "gaba-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience increased muscle tension or physical restlessness, especially during rest periods or in the evening?",
+            "nl": "Heb je last van verhoogde spierspanning of lichamelijke onrust, vooral in rustmomenten of 's avonds?"
+          }
+        },
+        {
+          "id": "gaba-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you have difficulty calming down mentally, for example, due to worrying thoughts or increased inner turmoil?",
+            "nl": "Heb je moeite om mentaal tot rust te komen, bijvoorbeeld door piekergedachten of verhoogde innerlijke onrust?"
+          }
+        },
+        {
+          "id": "gaba-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you have trouble falling asleep or do you often wake up at night for no apparent reason?",
+            "nl": "Heb je moeite om goed in te slapen of word je 's nachts vaak wakker zonder duidelijke reden?"
+          }
+        },
+        {
+          "id": "gaba-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system can't shut down properly, as if you're no longer reaching deep recovery mode?",
+            "nl": "Heb je het gevoel dat je systeem onvoldoende kan afschakelen, alsof je geen diepe herstelmodus meer bereikt?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "progesteron",
+      "title": {
+        "en": "Progesteron",
+        "nl": "Progesteron"
+      },
+      "description": {
+        "en": "The following questions are about your hormonal balance around your menstrual cycle, your sense of calm, your sleep quality and your feminine well-being.",
+        "nl": "De volgende vragen gaan over je hormonale balans rond je menstruatiecyclus, je gevoel van kalmte, je slaapkwaliteit en je vrouwelijke welzijn."
+      },
+      "questions": [
+        {
+          "id": "progesteron-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience physical restlessness or tension, especially in the second half of your cycle or around your period?",
+            "nl": "Heb je last van lichamelijke onrust of gespannenheid, vooral in de tweede helft van je cyclus of rond je menstruatie?"
+          }
+        },
+        {
+          "id": "progesteron-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel more irritable or emotionally volatile in the days leading up to your period?",
+            "nl": "Voel je je sneller prikkelbaar of emotioneel schommelend in de dagen voor je menstruatie?"
+          }
+        },
+        {
+          "id": "progesteron-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you have trouble sleeping well during certain phases of your cycle, for example, just before your period?",
+            "nl": "Heb je moeite om goed door te slapen in bepaalde fasen van je cyclus, bijvoorbeeld vlak voor je menstruatie?"
+          }
+        },
+        {
+          "id": "progesteron-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your feminine rhythm is disrupted, as if you're less in touch with your natural cyclical strength and calmness?",
+            "nl": "Heb je het gevoel dat je vrouwelijke ritme verstoord is, alsof je minder in contact bent met je natuurlijke cyclische kracht en verzachting?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "somatropine",
+      "title": {
+        "en": "Somatropine",
+        "nl": "Somatropine"
+      },
+      "description": {
+        "en": "The following questions are about your physical recovery, your sense of strength and vitality, your recovery rate after exercise, and your youthfulness in physical functioning.",
+        "nl": "De volgende vragen gaan over je fysieke herstel, je gevoel van kracht en vitaliteit, je herstelsnelheid na inspanning en je jeugdigheid in lichamelijk functioneren."
+      },
+      "questions": [
+        {
+          "id": "somatropine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you find it harder to recover after physical exertion or do you experience prolonged muscle pain or stiffness more often?",
+            "nl": "Merk je dat je minder makkelijk herstelt na fysieke inspanning of vaker last hebt van langdurige spierpijn of stijfheid?"
+          }
+        },
+        {
+          "id": "somatropine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel less vital or physically youthful, even when you exercise enough?",
+            "nl": "Heb je het gevoel minder vitaliteit of fysieke jeugdigheid te ervaren, ook wanneer je voldoende beweegt?"
+          }
+        },
+        {
+          "id": "somatropine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you find your sleep less restorative, for example, waking up tired after a full night's sleep?",
+            "nl": "Merk je dat je slaap minder herstellend is, bijvoorbeeld dat je na een volledige nacht slapen toch vermoeid wakker wordt?"
+          }
+        },
+        {
+          "id": "somatropine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body is less able to repair itself, as if your physical aging seems to be accelerating?",
+            "nl": "Heb je het gevoel dat je lichaam minder goed in staat is om zichzelf te herstellen, alsof je fysieke veroudering sneller lijkt te verlopen?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "calcitriol",
+      "title": {
+        "en": "Calcitriol",
+        "nl": "Calcitriol"
+      },
+      "description": {
+        "en": "The following questions are about your physical strength, resistance, mood and resilience during exertion or recovery.",
+        "nl": "De volgende vragen gaan over je fysieke stevigheid, weerstand, stemming en je veerkracht bij inspanning of herstel."
+      },
+      "questions": [
+        {
+          "id": "calcitriol-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience muscle weakness or reduced physical stability, such as bending your knees more easily or having less strength during daily movements?",
+            "nl": "Heb je last van spierzwakte of verminderde fysieke stabiliteit, bijvoorbeeld sneller door je knieën zakken of minder kracht bij dagelijkse bewegingen?"
+          }
+        },
+        {
+          "id": "calcitriol-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you find yourself more susceptible to depression or a flat mood, especially during periods with little sunlight?",
+            "nl": "Merk je dat je gevoeliger bent voor somberheid of een vlakke stemming, vooral in perioden met weinig zonlicht?"
+          }
+        },
+        {
+          "id": "calcitriol-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer more frequently from recurring infections or a weakened immune system, especially in the fall or winter months?",
+            "nl": "Heb je vaker last van terugkerende infecties of een verminderde weerstand, vooral in herfst- of wintermaanden?"
+          }
+        },
+        {
+          "id": "calcitriol-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system has become less robust or vital, as if your foundation of energy, bone health, or immunity has weakened?",
+            "nl": "Heb je het gevoel dat je systeem minder stevig of vitaal is geworden, alsof je fundament van energie, botgezondheid of weerstand verzwakt is?"
+          }
+        }
       ]
     },
     {
       "id": "cortisol",
-      "title": { "en": "Cortisol", "nl": "Cortisol" },
+      "title": {
+        "en": "Cortisol",
+        "nl": "Cortisol"
+      },
       "description": {
         "en": "The following questions are about your stress levels, energy balance during the day, recovery time after busy times, and your sleep pattern.",
         "nl": "De volgende vragen gaan over je stressbelasting, energiebalans gedurende de dag, hersteltijd na drukte en je slaappatroon."
       },
       "questions": [
-        { "id": "cortisol-q1", "type": "text", "text": { "en": "Do you struggle to get going in the morning or feel exhausted after exertion or busy periods?", "nl": "Heb je moeite om in de ochtend op gang te komen of voel je een gevoel van uitputting na inspanning of drukke perioden?" } },
-        { "id": "cortisol-q2", "type": "text", "text": { "en": "Do you suffer from disrupted circadian rhythms, such as difficulty falling asleep or struggling with energy levels throughout the day?", "nl": "Heb je last van ontregelde dag-nachtritmes, bijvoorbeeld moeilijk in slaap vallen of moeite met energieniveau door de dag heen?" } }
+        {
+          "id": "cortisol-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you struggle to get going in the morning or feel exhausted after exertion or busy periods?",
+            "nl": "Heb je moeite om in de ochtend op gang te komen of voel je een gevoel van uitputting na inspanning of drukke perioden?"
+          }
+        },
+        {
+          "id": "cortisol-q2",
+          "type": "text",
+          "text": {
+            "en": "Are you more likely to experience irritability or restlessness during busy times, unexpected situations, or social pressures?",
+            "nl": "Heb je sneller last van prikkelbaarheid of onrust bij drukte, onverwachte situaties of sociale belasting?"
+          }
+        },
+        {
+          "id": "cortisol-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer from disrupted circadian rhythms, such as difficulty falling asleep or struggling with energy levels throughout the day?",
+            "nl": "Heb je last van ontregelde dag-nachtritmes, bijvoorbeeld moeilijk in slaap vallen of moeite met energieniveau door de dag heen?"
+          }
+        },
+        {
+          "id": "cortisol-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system is constantly \"on\" or burnt out, as if the transition between action and recovery isn't smooth?",
+            "nl": "Heb je het gevoel dat je systeem voortdurend 'aan' staat of juist opgebrand is, alsof het schakelen tussen actie en herstel niet soepel verloopt?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "beta-endorfinen",
+      "title": {
+        "en": "Beta endorfinen",
+        "nl": "Beta endorfinen"
+      },
+      "description": {
+        "en": "The following questions are about your sensitivity to pain, inner pleasure capacity, stress buffering, and your ability to experience contentment.",
+        "nl": "De volgende vragen gaan over je pijngevoeligheid, innerlijk genotsvermogen, stress-buffering en je vermogen om tevredenheid te ervaren."
+      },
+      "questions": [
+        {
+          "id": "beta-endorfinen-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer from persistent pain or increased sensitivity to pain, even from mild physical stimuli?",
+            "nl": "Heb je last van aanhoudende pijnklachten of verhoogde gevoeligheid voor pijn, ook bij milde fysieke prikkels?"
+          }
+        },
+        {
+          "id": "beta-endorfinen-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you struggle to experience moments of happiness or satisfaction, or do you often experience a flat, subdued mood?",
+            "nl": "Heb je moeite om momenten van geluk of voldoening te ervaren, of voel je vaker een vlakke, gedempte stemming?"
+          }
+        },
+        {
+          "id": "beta-endorfinen-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that during periods of stress or overload, you more quickly resort to pleasurable behaviors like eating, screen time, or other short-term pleasures?",
+            "nl": "Merk je dat je in periodes van stress of overbelasting sneller teruggrijpt naar genotsgedrag zoals eten, schermgebruik of andere korte-termijnpleziertjes?"
+          }
+        },
+        {
+          "id": "beta-endorfinen-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body struggles to generate natural contentment or well-being, as if there's an internal shortage of soothing or happiness-producing impulses?",
+            "nl": "Heb je het gevoel dat je lichaam moeite heeft om natuurlijke tevredenheid of welzijn te genereren, alsof er een intern tekort is aan rustgevende of geluk-gevende impulsen?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "endorfine-mdk",
+      "title": {
+        "en": "mu-, delta-, en kappa endorfine",
+        "nl": "mu-, delta-, en kappa endorfine"
+      },
+      "description": {
+        "en": "The following questions are about your sensitivity to pain, your ability to experience satisfaction after exertion or social interaction, and your ability to recover after physical or mental stress.",
+        "nl": "De volgende vragen gaan over je pijngevoeligheid, je vermogen om voldoening te ervaren na inspanning of sociale interactie, en je herstellend vermogen na fysieke of mentale belasting."
+      },
+      "questions": [
+        {
+          "id": "endorfine-mdk-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience increased pain sensitivity or difficulty tolerating physical exertion without prolonged after-pain?",
+            "nl": "Heb je last van verhoogde pijngevoeligheid of moeite om fysieke inspanning zonder langdurige napijn te verdragen?"
+          }
+        },
+        {
+          "id": "endorfine-mdk-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel less fulfilled or \"good tired\" after exertion or social activities, but rather run out faster?",
+            "nl": "Heb je het gevoel dat je na inspanning of sociale activiteiten minder voldoening of 'goede moeheid' ervaart, maar juist eerder leegloopt?"
+          }
+        },
+        {
+          "id": "endorfine-mdk-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that you recover less well after physical or mental strain, for example, experiencing more muscle soreness, slow recovery, or emotional exhaustion?",
+            "nl": "Merk je dat je minder goed herstelt na fysieke of mentale belasting, bijvoorbeeld meer last hebt van spierpijn, traag herstel of emotionele uitputting?"
+          }
+        },
+        {
+          "id": "endorfine-mdk-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your natural \"feel-good\" has disappeared after healthy exertion or social interaction, as if reward and recovery are lacking?",
+            "nl": "Heb je het gevoel dat je natuurlijke 'feelgood' na gezonde inspanning of sociaal contact verdwenen is, alsof beloning en herstel uitblijven?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2ag",
+      "title": {
+        "en": "2-Arachidonoylglycerol (2-AG)",
+        "nl": "2-Arachidonoylglycerol (2-AG)"
+      },
+      "description": {
+        "en": "The following questions are about your ability to release stress, your sense of inner calm, your appetite regulation, and your sensitivity to overstimulation.",
+        "nl": "De volgende vragen gaan over je vermogen om stress los te laten, je gevoel van innerlijke kalmte, je eetlustregulatie en je gevoeligheid voor overprikkeling."
+      },
+      "questions": [
+        {
+          "id": "2ag-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience restlessness or tension that doesn't easily disappear, even after relaxing or resting?",
+            "nl": "Heb je last van onrust of gespannenheid die niet makkelijk verdwijnt, ook na ontspanning of rustmomenten?"
+          }
+        },
+        {
+          "id": "2ag-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you find it difficult to regain emotional balance after a stressful event, as if stress \"lingers\"?",
+            "nl": "Voel je moeite om emotionele balans te hervinden na een stressvolle gebeurtenis, alsof stress 'blijft hangen'?"
+          }
+        },
+        {
+          "id": "2ag-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you experience fluctuations in your appetite, for example, increased hunger during stress or decreased appetite when you're restless?",
+            "nl": "Heb je last van schommelingen in eetlust, bijvoorbeeld sterke honger bij stress of juist verminderde eetlust wanneer je onrustig bent?"
+          }
+        },
+        {
+          "id": "2ag-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system is less able to achieve a relaxed, calming state?",
+            "nl": "Heb je het gevoel dat je systeem minder goed in staat is om een ontspannen, rustgevende toestand te bereiken?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "anandaminde",
+      "title": {
+        "en": "Anandaminde",
+        "nl": "Anandaminde"
+      },
+      "description": {
+        "en": "The following questions are about your ability to experience peace and contentment, your resistance to stress, your sensitivity to pain, and your sense of inner well-being.",
+        "nl": "De volgende vragen gaan over je vermogen om rust en tevredenheid te ervaren, je stressbestendigheid, je gevoeligheid voor pijn en je gevoel van innerlijk welzijn."
+      },
+      "questions": [
+        {
+          "id": "anandaminde-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience increased sensitivity to pain or physical discomfort, even with relatively mild stimuli?",
+            "nl": "Heb je last van een verhoogde gevoeligheid voor pijn of lichamelijke ongemakken, ook bij relatief milde prikkels?"
+          }
+        },
+        {
+          "id": "anandaminde-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you find it difficult to truly relax or experience moments of happiness or contentment, even when prompted?",
+            "nl": "Heb je moeite om echt te ontspannen of momenten van geluk of tevredenheid te voelen, zelfs wanneer daar aanleiding toe is?"
+          }
+        },
+        {
+          "id": "anandaminde-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you find it difficult to quiet your thoughts or fully relax your body during moments of rest?",
+            "nl": "Merk je dat je moeite hebt om in rustmomenten je gedachten tot stilte te brengen of je lichaam volledig te laten ontspannen?"
+          }
+        },
+        {
+          "id": "anandaminde-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel disconnected from inner contentment or well-being, as if joy or peace are less accessible?",
+            "nl": "Heb je het gevoel dat je 'losgekoppeld' bent geraakt van innerlijke tevredenheid of welzijn, alsof vreugde of rust minder toegankelijk zijn?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "leptine",
+      "title": {
+        "en": "Leptine",
+        "nl": "Leptine"
+      },
+      "description": {
+        "en": "The following questions are about your feeling of satiety, stability of body weight, hunger perception and your energy level during the day.",
+        "nl": "De volgende vragen gaan over je gevoel van verzadiging, stabiliteit van lichaamsgewicht, hongerbeleving en je energieniveau gedurende de dag."
+      },
+      "questions": [
+        {
+          "id": "leptine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you struggle to feel full after meals, causing you to keep eating or get hungry more quickly?",
+            "nl": "Heb je moeite om je verzadigd te voelen na maaltijden, waardoor je blijft eten of sneller trek hebt?"
+          }
+        },
+        {
+          "id": "leptine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you often feel tired or sluggish, despite adequate nutrition or rest?",
+            "nl": "Voel je je vaker vermoeid of traag, ondanks voldoende voeding of rust?"
+          }
+        },
+        {
+          "id": "leptine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you experience weight fluctuations or a feeling of \"energy drain,\" regardless of how much or what you eat?",
+            "nl": "Heb je last van gewichtsschommelingen of een gevoel van 'energie-lek', ongeacht hoeveel of wat je eet?"
+          }
+        },
+        {
+          "id": "leptine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body is struggling to maintain its energy reserves, as if your metabolic stability is lacking?",
+            "nl": "Heb je het gevoel dat je lichaam moeite heeft om zijn energiereserves in balans te houden, alsof je metabole stabiliteit ontbreekt?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "oxytocine",
+      "title": {
+        "en": "Oxytocine",
+        "nl": "Oxytocine"
+      },
+      "description": {
+        "en": "The following questions are about your sense of connectedness, your ability to relax in social situations, and your experience of peace and safety with others.",
+        "nl": "De volgende vragen gaan over je gevoel van verbondenheid, je vermogen tot ontspanning in sociale situaties en je ervaring van rust en veiligheid bij anderen."
+      },
+      "questions": [
+        {
+          "id": "oxytocine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you notice physical tension or anxiety in social situations, even with people you know?",
+            "nl": "Merk je lichamelijke spanning of onrust wanneer je in sociale situaties bent, zelfs bij mensen die je kent?"
+          }
+        },
+        {
+          "id": "oxytocine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you often feel emotionally withdrawn or struggle to truly connect with others?",
+            "nl": "Voel je je vaak emotioneel teruggetrokken of heb je moeite om echt verbinding te voelen met anderen?"
+          }
+        },
+        {
+          "id": "oxytocine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you can't relax after social interactions, or that you remain overstimulated?",
+            "nl": "Heb je het gevoel dat je na sociale interactie niet tot rust komt of juist overprikkeld blijft hangen?"
+          }
+        },
+        {
+          "id": "oxytocine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you struggle to experience safety and peace within yourself or in relationships, as if connection doesn't feel natural?",
+            "nl": "Heb je het gevoel dat je moeite hebt om veiligheid en rust in jezelf of in relaties te ervaren, alsof verbondenheid niet vanzelfsprekend voelt?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "npy",
+      "title": {
+        "en": "NPY",
+        "nl": "NPY"
+      },
+      "description": {
+        "en": "The following questions are about your stress resistance, your eating habits during stressful periods and your ability to remain calm and stable when under pressure.",
+        "nl": "De volgende vragen gaan over je stressbestendigheid, je eetpatroon in stressvolle periodes en je vermogen om kalmte en stabiliteit te bewaren wanneer je onder druk staat."
+      },
+      "questions": [
+        {
+          "id": "npy-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience an increased appetite or a preference for high-calorie foods during stressful moments?",
+            "nl": "Heb je last van verhoogde eetlust of voorkeur voor calorierijk voedsel tijdens stressmomenten?"
+          }
+        },
+        {
+          "id": "npy-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you lose your balance more quickly under prolonged stress or react more emotionally than you're used to?",
+            "nl": "Heb je het gevoel dat je onder langdurige stress sneller uit balans raakt of emotioneler reageert dan je van jezelf gewend bent?"
+          }
+        },
+        {
+          "id": "npy-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you find it difficult to recover during stressful periods, for example, that you struggle to regain your energy and calm after stress?",
+            "nl": "Merk je dat je in stressvolle periodes moeilijk herstelt, bijvoorbeeld moeite hebt om je energie en kalmte terug te vinden na stress?"
+          }
+        },
+        {
+          "id": "npy-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body is functioning in a \"survival-oriented\" way, as if your system quickly goes into save mode or overdrive under stress?",
+            "nl": "Heb je het gevoel dat je lichaam 'overlevingsgericht' functioneert, alsof je systeem snel in spaarstand of overdrive schiet bij spanning?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "calcitriol",
+      "title": {
+        "en": "Calcitriol",
+        "nl": "Calcitriol"
+      },
+      "description": {
+        "en": "The following questions are about your physical strength, resistance, mood and resilience during exertion or recovery.",
+        "nl": "De volgende vragen gaan over je fysieke stevigheid, weerstand, stemming en je veerkracht bij inspanning of herstel."
+      },
+      "questions": [
+        {
+          "id": "calcitriol-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience muscle weakness or reduced physical stability, such as bending your knees more easily or having less strength during daily movements?",
+            "nl": "Heb je last van spierzwakte of verminderde fysieke stabiliteit, bijvoorbeeld sneller door je knieën zakken of minder kracht bij dagelijkse bewegingen?"
+          }
+        },
+        {
+          "id": "calcitriol-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you find yourself more susceptible to depression or a flat mood, especially during periods with little sunlight?",
+            "nl": "Merk je dat je gevoeliger bent voor somberheid of een vlakke stemming, vooral in perioden met weinig zonlicht?"
+          }
+        },
+        {
+          "id": "calcitriol-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer more frequently from recurring infections or a weakened immune system, especially in the fall or winter months?",
+            "nl": "Heb je vaker last van terugkerende infecties of een verminderde weerstand, vooral in herfst- of wintermaanden?"
+          }
+        },
+        {
+          "id": "calcitriol-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system has become less robust or vital, as if your foundation of energy, bone health, or immunity has weakened?",
+            "nl": "Heb je het gevoel dat je systeem minder stevig of vitaal is geworden, alsof je fundament van energie, botgezondheid of weerstand verzwakt is?"
+          }
+        }
       ]
     }
   ]
