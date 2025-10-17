@@ -4,15 +4,17 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "questionnaires")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@BatchSize(size = 20)
 public class Questionnaire {
 
         @Id
@@ -42,7 +44,9 @@ public class Questionnaire {
 
         @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         @JoinColumn(name = "questionnaire_id")
-        private Set<Section> sections = new HashSet<>();
+        @OrderBy("sortOrder ASC")
+        @BatchSize(size = 50)
+        private List<Section> sections = new ArrayList<>();
 
         @Column(name = "is_active")
         private Boolean isActive = true;

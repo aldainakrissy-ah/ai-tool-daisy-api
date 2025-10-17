@@ -12,12 +12,13 @@ import java.util.Optional;
 @Repository
 public interface QuestionnaireRepository extends JpaRepository<Questionnaire, String> {
     Optional<Questionnaire> findById(String id);
+
     List<Questionnaire> findAll();
+
     @Query("SELECT DISTINCT q FROM Questionnaire q " +
-           "LEFT JOIN FETCH q.sections s " +
-           "LEFT JOIN FETCH s.questions qu " +
-           "LEFT JOIN FETCH qu.options o " +
-           "WHERE q.id = :id")
+            "LEFT JOIN FETCH q.sections s " +
+            "WHERE q.id = :id")
     Optional<Questionnaire> findByIdWithDetails(@Param("id") String id);
+
     boolean existsById(String id);
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -126,9 +127,14 @@ public class QuestionnaireService {
 
         // Convert sections and maintain bidirectional relationships
         if (dto.getSections() != null) {
-            Set<Section> sections = dto.getSections().stream()
-                    .map(sectionDto -> convertSectionToEntity(sectionDto, questionnaire))
-                    .collect(Collectors.toSet());
+            AtomicInteger sectionOrder = new AtomicInteger(0);
+            List<Section> sections = dto.getSections().stream()
+                    .map(sectionDto -> {
+                        Section section = convertSectionToEntity(sectionDto, questionnaire);
+                        section.setSortOrder(sectionOrder.getAndIncrement());
+                        return section;
+                    })
+                    .collect(Collectors.toList());
             questionnaire.setSections(sections);
         }
         return questionnaire;
@@ -141,18 +147,20 @@ public class QuestionnaireService {
         section.setTitle(toLocalizedText(dto.getTitle()));
 
         if (dto.getQuestions() != null) {
-            Set<Question> questions = dto.getQuestions().stream()
+            AtomicInteger questionOrder = new AtomicInteger(0);
+            List<Question> questions = dto.getQuestions().stream()
                     .map(questionDto -> {
                         Question question = convertQuestionToEntity(questionDto);
                         question.setId(
                                 questionDto.getId() != null ? questionDto.getId() : UUID.randomUUID().toString());
                         question.setSection(section); // Set up bidirectional relationship
+                        question.setSortOrder(questionOrder.getAndIncrement());
                         return question;
                     })
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toList());
             section.setQuestions(questions);
         } else {
-            section.setQuestions(new HashSet<>());
+            section.setQuestions(new ArrayList<>());
         }
 
         return section;
@@ -164,9 +172,15 @@ public class QuestionnaireService {
         question.setType(dto.getType());
         question.setText(toLocalizedText(dto.getText()));
         if (dto.getOptions() != null) {
-            question.setOptions(dto.getOptions().stream()
-                    .map(this::convertOptionToEntity)
-                    .collect(Collectors.toSet()));
+            AtomicInteger optionOrder = new AtomicInteger(0);
+            List<Option> options = dto.getOptions().stream()
+                    .map(optionDto -> {
+                        Option option = convertOptionToEntity(optionDto);
+                        option.setSortOrder(optionOrder.getAndIncrement());
+                        return option;
+                    })
+                    .collect(Collectors.toList());
+            question.setOptions(options);
         }
         return question;
     }
@@ -206,7 +220,8 @@ public class QuestionnaireService {
                     ? existing.getSections().stream().collect(Collectors.toMap(Section::getId, s -> s, (s1, s2) -> s1))
                     : new HashMap<>();
 
-            Set<Section> updatedSections = dto.getSections().stream()
+            AtomicInteger sectionOrder = new AtomicInteger(0);
+            List<Section> updatedSections = dto.getSections().stream()
                     .map(sectionDto -> {
                         // Check if section with this ID already exists
                         Section existingSection = existingSectionsMap.get(sectionDto.getId());
@@ -214,22 +229,27 @@ public class QuestionnaireService {
                             // Update existing section
                             existingSection.setTitle(toLocalizedText(sectionDto.getTitle()));
                             if (sectionDto.getQuestions() != null) {
-                                Set<Question> updatedQuestions = sectionDto.getQuestions().stream()
+                                AtomicInteger questionOrder = new AtomicInteger(0);
+                                List<Question> updatedQuestions = sectionDto.getQuestions().stream()
                                         .map(questionDto -> {
                                             Question question = convertQuestionToEntity(questionDto);
                                             question.setSection(existingSection);
+                                            question.setSortOrder(questionOrder.getAndIncrement());
                                             return question;
                                         })
-                                        .collect(Collectors.toSet());
+                                        .collect(Collectors.toList());
                                 existingSection.setQuestions(updatedQuestions);
                             }
+                            existingSection.setSortOrder(sectionOrder.getAndIncrement());
                             return existingSection;
                         } else {
                             // Create new section
-                            return convertSectionToEntity(sectionDto, existing);
+                            Section newSection = convertSectionToEntity(sectionDto, existing);
+                            newSection.setSortOrder(sectionOrder.getAndIncrement());
+                            return newSection;
                         }
                     })
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toList());
             existing.setSections(updatedSections);
         }
     }

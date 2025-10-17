@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class Option {
     private String value;
+    private Integer sortOrder;
 
     @Embedded
     private LocalizedText label;

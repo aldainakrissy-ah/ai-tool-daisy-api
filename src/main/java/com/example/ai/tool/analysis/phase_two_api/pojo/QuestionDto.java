@@ -1,20 +1,23 @@
 package com.example.ai.tool.analysis.phase_two_api.pojo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.Nulls;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class QuestionDto {
     private String id;
     private String type;
     private LocalizedTextDto text;
-    private Boolean required = false;
-
-    @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
-    @JsonSetter(nulls = Nulls.AS_EMPTY)
     private List<OptionDto> options = new ArrayList<>();
+    private List<QuestionColumnDto> columns = new ArrayList<>();
+    private ValidationRulesDto validation;
+    private Integer maxNames;
+    private Boolean required = false;
+    private Integer sortOrder;
 }

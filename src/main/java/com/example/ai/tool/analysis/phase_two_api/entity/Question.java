@@ -15,16 +15,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.BatchSize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -52,13 +49,14 @@ public class Question {
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "question_options", joinColumns = @JoinColumn(name = "question_id", foreignKey = @ForeignKey(name = "fk_question_options")), indexes = @Index(name = "idx_question_options", columnList = "question_id"))
-    @Fetch(FetchMode.SUBSELECT)
-    private Set<Option> options = new HashSet<>();
+    @OrderBy("sortOrder ASC")
+    @BatchSize(size = 100)
+    private List<Option> options = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "question_columns", joinColumns = @JoinColumn(name = "question_id", foreignKey = @ForeignKey(name = "fk_question_columns")), indexes = @Index(name = "idx_question_columns", columnList = "question_id"))
     @OrderBy("sortOrder ASC")
-    @Fetch(FetchMode.SUBSELECT)
+    @BatchSize(size = 20)
     private List<QuestionColumn> columns = new ArrayList<>();
 
     @Embedded
