@@ -14,9 +14,14 @@ import java.util.Set;
 @Table(name = "sections")
 public class Section {
     @Id
+    @Column(columnDefinition = "varchar(255)")
     private String id;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "en", column = @Column(name = "title_en", columnDefinition = "text")),
+            @AttributeOverride(name = "nl", column = @Column(name = "title_nl", columnDefinition = "text"))
+    })
     private LocalizedText title;
 
     @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
@@ -24,8 +29,10 @@ public class Section {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Section)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof Section))
+            return false;
         Section section = (Section) o;
         return Objects.equals(id, section.id);
     }

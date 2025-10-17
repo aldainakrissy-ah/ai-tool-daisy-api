@@ -14,27 +14,39 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Questionnaire {
-    
-    @Id
-    private String id;
 
-    @Embedded
-    private LocalizedText title;
+        @Id
+        @Column(columnDefinition = "varchar(255)")
+        private String id;
 
-    @Embedded
-    @AttributeOverrides({
-        @AttributeOverride(name = "en", column = @Column(name = "description_en")),
-        @AttributeOverride(name = "nl", column = @Column(name = "description_nl"))
-    })
-    private LocalizedText description;
+        @Embedded
+        @AttributeOverrides({
+                        @AttributeOverride(name = "en", column = @Column(name = "title_en", columnDefinition = "text")),
+                        @AttributeOverride(name = "nl", column = @Column(name = "title_nl", columnDefinition = "text"))
+        })
+        private LocalizedText title;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "questionnaire_id")
-    private Set<Section> sections = new HashSet<>();
+        @Embedded
+        @AttributeOverrides({
+                        @AttributeOverride(name = "en", column = @Column(name = "description_en", columnDefinition = "text")),
+                        @AttributeOverride(name = "nl", column = @Column(name = "description_nl", columnDefinition = "text"))
+        })
+        private LocalizedText description;
 
-    @Column(name = "is_active")
-    private Boolean isActive = true;
+        @Embedded
+        @AttributeOverrides({
+                        @AttributeOverride(name = "en", column = @Column(name = "instructions_en", columnDefinition = "text")),
+                        @AttributeOverride(name = "nl", column = @Column(name = "instructions_nl", columnDefinition = "text"))
+        })
+        private LocalizedText instructions;
 
-    @Column(name = "version")
-    private Integer version = 1;
+        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+        @JoinColumn(name = "questionnaire_id")
+        private Set<Section> sections = new HashSet<>();
+
+        @Column(name = "is_active")
+        private Boolean isActive = true;
+
+        @Column(name = "version")
+        private Integer version = 1;
 }

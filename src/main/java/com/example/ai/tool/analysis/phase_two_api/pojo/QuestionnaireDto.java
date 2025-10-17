@@ -9,6 +9,7 @@ public class QuestionnaireDto {
     private String id;
     private LocalizedTextDto title;
     private LocalizedTextDto description;
+    private LocalizedTextDto instructions;
     private List<SectionDto> sections;
     private Boolean isActive;
     private Integer version;

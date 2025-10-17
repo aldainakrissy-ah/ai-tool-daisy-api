@@ -5,6 +5,7 @@ import com.example.ai.tool.analysis.phase_two_api.entity.QuestionColumn;
 import com.example.ai.tool.analysis.phase_two_api.pojo.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.NullNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -22,16 +23,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class QuestionnaireLoaderService {
-    
+
     private final ResourceLoader resourceLoader;
     private final ObjectMapper objectMapper;
     private final QuestionnaireService questionnaireService;
-    
+
     @Value("${questionnaire.auto-load-on-startup:true}")
     private boolean autoLoadOnStartup;
 
     /**
      * Loads all questionnaire JSON files from the questionnaires directory
+     * 
      * @throws IOException if there's an error reading the files
      */
     public void loadAllQuestionnaires() throws IOException {
@@ -79,7 +81,7 @@ public class QuestionnaireLoaderService {
             log.warn("Questionnaire already exists: {}", questionnaireDto.getId());
         }
     }
-    
+
     public QuestionnaireDto parseJsonToQuestionnaireDto(JsonNode jsonNode) {
         QuestionnaireDto dto = new QuestionnaireDto();
         dto.setId(jsonNode.get("id").asText());
@@ -97,17 +99,17 @@ public class QuestionnaireLoaderService {
         dto.setVersion(1);
         return dto;
     }
-    
+
     private SectionDto parseSectionDto(JsonNode sectionNode) {
         SectionDto dto = new SectionDto();
         dto.setId(sectionNode.get("id").asText());
-        
+
         // Parse title if it exists
         JsonNode titleNode = sectionNode.get("title");
         if (titleNode != null) {
             dto.setTitle(parseLocalizedTextDto(titleNode));
         }
-        
+
         // Parse questions array
         JsonNode questionsNode = sectionNode.get("questions");
         if (questionsNode != null && questionsNode.isArray()) {
@@ -117,41 +119,82 @@ public class QuestionnaireLoaderService {
                 questions.add(questionDto);
             }
             dto.setQuestions(questions);
-            
+
             // Log the number of questions parsed for debugging
             log.debug("Parsed {} questions for section {}", questions.size(), dto.getId());
         } else {
             log.debug("No questions found for section {}", dto.getId());
             dto.setQuestions(new ArrayList<>());
         }
-        
+
         return dto;
     }
-    
+
     private QuestionDto parseQuestionDto(JsonNode questionNode) {
         QuestionDto dto = new QuestionDto();
-        dto.setId(questionNode.get("id").asText());
-        dto.setType(questionNode.get("type").asText());
-        dto.setText(parseLocalizedTextDto(questionNode.get("text")));
+
+        JsonNode idNode = questionNode.get("id");
+        if (idNode == null) {
+            throw new IllegalArgumentException("Question must have an id");
+        }
+        dto.setId(idNode.asText());
+
+        JsonNode typeNode = questionNode.get("type");
+        if (typeNode == null) {
+            throw new IllegalArgumentException("Question must have a type");
+        }
+        dto.setType(typeNode.asText());
+
+        JsonNode textNode = questionNode.get("text");
+        if (textNode == null) {
+            throw new IllegalArgumentException("Question must have text");
+        }
+        dto.setText(parseLocalizedTextDto(textNode));
+
+        // Parse required field with default value false if not present
+        dto.setRequired(false); // Default value
+        JsonNode requiredNode = questionNode.get("required");
+        if (requiredNode != null && !requiredNode.isNull()) {
+            dto.setRequired(requiredNode.asBoolean());
+        }
+
         JsonNode optionsNode = questionNode.get("options");
         if (optionsNode != null && optionsNode.isArray()) {
             List<OptionDto> options = new ArrayList<>();
             for (JsonNode optionNode : optionsNode) {
                 OptionDto optionDto = new OptionDto();
-                optionDto.setValue(optionNode.get("value").asText());
-                optionDto.setLabel(parseLocalizedTextDto(optionNode.get("label")));
+                JsonNode valueNode = optionNode.get("value");
+                if (valueNode != null) {
+                    optionDto.setValue(valueNode.asText());
+                }
+                JsonNode labelNode = optionNode.get("label");
+                if (labelNode != null) {
+                    optionDto.setLabel(parseLocalizedTextDto(labelNode));
+                }
                 options.add(optionDto);
             }
             dto.setOptions(options);
         }
         return dto;
     }
-    
+
     private LocalizedTextDto parseLocalizedTextDto(JsonNode node) {
-        if (node == null) return null;
+        if (node == null || node.isNull()) {
+            return null;
+        }
+
         LocalizedTextDto dto = new LocalizedTextDto();
-        if (node.has("en")) dto.setEn(node.get("en").asText());
-        if (node.has("nl")) dto.setNl(node.get("nl").asText());
+
+        JsonNode enNode = node.get("en");
+        if (enNode != null && !enNode.isNull()) {
+            dto.setEn(enNode.asText());
+        }
+
+        JsonNode nlNode = node.get("nl");
+        if (nlNode != null && !nlNode.isNull()) {
+            dto.setNl(nlNode.asText());
+        }
+
         return dto;
     }
 }
