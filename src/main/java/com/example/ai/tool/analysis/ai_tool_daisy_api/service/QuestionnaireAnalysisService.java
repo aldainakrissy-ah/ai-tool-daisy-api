@@ -1,5 +1,6 @@
 package com.example.ai.tool.analysis.ai_tool_daisy_api.service;
 
+import com.example.ai.tool.analysis.ai_tool_daisy_api.constant.QuestionnaireInstructions;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1ResultEntity;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1Result;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.Prompt1ResultRepository;
@@ -12,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -42,7 +43,6 @@ public class QuestionnaireAnalysisService {
      * @param file the uploaded PDF file as a {@link MultipartFile}.
      * @return the response from the OpenAI API as a {@link String}.
      */
-    @Async
     @Transactional
     public CompletableFuture<Prompt1Result> generatePreIntakeAnalysis(MultipartFile file) {
         if (file == null || file.isEmpty()) {
@@ -55,10 +55,11 @@ public class QuestionnaireAnalysisService {
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String content = pdfStripper.getText(document);
             StructuredResponseCreateParams<Prompt1Result> params = StructuredResponseCreateParams.<Prompt1Result>builder()
-                    .model(ChatModel.GPT_4_1)
+                    .model(ChatModel.GPT_5)
                     .addFileSearchTool(Collections.singletonList(FILE_ID))
+                    .instructions(QuestionnaireInstructions.PROMPT1_INSTRUCTION)
                     .input("Process the intake questionnaire and demographic data with prompt 1. Here is the content:\n" + content)
-                    .temperature(0.2)
+                    //.temperature(0.2)
                     .text(Prompt1Result.class)
                     .build();
             StructuredResponse<Prompt1Result> response = client.responses().create(params);
@@ -71,6 +72,7 @@ public class QuestionnaireAnalysisService {
                     .findFirst().map(prompt1Result -> {
                         Prompt1ResultEntity prompt1ResultEntity = new Prompt1ResultEntity();
                         prompt1ResultEntity.setPatientId(prompt1Result.getPatientId());
+                        prompt1ResultEntity.setProfessionalId(String.valueOf(UUID.randomUUID()));
                         prompt1ResultEntity.setResultJson(prompt1Result.toString());
 
                         prompt1ResultRepository.save(prompt1ResultEntity);
@@ -84,15 +86,28 @@ public class QuestionnaireAnalysisService {
             throw new RuntimeException("Error processing PDF file for healthcare analysis: " + e.getMessage(), e);
         }
     }
+
     /**
      * Retrieves Prompt1 results by patient ID from the database.
      *
-     * @param patientId the patient ID to search for.
+     * @param professionalId the patient ID to search for.
      * @return a list of {@link Prompt1ResultEntity} matching the patient ID.
      */
     @Transactional
-    public List<Prompt1ResultEntity> getPrompt1ResultByPatientId(String patientId) {
-        log.info("Fetching Prompt1 results for patient id: {}", patientId);
-        return prompt1ResultRepository.findByPatientId(patientId);
+    public List<Prompt1ResultEntity> getPreIntakeResult(String professionalId) {
+        log.info("Fetching Prompt1 results for professional id: {}", professionalId);
+        return prompt1ResultRepository.findByProfessionalId(professionalId);
+    }
+    /**
+     * Retrieves Prompt1 result by professional ID and patient ID from the database.
+     *
+     * @param professionalId the professional ID to search for.
+     * @param patientId the patient ID to search for.
+     * @return a list of {@link Prompt1ResultEntity} matching the professional ID and patient ID.
+     */
+    @Transactional
+    public List<Prompt1ResultEntity> getPreIntakeResultByProfessionalIdAndPatientId(String professionalId, String patientId) {
+        log.info("Fetching Prompt1 result for professional id: {} and patient id: {}", professionalId, patientId);
+        return prompt1ResultRepository.findByProfessionalIdAndPatientId(professionalId, patientId);
     }
 }

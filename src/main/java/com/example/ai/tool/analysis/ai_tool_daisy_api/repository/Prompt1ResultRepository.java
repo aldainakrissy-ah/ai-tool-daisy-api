@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface Prompt1ResultRepository extends  JpaRepository<Prompt1ResultEntity, Long> {
-    List<Prompt1ResultEntity> findByPatientId(String patientId);
+    List<Prompt1ResultEntity> findByProfessionalId(String professionalId);
+    List<Prompt1ResultEntity> findByProfessionalIdAndPatientId(String professionalId, String patientId);
 }

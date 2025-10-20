@@ -9,8 +9,10 @@ import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Prompt1Result {
+    @JsonProperty("professional_id")
+    private String professionalId; //general id for the healthcare professional
     @JsonProperty("patient_id")
-    private String patientId;
+    private String patientId; //general id for the patient
     private Analysis analysis;
     private Routing routing;
 

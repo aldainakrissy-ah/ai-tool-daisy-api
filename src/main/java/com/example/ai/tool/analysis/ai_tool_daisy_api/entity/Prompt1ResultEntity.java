@@ -18,6 +18,9 @@ public class Prompt1ResultEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "professional_id", nullable = false)
+    private String professionalId;
+
     @Column(name = "patient_id", nullable = false)
     private String patientId;
 
