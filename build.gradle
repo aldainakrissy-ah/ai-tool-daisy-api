@@ -60,6 +60,9 @@ dependencies {
     // OpenAI
     implementation 'com.openai:openai-java:3.0.3'
     implementation 'org.springframework.ai:spring-ai-openai:1.0.0'
+
+	//Spring Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 test {

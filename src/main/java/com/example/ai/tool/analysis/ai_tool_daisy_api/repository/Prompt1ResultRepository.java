@@ -5,9 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface Prompt1ResultRepository extends  JpaRepository<Prompt1ResultEntity, Long> {
-    List<Prompt1ResultEntity> findByPatientId(String patientId);
+    List<Prompt1ResultEntity> findByProfessionalId(String professionalId);
+    List<Prompt1ResultEntity> findByProfessionalIdAndPatientId(String professionalId, String patientId);
 }

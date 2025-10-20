@@ -4,43 +4,38 @@ import com.example.ai.tool.analysis.ai_tool_daisy_api.constant.QuestionnaireInst
 import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1ResultEntity;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1Result;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.Prompt1ResultRepository;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openai.client.OpenAIClient;
-import com.openai.models.ChatModel;
-import com.openai.models.responses.ResponseCreateParams;
-import lombok.AllArgsConstructor;
+import com.openai.errors.OpenAIException;
 
+import com.openai.models.ChatModel;
+import com.openai.models.responses.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Service class responsible for processing PDF files and interacting with the OpenAI API.
  */
-@Service
-@AllArgsConstructor
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class QuestionnaireAnalysisService {
 
-    private OpenAIClient client;
+    private final OpenAIClient client;
 
-    @Autowired
-    private Prompt1ResultRepository prompt1ResultRepository;
+    private final Prompt1ResultRepository prompt1ResultRepository;
 
     public static final String FILE_ID = "vs_68ca996f20ec8191974741691b169cae";
-
-    private static final ObjectMapper MAPPER = new ObjectMapper()
-            .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
-            .configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     /**
      * Processes the uploaded PDF file, extracts its content, and sends it to the OpenAI API for analysis.
@@ -48,50 +43,71 @@ public class QuestionnaireAnalysisService {
      * @param file the uploaded PDF file as a {@link MultipartFile}.
      * @return the response from the OpenAI API as a {@link String}.
      */
-    public Prompt1Result generatePreIntakeAnalysis(MultipartFile file) {
+    @Transactional
+    public CompletableFuture<Prompt1Result> generatePreIntakeAnalysis(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("PDF file cannot be empty");
+        }
+
+        log.info("Processing file: {}", file.getOriginalFilename());
 
         try (PDDocument document = PDDocument.load(file.getInputStream())) {
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String content = pdfStripper.getText(document);
-            ResponseCreateParams params = ResponseCreateParams.builder()
+            StructuredResponseCreateParams<Prompt1Result> params = StructuredResponseCreateParams.<Prompt1Result>builder()
                     .model(ChatModel.GPT_5)
                     .addFileSearchTool(Collections.singletonList(FILE_ID))
-                    .instructions(QuestionnaireInstructions.PROMPT1_INSTRUCTIONS)
-                    .input("Process the intake questionnaire and demographic data with prompt 1. And provide the output as a json object of type Prompt1Result. Here is the content:" + content)
+                    .instructions(QuestionnaireInstructions.PROMPT1_INSTRUCTION)
+                    .input("Process the intake questionnaire and demographic data with prompt 1. Here is the content:\n" + content)
+                    //.temperature(0.2)
+                    .text(Prompt1Result.class)
                     .build();
+            StructuredResponse<Prompt1Result> response = client.responses().create(params);
+            log.debug("OpenAI response: {}", response);
 
-            log.info("Sending request to OpenAI with extracted PDF content: {}", content);
-            String response = client.responses()
-                    .create(params)
-                    .output()
-                    .stream()
+            return CompletableFuture.supplyAsync(() -> response.output().stream()
                     .flatMap(item -> item.message().stream())
                     .flatMap(msg -> msg.content().stream())
-                    .map(responseOutputText -> responseOutputText.asOutputText().text()).collect(Collectors.joining());
-            Prompt1Result result = Prompt1Result.fromJson(response);
+                    .map(StructuredResponseOutputMessage.Content::asOutputText)
+                    .findFirst().map(prompt1Result -> {
+                        Prompt1ResultEntity prompt1ResultEntity = new Prompt1ResultEntity();
+                        prompt1ResultEntity.setPatientId(prompt1Result.getPatientId());
+                        prompt1ResultEntity.setProfessionalId(String.valueOf(UUID.randomUUID()));
+                        prompt1ResultEntity.setResultJson(prompt1Result.toString());
 
-            log.info("Successfully received response from OpenAI for patient id: {}", result.getPatientId());
-            String json = MAPPER.writeValueAsString(result);
-            Prompt1ResultEntity entity = new Prompt1ResultEntity();
-            entity.setPatientId(result.getPatientId());
-            entity.setResultJson(json);
-            prompt1ResultRepository.save(entity);
+                        prompt1ResultRepository.save(prompt1ResultEntity);
+                        return prompt1Result;
+                    })
+                    .orElseThrow(() -> new RuntimeException("No valid response from OpenAI"))).thenApply(result -> result);
 
-            return result;
 
-        } catch (Exception e) {
-            log.error("Error processing PDF file for healthcare analysis. Error: {}", e.getMessage());
-            throw new RuntimeException("Error processing PDF file for healthcare analysis: Error: {}" + e.getMessage());
+        } catch (IOException | OpenAIException e) {
+            log.error("Error processing PDF file for healthcare analysis", e);
+            throw new RuntimeException("Error processing PDF file for healthcare analysis: " + e.getMessage(), e);
         }
     }
+
     /**
      * Retrieves Prompt1 results by patient ID from the database.
      *
-     * @param patientId the patient ID to search for.
+     * @param professionalId the patient ID to search for.
      * @return a list of {@link Prompt1ResultEntity} matching the patient ID.
      */
-    public List<Prompt1ResultEntity> getPrompt1ResultByPatientId(String patientId) {
-        log.info("Fetching Prompt1 results for patient id: {}", patientId);
-        return prompt1ResultRepository.findByPatientId(patientId);
+    @Transactional
+    public List<Prompt1ResultEntity> getPreIntakeResult(String professionalId) {
+        log.info("Fetching Prompt1 results for professional id: {}", professionalId);
+        return prompt1ResultRepository.findByProfessionalId(professionalId);
+    }
+    /**
+     * Retrieves Prompt1 result by professional ID and patient ID from the database.
+     *
+     * @param professionalId the professional ID to search for.
+     * @param patientId the patient ID to search for.
+     * @return a list of {@link Prompt1ResultEntity} matching the professional ID and patient ID.
+     */
+    @Transactional
+    public List<Prompt1ResultEntity> getPreIntakeResultByProfessionalIdAndPatientId(String professionalId, String patientId) {
+        log.info("Fetching Prompt1 result for professional id: {} and patient id: {}", professionalId, patientId);
+        return prompt1ResultRepository.findByProfessionalIdAndPatientId(professionalId, patientId);
     }
 }

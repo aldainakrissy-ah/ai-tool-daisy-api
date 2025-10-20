@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * REST controller for handling questionnaire analysis requests.
@@ -28,23 +30,34 @@ public class QuestionnaireAnalysisController {
      * @param file the uploaded PDF file as a {@link MultipartFile}.
      * @return a {@link ResponseEntity} containing the result of the processing or an error message.
      */
-    @PostMapping("/read/pdf")
-    public ResponseEntity<Prompt1Result> readPdf(@RequestParam("file") MultipartFile file) {
+    @PostMapping("/preintake/analyze")
+    public ResponseEntity<Prompt1Result> readPdf(@RequestParam("file") MultipartFile file) throws ExecutionException, InterruptedException {
         log.info("Received file: {}", file.getOriginalFilename());
-        Prompt1Result responseFuture = questionnaireAnalysisService.generatePreIntakeAnalysis(file);
-        return ResponseEntity.ok(responseFuture);
+        CompletableFuture<Prompt1Result> responseFuture = questionnaireAnalysisService.generatePreIntakeAnalysis(file);
+        return ResponseEntity.ok(responseFuture.get());
     }
 
     /**
-     * Endpoint to retrieve Prompt1 results by patient ID.
+     * Endpoint to retrieve Prompt1 results by professional ID.
      *
-     * @param patientId the patient ID to search for.
+     * @param professionalId the patient ID to search for.
      * @return a {@link ResponseEntity} containing a list of {@link Prompt1ResultEntity} or a not found status.
      */
-    @GetMapping("/results/{patientId}")
-    public ResponseEntity<List<Prompt1ResultEntity>> getPrompt1ResultByPatientId(@PathVariable("patientId") String patientId) {
-        List<Prompt1ResultEntity> result = questionnaireAnalysisService.getPrompt1ResultByPatientId(patientId);
+    @GetMapping("/results/{professionalId}")
+    public ResponseEntity<List<Prompt1ResultEntity>> getResultsByProfessionalId(@PathVariable("professionalId") String professionalId) {
+        List<Prompt1ResultEntity> result = questionnaireAnalysisService.getPreIntakeResult(professionalId);
         if (result == null || result.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("results/{professionalId}/client/{patientId}")
+    public ResponseEntity<List<Prompt1ResultEntity>> getResultByProfessionalIdAndPatientId(
+            @PathVariable("professionalId") String professionalId,
+            @PathVariable("patientId") String patientId) {
+        List<Prompt1ResultEntity> result = questionnaireAnalysisService.getPreIntakeResultByProfessionalIdAndPatientId(professionalId, patientId);
+        if (result == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(result);

@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-
 @SpringBootApplication
 @ComponentScan(basePackages = {
     "com.example.ai.tool.analysis.ai_tool_daisy_api", 
