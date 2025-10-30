@@ -5,12 +5,12 @@ import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1Result;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.QuestionnaireAnalysisService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -20,6 +20,7 @@ import java.util.concurrent.ExecutionException;
 @RestController
 @RequestMapping("/ai/tool/daisy/")
 @AllArgsConstructor
+@CrossOrigin(origins = "*")
 public class QuestionnaireAnalysisController {
 
     private final QuestionnaireAnalysisService questionnaireAnalysisService;
@@ -33,8 +34,8 @@ public class QuestionnaireAnalysisController {
     @PostMapping("/preintake/analyze")
     public ResponseEntity<Prompt1Result> readPdf(@RequestParam("file") MultipartFile file) throws ExecutionException, InterruptedException {
         log.info("Received file: {}", file.getOriginalFilename());
-        CompletableFuture<Prompt1Result> responseFuture = questionnaireAnalysisService.generatePreIntakeAnalysis(file);
-        return ResponseEntity.ok(responseFuture.get());
+        Prompt1Result responseFuture = questionnaireAnalysisService.generatePreIntakeAnalysis(file);
+        return ResponseEntity.ok(responseFuture);
     }
 
     /**
@@ -62,5 +63,23 @@ public class QuestionnaireAnalysisController {
         }
         return ResponseEntity.ok(result);
     }
+
+    @PostMapping(value = "/preintake/analyze/save", consumes = "application/json")
+    public ResponseEntity<Void> savePreIntakeResult(@RequestBody Prompt1Result prompt1Result) {
+        if (prompt1Result == null) {
+            log.warn("Received null Prompt1Result payload");
+            return ResponseEntity.badRequest().build();
+        }
+        log.info("Saving Prompt1 result for professional id: {}", prompt1Result.getProfessionalId());
+        try {
+            questionnaireAnalysisService.savePrompt1Result(prompt1Result);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            log.error("Failed to save Prompt1 result for professionalId={}, {}",
+                    prompt1Result.getProfessionalId(), e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }
 
