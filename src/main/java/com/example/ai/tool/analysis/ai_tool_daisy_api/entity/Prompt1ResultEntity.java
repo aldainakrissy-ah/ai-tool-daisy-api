@@ -27,7 +27,7 @@ public class Prompt1ResultEntity {
     private String patientId;
 
     @Type(JsonBinaryType.class)
-    @Column(name = "result_json", columnDefinition = "jsonb", nullable = false)
+    @Column(name = "result_json", columnDefinition = "jsonb")
     private String resultJson;
 
     @CreationTimestamp
