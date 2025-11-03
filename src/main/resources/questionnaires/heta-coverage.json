@@ -1642,51 +1642,6 @@
           }
         }
       ]
-    },
-    {
-      "id": "calcitriol",
-      "title": {
-        "en": "Calcitriol",
-        "nl": "Calcitriol"
-      },
-      "description": {
-        "en": "The following questions are about your physical strength, resistance, mood and resilience during exertion or recovery.",
-        "nl": "De volgende vragen gaan over je fysieke stevigheid, weerstand, stemming en je veerkracht bij inspanning of herstel."
-      },
-      "questions": [
-        {
-          "id": "calcitriol-q1",
-          "type": "text",
-          "text": {
-            "en": "Do you experience muscle weakness or reduced physical stability, such as bending your knees more easily or having less strength during daily movements?",
-            "nl": "Heb je last van spierzwakte of verminderde fysieke stabiliteit, bijvoorbeeld sneller door je knieën zakken of minder kracht bij dagelijkse bewegingen?"
-          }
-        },
-        {
-          "id": "calcitriol-q2",
-          "type": "text",
-          "text": {
-            "en": "Do you find yourself more susceptible to depression or a flat mood, especially during periods with little sunlight?",
-            "nl": "Merk je dat je gevoeliger bent voor somberheid of een vlakke stemming, vooral in perioden met weinig zonlicht?"
-          }
-        },
-        {
-          "id": "calcitriol-q3",
-          "type": "text",
-          "text": {
-            "en": "Do you suffer more frequently from recurring infections or a weakened immune system, especially in the fall or winter months?",
-            "nl": "Heb je vaker last van terugkerende infecties of een verminderde weerstand, vooral in herfst- of wintermaanden?"
-          }
-        },
-        {
-          "id": "calcitriol-q4",
-          "type": "text",
-          "text": {
-            "en": "Do you feel like your system has become less robust or vital, as if your foundation of energy, bone health, or immunity has weakened?",
-            "nl": "Heb je het gevoel dat je systeem minder stevig of vitaal is geworden, alsof je fundament van energie, botgezondheid of weerstand verzwakt is?"
-          }
-        }
-      ]
     }
   ]
 }

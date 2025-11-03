@@ -13,8 +13,19 @@
           "id": "ssq6-1a",
           "type": "names-list",
           "maxNames": 9,
-          "text": { "en": "Who can you turn to when you feel unhappy or sad?", "nl": "Bij wie kun je terecht als je je ongelukkig of verdrietig voelt?" },
-          "options": ["With no one", "bij niemand"]
+          "text": { "en": "1a. Who can you turn to when you feel unhappy or sad?", "nl": "1a. Bij wie kun je terecht als je je ongelukkig of verdrietig voelt?" },
+          "options": [
+            { "en": "With no one", "nl": "bij niemand" },
+            { "en": "[name 1]", "nl": "[naam 1]" },
+            { "en": "[name 2]", "nl": "[naam 2]" },
+            { "en": "[name 3]", "nl": "[naam 3]" },
+            { "en": "[name 4]", "nl": "[naam 4]" },
+            { "en": "[name 5]", "nl": "[naam 5]" },
+            { "en": "[name 6]", "nl": "[naam 6]" },
+            { "en": "[name 7]", "nl": "[naam 7]" },
+            { "en": "[name 8]", "nl": "[naam 8]" },
+            { "en": "[name 9]", "nl": "[naam 9]" }
+          ]
         },
         {
           "id": "ssq6-1b",
@@ -27,14 +38,25 @@
             {"value": 4, "label": {"en": "Fairly satisfied", "nl": "Tamelijk tevreden"}},
             {"value": 5, "label": {"en": "Very satisfied", "nl": "Zeer tevreden"}}
           ],
-          "text": { "en": "Overall, how satisfied are you with the social support you receive from these people?", "nl": "Hoe tevreden bent u over het algemeen over de sociale steun die u van deze mensen krijgt?" }
+          "text": { "en": "1b. Overall, how satisfied are you with the social support you receive from these people?", "nl": "1b. Hoe tevreden bent u over het algemeen over de sociale steun die u van deze mensen krijgt?" }
         },
         {
           "id": "ssq6-2a",
           "type": "names-list",
           "maxNames": 9,
-          "text": { "en": "Who can you turn to if you want to talk about important decisions you have to make?", "nl": "Bij wie kun je terecht als je wilt praten over belangrijke beslissingen die je moet nemen?" },
-          "options": ["With no one", "bij niemand"]
+          "text": { "en": "2a. Who can you turn to if you want to talk about important decisions you have to make?", "nl": "2a. Bij wie kun je terecht als je wilt praten over belangrijke beslissingen die je moet nemen?" },
+          "options": [
+            { "en": "With no one", "nl": "bij niemand" },
+            { "en": "[name 1]", "nl": "[naam 1]" },
+            { "en": "[name 2]", "nl": "[naam 2]" },
+            { "en": "[name 3]", "nl": "[naam 3]" },
+            { "en": "[name 4]", "nl": "[naam 4]" },
+            { "en": "[name 5]", "nl": "[naam 5]" },
+            { "en": "[name 6]", "nl": "[naam 6]" },
+            { "en": "[name 7]", "nl": "[naam 7]" },
+            { "en": "[name 8]", "nl": "[naam 8]" },
+            { "en": "[name 9]", "nl": "[naam 9]" }
+          ]
         },
         {
           "id": "ssq6-2b",
@@ -47,14 +69,25 @@
             {"value": 4, "label": {"en": "Fairly satisfied", "nl": "Tamelijk tevreden"}},
             {"value": 5, "label": {"en": "Very satisfied", "nl": "Zeer tevreden"}}
           ],
-          "text": { "en": "Overall, how satisfied are you with the social support you receive from these people?", "nl": "Hoe tevreden bent u over het algemeen over de sociale steun die u van deze mensen krijgt?" }
+          "text": { "en": "2b. Overall, how satisfied are you with the social support you receive from these people?", "nl": "2b. Hoe tevreden bent u over het algemeen over de sociale steun die u van deze mensen krijgt?" }
         },
         {
           "id": "ssq6-3a",
           "type": "names-list",
           "maxNames": 9,
-          "text": { "en": "Who can you turn to if you need advice or help with daily problems (work, study, household)?", "nl": "Bij wie kun je terecht als je advies of hulp nodig hebt bij dagelijkse problemen (werk, studie, huishouden)?" },
-          "options": ["With no one", "bij niemand"]
+          "text": { "en": "3a. Who can you turn to if you need advice or help with daily problems (work, study, household)?", "nl": "3a. Bij wie kun je terecht als je advies of hulp nodig hebt bij dagelijkse problemen (werk, studie, huishouden)?" },
+          "options": [
+            { "en": "With no one", "nl": "bij niemand" },
+            { "en": "[name 1]", "nl": "[naam 1]" },
+            { "en": "[name 2]", "nl": "[naam 2]" },
+            { "en": "[name 3]", "nl": "[naam 3]" },
+            { "en": "[name 4]", "nl": "[naam 4]" },
+            { "en": "[name 5]", "nl": "[naam 5]" },
+            { "en": "[name 6]", "nl": "[naam 6]" },
+            { "en": "[name 7]", "nl": "[naam 7]" },
+            { "en": "[name 8]", "nl": "[naam 8]" },
+            { "en": "[name 9]", "nl": "[naam 9]" }
+          ]
         },
         {
           "id": "ssq6-3b",
@@ -67,14 +100,25 @@
             {"value": 4, "label": {"en": "Fairly satisfied", "nl": "Tamelijk tevreden"}},
             {"value": 5, "label": {"en": "Very satisfied", "nl": "Zeer tevreden"}}
           ],
-          "text": { "en": "Overall, how satisfied are you with the social support you receive from these people?", "nl": "Hoe tevreden bent u over het algemeen over de sociale steun die u van deze mensen krijgt?" }
+          "text": { "en": "3b. Overall, how satisfied are you with the social support you receive from these people?", "nl": "3b. Hoe tevreden bent u over het algemeen over de sociale steun die u van deze mensen krijgt?" }
         },
         {
           "id": "ssq6-4a",
           "type": "names-list",
           "maxNames": 9,
           "text": { "en": "Who can you turn to when you feel lonely or isolated?", "nl": "Bij wie kun je terecht als je je eenzaam of geïsoleerd voelt?" },
-          "options": ["With no one", "bij niemand"]
+          "options": [
+            { "en": "With no one", "nl": "bij niemand" },
+            { "en": "[name 1]", "nl": "[naam 1]" },
+            { "en": "[name 2]", "nl": "[naam 2]" },
+            { "en": "[name 3]", "nl": "[naam 3]" },
+            { "en": "[name 4]", "nl": "[naam 4]" },
+            { "en": "[name 5]", "nl": "[naam 5]" },
+            { "en": "[name 6]", "nl": "[naam 6]" },
+            { "en": "[name 7]", "nl": "[naam 7]" },
+            { "en": "[name 8]", "nl": "[naam 8]" },
+            { "en": "[name 9]", "nl": "[naam 9]" }
+          ]
         },
         {
           "id": "ssq6-4b",
@@ -87,14 +131,25 @@
             {"value": 4, "label": {"en": "Fairly satisfied", "nl": "Tamelijk tevreden"}},
             {"value": 5, "label": {"en": "Very satisfied", "nl": "Zeer tevreden"}}
           ],
-          "text": { "en": "Overall, how satisfied are you with the social support you receive from these people?", "nl": "Hoe tevreden bent u over het algemeen over de sociale steun die u van deze mensen krijgt?" }
+          "text": { "en": "4b. Overall, how satisfied are you with the social support you receive from these people?", "nl": "4b. Hoe tevreden bent u over het algemeen over de sociale steun die u van deze mensen krijgt?" }
         },
         {
           "id": "ssq6-5a",
           "type": "names-list",
           "maxNames": 9,
-          "text": { "en": "Who can you turn to when you want to celebrate something or when you feel good?", "nl": "Bij wie kun je terecht als je iets wilt vieren of je goed voelt?" },
-          "options": ["With no one", "bij niemand"]
+          "text": { "en": "5a. Who can you turn to when you want to celebrate something or when you feel good?", "nl": "5a. Bij wie kun je terecht als je iets wilt vieren of je goed voelt?" },
+          "options": [
+            { "en": "With no one", "nl": "bij niemand" },
+            { "en": "[name 1]", "nl": "[naam 1]" },
+            { "en": "[name 2]", "nl": "[naam 2]" },
+            { "en": "[name 3]", "nl": "[naam 3]" },
+            { "en": "[name 4]", "nl": "[naam 4]" },
+            { "en": "[name 5]", "nl": "[naam 5]" },
+            { "en": "[name 6]", "nl": "[naam 6]" },
+            { "en": "[name 7]", "nl": "[naam 7]" },
+            { "en": "[name 8]", "nl": "[naam 8]" },
+            { "en": "[name 9]", "nl": "[naam 9]" }
+          ]
         },
         {
           "id": "ssq6-5b",
@@ -107,14 +162,25 @@
             {"value": 4, "label": {"en": "Fairly satisfied", "nl": "Tamelijk tevreden"}},
             {"value": 5, "label": {"en": "Very satisfied", "nl": "Zeer tevreden"}}
           ],
-          "text": { "en": "Overall, how satisfied are you with the social support you receive from these people?", "nl": "Hoe tevreden bent u over het algemeen over de sociale steun die u van deze mensen krijgt?" }
+          "text": { "en": "5b. Overall, how satisfied are you with the social support you receive from these people?", "nl": "5b. Hoe tevreden bent u over het algemeen over de sociale steun die u van deze mensen krijgt?" }
         },
         {
           "id": "ssq6-6a",
           "type": "names-list",
           "maxNames": 9,
-          "text": { "en": "Who can you turn to when you need support in stressful situations?", "nl": "Bij wie kun je terecht als je een steuntje in de rug nodig hebt in stressvolle situaties?" },
-          "options": ["With no one", "bij niemand"]
+          "text": { "en": "6a. Who can you turn to when you need support in stressful situations?", "nl": "6a. Bij wie kun je terecht als je een steuntje in de rug nodig hebt in stressvolle situaties?" },
+          "options": [
+            { "en": "With no one", "nl": "bij niemand" },
+            { "en": "[name 1]", "nl": "[naam 1]" },
+            { "en": "[name 2]", "nl": "[naam 2]" },
+            { "en": "[name 3]", "nl": "[naam 3]" },
+            { "en": "[name 4]", "nl": "[naam 4]" },
+            { "en": "[name 5]", "nl": "[naam 5]" },
+            { "en": "[name 6]", "nl": "[naam 6]" },
+            { "en": "[name 7]", "nl": "[naam 7]" },
+            { "en": "[name 8]", "nl": "[naam 8]" },
+            { "en": "[name 9]", "nl": "[naam 9]" }
+          ]
         },
         {
           "id": "ssq6-6b",
@@ -127,7 +193,7 @@
             {"value": 4, "label": {"en": "Fairly satisfied", "nl": "Tamelijk tevreden"}},
             {"value": 5, "label": {"en": "Very satisfied", "nl": "Zeer tevreden"}}
           ],
-          "text": { "en": "Overall, how satisfied are you with the social support you receive from these people?", "nl": "Hoe tevreden bent u over het algemeen over de sociale steun die u van deze mensen krijgt?" }
+          "text": { "en": "6b. Overall, how satisfied are you with the social support you receive from these people?", "nl": "6b. Hoe tevreden bent u over het algemeen over de sociale steun die u van deze mensen krijgt?" }
         }
       ]
     }
