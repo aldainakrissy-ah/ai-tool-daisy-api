@@ -1,9 +1,11 @@
 package com.example.ai.tool.analysis.ai_tool_daisy_api.entity;
 
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
 
@@ -24,6 +26,7 @@ public class Prompt1ResultEntity {
     @Column(name = "patient_id", nullable = false)
     private String patientId;
 
+    @Type(JsonBinaryType.class)
     @Column(name = "result_json", columnDefinition = "jsonb", nullable = false)
     private String resultJson;
 
