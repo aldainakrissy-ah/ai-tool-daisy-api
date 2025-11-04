@@ -24,7 +24,7 @@ public class Prompt1ResultEntity {
     @Column(name = "patient_id", nullable = false)
     private String patientId;
 
-    @Column(name = "result_json", columnDefinition = "TEXT")
+    @Column(name = "result_json", columnDefinition = "jsonb", nullable = false)
     private String resultJson;
 
     @CreationTimestamp

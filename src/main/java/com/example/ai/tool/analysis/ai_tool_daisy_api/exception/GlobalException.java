@@ -11,7 +11,7 @@ import java.util.Map;
 
 @ControllerAdvice
 @Slf4j
-public class GlobalExceptionHandler {
+public class GlobalException {
 
     @ExceptionHandler(exception = IllegalArgumentException.class)
     public ResponseEntity<Map<String,String>> handleIllegalArgumentException(IllegalArgumentException e) {
