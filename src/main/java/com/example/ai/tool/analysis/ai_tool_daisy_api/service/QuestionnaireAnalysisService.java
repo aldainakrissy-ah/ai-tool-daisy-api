@@ -67,9 +67,16 @@ public class QuestionnaireAnalysisService {
             return response.output().stream()
                     .flatMap(item -> item.message().stream())
                     .flatMap(msg -> msg.content().stream())
-                    .map(StructuredResponseOutputMessage.Content::asOutputText)
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("No output from OpenAI response"));
+                    .map(StructuredResponseOutputMessage.Content::asOutputText).findFirst().map(prompt1Result -> {
+                        Prompt1ResultEntity prompt1ResultEntity = new Prompt1ResultEntity();
+                        prompt1ResultEntity.setProfessionalId(prompt1Result.getProfessionalId());
+                        prompt1ResultEntity.setPatientId(prompt1Result.getPatientId());
+                        prompt1ResultEntity.setResultJson(prompt1Result.toJson());
+                        prompt1ResultRepository.saveAsJson(prompt1Result.getProfessionalId(), prompt1Result.getPatientId(), prompt1Result.toJson());
+                        return prompt1Result;
+                    }).orElseThrow(() -> new RuntimeException("No valid response from OpenAI API"));
+
+
         } catch (IOException | OpenAIException e) {
             log.error("Error processing PDF file for healthcare analysis", e);
             throw new RuntimeException("Error processing PDF file for healthcare analysis: " + e.getMessage(), e);

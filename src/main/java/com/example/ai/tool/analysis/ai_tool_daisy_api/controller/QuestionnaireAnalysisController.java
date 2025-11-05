@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /**
  * REST controller for handling questionnaire analysis requests.
@@ -32,7 +31,7 @@ public class QuestionnaireAnalysisController {
      * @return a {@link ResponseEntity} containing the result of the processing or an error message.
      */
     @PostMapping("/preintake/analyze")
-    public ResponseEntity<Prompt1Result> readPdf(@RequestParam("file") MultipartFile file) throws ExecutionException, InterruptedException {
+    public ResponseEntity<Prompt1Result> readPdf(@RequestParam("file") MultipartFile file) {
         log.info("Received file: {}", file.getOriginalFilename());
         Prompt1Result responseFuture = questionnaireAnalysisService.generatePreIntakeAnalysis(file);
         return ResponseEntity.ok(responseFuture);
