@@ -1,4 +1,7 @@
-FROM openjdk:21-jdk-slim as build
+ARG REGISTRY=docker.io
+ARG REPO=eclipse-temurin
+ARG TAG=21-jdk-jammy
+FROM ${REGISTRY}/${REPO}:${TAG} AS build
 
 WORKDIR /app
 
@@ -17,7 +20,7 @@ COPY src ./src
 # Build the application
 RUN ./gradlew build -x test
 
-FROM openjdk:21-jdk-slim
+FROM ${REGISTRY}/${REPO}:${TAG}
 
 WORKDIR /app
 
