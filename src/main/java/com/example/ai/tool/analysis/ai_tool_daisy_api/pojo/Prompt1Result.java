@@ -13,7 +13,6 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Prompt1Result {
 
-    // Optional identifiers (keep if you already persist these)
     @JsonProperty("professional_id")
     private String professionalId;
 
@@ -23,6 +22,8 @@ public class Prompt1Result {
     private Analysis analysis;
 
     private Routing routing;
+
+    private static ObjectMapper MAPPER = new ObjectMapper();
 
 
     @Data
@@ -174,12 +175,9 @@ public class Prompt1Result {
         private String note;
     }
 
-    /* ===================== JSON HELPERS ===================== */
-
     public static Prompt1Result fromJson(String json) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, Prompt1Result.class);
+            return MAPPER.readValue(json, Prompt1Result.class);
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse JSON to Prompt1Result", e);
         }
@@ -187,8 +185,8 @@ public class Prompt1Result {
 
     public String toJson() {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(this);
+
+            return MAPPER.writeValueAsString(this);
         } catch (Exception e) {
             throw new RuntimeException("Failed to serialize Prompt1Result to JSON", e);
         }
