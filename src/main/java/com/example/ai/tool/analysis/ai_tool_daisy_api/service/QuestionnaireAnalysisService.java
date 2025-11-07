@@ -43,7 +43,7 @@ public class QuestionnaireAnalysisService {
      */
     @Transactional
     @Async
-    public Prompt1Result generatePreIntakeAnalysis(MultipartFile file, String professionalId, String patientId) {
+    public Prompt1Result generatePreIntakeAnalysis(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("PDF file cannot be empty");
         }
@@ -69,10 +69,10 @@ public class QuestionnaireAnalysisService {
                     .flatMap(msg -> msg.content().stream())
                     .map(StructuredResponseOutputMessage.Content::asOutputText).findFirst().map(prompt1Result -> {
                         Prompt1ResultEntity prompt1ResultEntity = new Prompt1ResultEntity();
-                        prompt1ResultEntity.setProfessionalId(professionalId);
-                        prompt1ResultEntity.setPatientId(patientId);
+                        prompt1ResultEntity.setProfessionalId(prompt1Result.getProfessionalId());
+                        prompt1ResultEntity.setPatientId(prompt1Result.getPatientId());
                         prompt1ResultEntity.setResultJson(prompt1Result.toJson());
-                        prompt1ResultRepository.saveAsJson(prompt1Result.getProfessionalId(), prompt1Result.getPatientId(), prompt1Result.toJson());
+                        prompt1ResultRepository.saveAsJson(prompt1Result.getProfessionalId(),prompt1Result.getPatientId(), prompt1Result.toJson());
                         return prompt1Result;
                     }).orElseThrow(() -> new RuntimeException("No valid response from OpenAI API"));
 
@@ -113,8 +113,9 @@ public class QuestionnaireAnalysisService {
      * @param prompt1Result the {@link Prompt1Result} to be saved.
      */
     @Transactional
-    public void savePrompt1Result(Prompt1Result prompt1Result) {
-        log.info("Saving Prompt1 result for professional id: {} and patient id: {}", prompt1Result.getProfessionalId(), prompt1Result.getPatientId());
+    public void savePrompt1Result(Prompt1Result prompt1Result)  {
+        log.info("Saving Prompt1 result for professional id: {} and patient id: {}",
+                prompt1Result.getProfessionalId(), prompt1Result.getPatientId());
         Prompt1ResultEntity prompt1ResultEntity = new  Prompt1ResultEntity();
         prompt1ResultEntity.setProfessionalId(prompt1Result.getProfessionalId());
         prompt1ResultEntity.setPatientId(prompt1Result.getPatientId());
