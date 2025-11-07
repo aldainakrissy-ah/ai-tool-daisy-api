@@ -43,7 +43,7 @@ public class QuestionnaireAnalysisService {
      */
     @Transactional
     @Async
-    public Prompt1Result generatePreIntakeAnalysis(MultipartFile file) {
+    public Prompt1Result generatePreIntakeAnalysis(MultipartFile file, String professionalId, String patientId) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("PDF file cannot be empty");
         }
@@ -69,8 +69,8 @@ public class QuestionnaireAnalysisService {
                     .flatMap(msg -> msg.content().stream())
                     .map(StructuredResponseOutputMessage.Content::asOutputText).findFirst().map(prompt1Result -> {
                         Prompt1ResultEntity prompt1ResultEntity = new Prompt1ResultEntity();
-                        prompt1ResultEntity.setProfessionalId(prompt1Result.getProfessionalId());
-                        prompt1ResultEntity.setPatientId(prompt1Result.getPatientId());
+                        prompt1ResultEntity.setProfessionalId(professionalId);
+                        prompt1ResultEntity.setPatientId(patientId);
                         prompt1ResultEntity.setResultJson(prompt1Result.toJson());
                         prompt1ResultRepository.saveAsJson(prompt1Result.getProfessionalId(), prompt1Result.getPatientId(), prompt1Result.toJson());
                         return prompt1Result;
