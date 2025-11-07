@@ -3,10 +3,8 @@ package com.example.ai.tool.analysis.ai_tool_daisy_api.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.OffsetDateTime;
-
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -27,7 +25,11 @@ public class Prompt1ResultEntity {
     @Column(name = "result_json", columnDefinition = "jsonb", nullable = false)
     private String resultJson;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createdAt;
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }
