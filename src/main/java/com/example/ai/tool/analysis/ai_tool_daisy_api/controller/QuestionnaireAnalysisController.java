@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("/ai/tool/daisy/")
+@RequestMapping("/api/v1/ai-tool-daisy")
 @AllArgsConstructor
 @CrossOrigin(origins = "*")
 public class QuestionnaireAnalysisController {
@@ -30,10 +30,10 @@ public class QuestionnaireAnalysisController {
      * @param file the uploaded PDF file as a {@link MultipartFile}.
      * @return a {@link ResponseEntity} containing the result of the processing or an error message.
      */
-    @PostMapping("/preintake/analyze")
-    public ResponseEntity<Prompt1Result> readPdf(@RequestParam("file") MultipartFile file) {
+    @PostMapping("/analyze")
+    public ResponseEntity<Prompt1Result> readPdf(@RequestParam("file") MultipartFile file, @RequestParam("professionalId") String professionalId, @RequestParam("patientId") String patientId) {
         log.info("Received file: {}", file.getOriginalFilename());
-        Prompt1Result responseFuture = questionnaireAnalysisService.generatePreIntakeAnalysis(file);
+        Prompt1Result responseFuture = questionnaireAnalysisService.generatePreIntakeAnalysis(file,professionalId,patientId);
         return ResponseEntity.ok(responseFuture);
     }
 
@@ -43,7 +43,7 @@ public class QuestionnaireAnalysisController {
      * @param professionalId the patient ID to search for.
      * @return a {@link ResponseEntity} containing a list of {@link Prompt1ResultEntity} or a not found status.
      */
-    @GetMapping("/results/{professionalId}")
+    @GetMapping("/analysis/{professionalId}")
     public ResponseEntity<List<Prompt1ResultEntity>> getResultsByProfessionalId(@PathVariable("professionalId") String professionalId) {
         List<Prompt1ResultEntity> result = questionnaireAnalysisService.getPreIntakeResult(professionalId);
         if (result == null || result.isEmpty()) {
@@ -52,7 +52,7 @@ public class QuestionnaireAnalysisController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("results/{professionalId}/client/{patientId}")
+    @GetMapping("/analysis/{professionalId}/client/{patientId}")
     public ResponseEntity<List<Prompt1ResultEntity>> getResultByProfessionalIdAndPatientId(
             @PathVariable("professionalId") String professionalId,
             @PathVariable("patientId") String patientId) {
@@ -63,7 +63,7 @@ public class QuestionnaireAnalysisController {
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping(value = "/preintake/analyze/save", consumes = "application/json")
+    @PostMapping(value = "/analysis/save", consumes = "application/json")
     public ResponseEntity<Void> savePreIntakeResult(@RequestBody Prompt1Result prompt1Result) {
         if (prompt1Result == null) {
             log.warn("Received null Prompt1Result payload");
@@ -79,6 +79,5 @@ public class QuestionnaireAnalysisController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
 }
 

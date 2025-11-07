@@ -67,8 +67,10 @@ docker run -d \
 - `GET /api/v1/endpoints` - List of all available endpoints
 
 ### AI Analysis
-- `POST /api/v1/analyze/text` - Analyze medical text using AI
-- `POST /api/v1/analyze/pdf` - Analyze medical PDF documents
+- `POST /api/v1/ai-tool-daisy` - Analyze medical PDF documents
+- `POST /api/v1/ai-tool-daisy/analysis/{professionalId}` - Analyze medical text for specific professional
+- `POST /api/v1/ai-tool-daisy/analysis/{professionalId}/client/{patientId}` - Analyze medical text for specific professional and patient
+- `POST /api/v1/ai-tool-daisy/analysis/save` - Save analysis result
 
 ### Questionnaire Management
 - `GET /api/v1/questionnaires` - Get all active questionnaires
