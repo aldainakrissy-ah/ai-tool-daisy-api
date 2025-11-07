@@ -6,7 +6,6 @@ import com.example.ai.tool.analysis.ai_tool_daisy_api.service.QuestionnaireAnaly
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,10 +30,10 @@ public class QuestionnaireAnalysisController {
      * @param file the uploaded PDF file as a {@link MultipartFile}.
      * @return a {@link ResponseEntity} containing the result of the processing or an error message.
      */
-    @PostMapping(path = "/analyze", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Prompt1Result> readPdf(@RequestPart("file") MultipartFile file, @RequestParam("professionalId") String professionalId, @RequestParam("patientId") String patientId) {
+    @PostMapping("/analyze")
+    public ResponseEntity<Prompt1Result> readPdf(@RequestParam("file") MultipartFile file) {
         log.info("Received file: {}", file.getOriginalFilename());
-        Prompt1Result responseFuture = questionnaireAnalysisService.generatePreIntakeAnalysis(file,professionalId,patientId);
+        Prompt1Result responseFuture = questionnaireAnalysisService.generatePreIntakeAnalysis(file);
         return ResponseEntity.ok(responseFuture);
     }
 
