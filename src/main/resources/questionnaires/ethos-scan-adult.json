@@ -24,62 +24,14 @@
             "nl": "Kernwaarden zijn de drijfveren die bepalen wat jij écht belangrijk vindt in je leven en werk. Ze vormen je morele kompas bij keuzes en gedrag. Kies daarom hieronder maximaal 4 kernwaarden die het beste bij jou passen."
           },
           "options": [
-            {
-              "value": "connection",
-              "label": {
-                "en": "Connection: Collaboration, Empathy, Loyalty, Solidarity",
-                "nl": "Verbinding: Samenwerking, Empathie, Loyaliteit, Solidariteit"
-              }
-            },
-            {
-              "value": "integrity",
-              "label": {
-                "en": "Integrity: Honesty, Transparency, Reliability, Equality",
-                "nl": "Integriteit: Eerlijkheid, Transparantie, Betrouwbaarheid, Gelijkwaardigheid"
-              }
-            },
-            {
-              "value": "growth",
-              "label": {
-                "en": "Growth and Development: Curiosity, Personal Growth, Creativity, Adventure",
-                "nl": "Groei en Ontwikkeling: Leergierigheid, Persoonlijke groei, Creativiteit, Avontuur"
-              }
-            },
-            {
-              "value": "autonomy",
-              "label": {
-                "en": "Autonomy: Freedom, Self-Determination, Entrepreneurship",
-                "nl": "Autonomie: Vrijheid, Zelfbeschikking, Ondernemerschap"
-              }
-            },
-            {
-              "value": "results",
-              "label": {
-                "en": "Results: Purposefulness, Efficiency, Quality, Impact",
-                "nl": "Resultaat: Doelgerichtheid, Efficiëntie, Kwaliteit, Impact"
-              }
-            },
-            {
-              "value": "care",
-              "label": {
-                "en": "People & Care: Caring, Well-being, Respect, Safety",
-                "nl": "Mens & Zorg: Zorgzaamheid, Welzijn, Respect, Veiligheid"
-              }
-            },
-            {
-              "value": "innovation",
-              "label": {
-                "en": "Innovation: Renewal, Courage, Visionary Thinking",
-                "nl": "Innovatie: Vernieuwing, Durf, Visionair denken"
-              }
-            },
-            {
-              "value": "sustainability",
-              "label": {
-                "en": "Sustainability: Sustainability, Responsibility",
-                "nl": "Duurzaamheid: Duurzaamheid, Verantwoordelijkheid"
-              }
-            }
+            { "value": "connection", "label": { "en": "Connection: Collaboration, Empathy, Loyalty, Solidarity", "nl": "Verbinding: Samenwerking, Empathie, Loyaliteit, Solidariteit" } },
+            { "value": "integrity", "label": { "en": "Integrity: Honesty, Transparency, Reliability, Equality", "nl": "Integriteit: Eerlijkheid, Transparantie, Betrouwbaarheid, Gelijkwaardigheid" } },
+            { "value": "growth", "label": { "en": "Growth and Development: Curiosity, Personal Growth, Creativity, Adventure", "nl": "Groei en Ontwikkeling: Leergierigheid, Persoonlijke groei, Creativiteit, Avontuur" } },
+            { "value": "autonomy", "label": { "en": "Autonomy: Freedom, Self-Determination, Entrepreneurship", "nl": "Autonomie: Vrijheid, Zelfbeschikking, Ondernemerschap" } },
+            { "value": "results", "label": { "en": "Results: Purposefulness, Efficiency, Quality, Impact", "nl": "Resultaat: Doelgerichtheid, Efficiëntie, Kwaliteit, Impact" } },
+            { "value": "care", "label": { "en": "People & Care: Caring, Well-being, Respect, Safety", "nl": "Mens & Zorg: Zorgzaamheid, Welzijn, Respect, Veiligheid" } },
+            { "value": "innovation", "label": { "en": "Innovation: Renewal, Courage, Visionary Thinking", "nl": "Innovatie: Vernieuwing, Durf, Visionair denken" } },
+            { "value": "sustainability", "label": { "en": "Sustainability: Sustainability, Responsibility", "nl": "Duurzaamheid: Duurzaamheid, Verantwoordelijkheid" } }
           ],
           "validation": {
             "required": true,
@@ -104,12 +56,6 @@
         "en": "Read each statement carefully and indicate to what extent you agree:",
         "nl": "Lees elke stelling zorgvuldig en geef aan in hoeverre je het ermee eens bent:"
       },
-      "scale": {
-        "description": {
-          "en": "1 = Strongly disagree\n2 = Disagree\n3 = Neutral\n4 = Agree\n5 = Strongly agree",
-          "nl": "1 = Helemaal oneens\n2 = Oneens\n3 = Neutraal\n4 = Eens\n5 = Helemaal eens"
-        }
-      },
       "questions": [
         {
           "id": "statement-1",
@@ -120,41 +66,11 @@
             "nl": "Ik weet duidelijk welke kernwaarden mijn keuzes sturen."
           },
           "options": [
-            {
-              "value": "1",
-              "label": {
-                "en": "1 - Strongly disagree",
-                "nl": "1 - Helemaal oneens"
-              }
-            },
-            {
-              "value": "2",
-              "label": {
-                "en": "2 - Disagree",
-                "nl": "2 - Oneens"
-              }
-            },
-            {
-              "value": "3",
-              "label": {
-                "en": "3 - Neutral",
-                "nl": "3 - Neutraal"
-              }
-            },
-            {
-              "value": "4",
-              "label": {
-                "en": "4 - Agree",
-                "nl": "4 - Eens"
-              }
-            },
-            {
-              "value": "5",
-              "label": {
-                "en": "5 - Strongly agree",
-                "nl": "5 - Helemaal eens"
-              }
-            }
+            { "value": "1", "label": { "en": "1 - Strongly disagree", "nl": "1 - Helemaal oneens" } },
+            { "value": "2", "label": { "en": "2 - Disagree", "nl": "2 - Oneens" } },
+            { "value": "3", "label": { "en": "3 - Neutral", "nl": "3 - Neutraal" } },
+            { "value": "4", "label": { "en": "4 - Agree", "nl": "4 - Eens" } },
+            { "value": "5", "label": { "en": "5 - Strongly agree", "nl": "5 - Helemaal eens" } }
           ]
         },
         {
@@ -166,41 +82,11 @@
             "nl": "Soms voel ik me schuldig of beschaamd omdat mijn keuzes niet passen bij wat ik echt belangrijk vind."
           },
           "options": [
-            {
-              "value": "1",
-              "label": {
-                "en": "1 - Strongly disagree",
-                "nl": "1 - Helemaal oneens"
-              }
-            },
-            {
-              "value": "2",
-              "label": {
-                "en": "2 - Disagree",
-                "nl": "2 - Oneens"
-              }
-            },
-            {
-              "value": "3",
-              "label": {
-                "en": "3 - Neutral",
-                "nl": "3 - Neutraal"
-              }
-            },
-            {
-              "value": "4",
-              "label": {
-                "en": "4 - Agree",
-                "nl": "4 - Eens"
-              }
-            },
-            {
-              "value": "5",
-              "label": {
-                "en": "5 - Strongly agree",
-                "nl": "5 - Helemaal eens"
-              }
-            }
+            { "value": "1", "label": { "en": "1 - Strongly disagree", "nl": "1 - Helemaal oneens" } },
+            { "value": "2", "label": { "en": "2 - Disagree", "nl": "2 - Oneens" } },
+            { "value": "3", "label": { "en": "3 - Neutral", "nl": "3 - Neutraal" } },
+            { "value": "4", "label": { "en": "4 - Agree", "nl": "4 - Eens" } },
+            { "value": "5", "label": { "en": "5 - Strongly agree", "nl": "5 - Helemaal eens" } }
           ]
         },
         {
@@ -212,41 +98,11 @@
             "nl": "Mijn dagelijks leven (werk, gezin, vrije tijd) loopt grotendeels in lijn met mijn diepste overtuigingen."
           },
           "options": [
-            {
-              "value": "1",
-              "label": {
-                "en": "1 - Strongly disagree",
-                "nl": "1 - Helemaal oneens"
-              }
-            },
-            {
-              "value": "2",
-              "label": {
-                "en": "2 - Disagree",
-                "nl": "2 - Oneens"
-              }
-            },
-            {
-              "value": "3",
-              "label": {
-                "en": "3 - Neutral",
-                "nl": "3 - Neutraal"
-              }
-            },
-            {
-              "value": "4",
-              "label": {
-                "en": "4 - Agree",
-                "nl": "4 - Eens"
-              }
-            },
-            {
-              "value": "5",
-              "label": {
-                "en": "5 - Strongly agree",
-                "nl": "5 - Helemaal eens"
-              }
-            }
+            { "value": "1", "label": { "en": "1 - Strongly disagree", "nl": "1 - Helemaal oneens" } },
+            { "value": "2", "label": { "en": "2 - Disagree", "nl": "2 - Oneens" } },
+            { "value": "3", "label": { "en": "3 - Neutral", "nl": "3 - Neutraal" } },
+            { "value": "4", "label": { "en": "4 - Agree", "nl": "4 - Eens" } },
+            { "value": "5", "label": { "en": "5 - Strongly agree", "nl": "5 - Helemaal eens" } }
           ]
         },
         {
@@ -258,41 +114,11 @@
             "nl": "Ik durf soms geen keuzes te maken uit angst voor wat anderen denken, ook al strookt dat niet met mijn waarden."
           },
           "options": [
-            {
-              "value": "1",
-              "label": {
-                "en": "1 - Strongly disagree",
-                "nl": "1 - Helemaal oneens"
-              }
-            },
-            {
-              "value": "2",
-              "label": {
-                "en": "2 - Disagree",
-                "nl": "2 - Oneens"
-              }
-            },
-            {
-              "value": "3",
-              "label": {
-                "en": "3 - Neutral",
-                "nl": "3 - Neutraal"
-              }
-            },
-            {
-              "value": "4",
-              "label": {
-                "en": "4 - Agree",
-                "nl": "4 - Eens"
-              }
-            },
-            {
-              "value": "5",
-              "label": {
-                "en": "5 - Strongly agree",
-                "nl": "5 - Helemaal eens"
-              }
-            }
+            { "value": "1", "label": { "en": "1 - Strongly disagree", "nl": "1 - Helemaal oneens" } },
+            { "value": "2", "label": { "en": "2 - Disagree", "nl": "2 - Oneens" } },
+            { "value": "3", "label": { "en": "3 - Neutral", "nl": "3 - Neutraal" } },
+            { "value": "4", "label": { "en": "4 - Agree", "nl": "4 - Eens" } },
+            { "value": "5", "label": { "en": "5 - Strongly agree", "nl": "5 - Helemaal eens" } }
           ]
         },
         {
@@ -304,41 +130,11 @@
             "nl": "Als ik terugkijk op mijn recente beslissingen, had ik vaak liever anders gehandeld."
           },
           "options": [
-            {
-              "value": "1",
-              "label": {
-                "en": "1 - Strongly disagree",
-                "nl": "1 - Helemaal oneens"
-              }
-            },
-            {
-              "value": "2",
-              "label": {
-                "en": "2 - Disagree",
-                "nl": "2 - Oneens"
-              }
-            },
-            {
-              "value": "3",
-              "label": {
-                "en": "3 - Neutral",
-                "nl": "3 - Neutraal"
-              }
-            },
-            {
-              "value": "4",
-              "label": {
-                "en": "4 - Agree",
-                "nl": "4 - Eens"
-              }
-            },
-            {
-              "value": "5",
-              "label": {
-                "en": "5 - Strongly agree",
-                "nl": "5 - Helemaal eens"
-              }
-            }
+            { "value": "1", "label": { "en": "1 - Strongly disagree", "nl": "1 - Helemaal oneens" } },
+            { "value": "2", "label": { "en": "2 - Disagree", "nl": "2 - Oneens" } },
+            { "value": "3", "label": { "en": "3 - Neutral", "nl": "3 - Neutraal" } },
+            { "value": "4", "label": { "en": "4 - Agree", "nl": "4 - Eens" } },
+            { "value": "5", "label": { "en": "5 - Strongly agree", "nl": "5 - Helemaal eens" } }
           ]
         },
         {
@@ -350,41 +146,11 @@
             "nl": "Over het algemeen voel ik me in harmonie met mijn eigen waarden."
           },
           "options": [
-            {
-              "value": "1",
-              "label": {
-                "en": "1 - Strongly disagree",
-                "nl": "1 - Helemaal oneens"
-              }
-            },
-            {
-              "value": "2",
-              "label": {
-                "en": "2 - Disagree",
-                "nl": "2 - Oneens"
-              }
-            },
-            {
-              "value": "3",
-              "label": {
-                "en": "3 - Neutral",
-                "nl": "3 - Neutraal"
-              }
-            },
-            {
-              "value": "4",
-              "label": {
-                "en": "4 - Agree",
-                "nl": "4 - Eens"
-              }
-            },
-            {
-              "value": "5",
-              "label": {
-                "en": "5 - Strongly agree",
-                "nl": "5 - Helemaal eens"
-              }
-            }
+            { "value": "1", "label": { "en": "1 - Strongly disagree", "nl": "1 - Helemaal oneens" } },
+            { "value": "2", "label": { "en": "2 - Disagree", "nl": "2 - Oneens" } },
+            { "value": "3", "label": { "en": "3 - Neutral", "nl": "3 - Neutraal" } },
+            { "value": "4", "label": { "en": "4 - Agree", "nl": "4 - Eens" } },
+            { "value": "5", "label": { "en": "5 - Strongly agree", "nl": "5 - Helemaal eens" } }
           ]
         }
       ]
@@ -397,496 +163,282 @@
       },
       "description": {
         "en": "Objective: Reflect on situations in which your behavior does or does not align with your core values, and identify what helped or hindered them. For each core value in your Ethos⁺ Scan, you will be asked four short questions.",
-        "nl": "Doel: Reflecteren op situaties waarin je gedrag wel of juist niet overeenkomt met je kernwaarden, en benoemen wat daarbij hielp of juist belemmerde.\nVoor elke kernwaarde uit je Ethos⁺-Scan krijg je vier korte vragen."
+        "nl": "Doel: Reflecteren op situaties waarin je gedrag wel of juist niet overeenkomt met je kernwaarden, en benoemen wat daarbij hielp of juist belemmerde. Voor elke kernwaarde uit je Ethos⁺-Scan krijg je vier korte vragen."
       },
-      "dynamicSections": [
+      "questions": [
         {
-          "condition": {
-            "field": "core-values-selection",
-            "operator": "hasValueAtIndex",
-            "index": 0
+          "id": "value1",
+          "number": "A",
+          "title": {
+            "en": "A. Selected Core Value 1",
+            "nl": "A. Gekozen kernwaarde 1"
           },
-          "content": {
-            "id": "value-1",
-            "title": {
-              "en": "A. Selected Core Value 1",
-              "nl": "A. Gekozen kernwaarde 1"
+          "questions": [
+            {
+              "id": "value1-aligned",
+              "type": "radio",
+              "number": "A1",
+              "text": {
+                "en": "To what extent have you acted in accordance with [Selected Core Value 1] in the past week?",
+                "nl": "In hoeverre heb je de afgelopen week gehandeld in overeenstemming met [Gekozen kernwaarde 1]?"
+              },
+              "options": [
+                { "value": "1", "label": { "en": "1 - Not at all", "nl": "1 - Helemaal niet" } },
+                { "value": "2", "label": { "en": "2", "nl": "2" } },
+                { "value": "3", "label": { "en": "3", "nl": "3" } },
+                { "value": "4", "label": { "en": "4", "nl": "4" } },
+                { "value": "5", "label": { "en": "5 - Completely", "nl": "5 - Volledig" } }
+              ]
             },
-            "questions": [
-              {
-                "id": "value1-aligned",
-                "type": "radio",
-                "groupLabel": {
-                  "en": "A1. Aligned with Value",
-                  "nl": "A1. In lijn met waarde"
-                },
-                "text": {
-                  "en": "To what extent have you acted in accordance with [Selected Core Value 1] in the past week?",
-                  "nl": "In hoeverre heb je de afgelopen week gehandeld in overeenstemming met [Gekozen kernwaarde 1]?"
-                },
-                "scale": {
-                  "description": {
-                    "en": "(1 = Not at all, 5 = Completely)",
-                    "nl": "(1 = Helemaal niet, 5 = Volledig)"
-                  },
-                  "options": [
-                    {
-                      "value": "1",
-                      "label": {
-                        "en": "1 - Not at all",
-                        "nl": "1 - Helemaal niet"
-                      }
-                    },
-                    {
-                      "value": "2",
-                      "label": {
-                        "en": "2",
-                        "nl": "2"
-                      }
-                    },
-                    {
-                      "value": "3",
-                      "label": {
-                        "en": "3",
-                        "nl": "3"
-                      }
-                    },
-                    {
-                      "value": "4",
-                      "label": {
-                        "en": "4",
-                        "nl": "4"
-                      }
-                    },
-                    {
-                      "value": "5",
-                      "label": {
-                        "en": "5 - Completely",
-                        "nl": "5 - Volledig"
-                      }
-                    }
-                  ]
-                }
+            {
+              "id": "value1-deviation",
+              "type": "radio",
+              "number": "A2",
+              "text": {
+                "en": "To what extent have you acted in deviation from [Selected Core Value 1] in the past week?",
+                "nl": "In hoeverre heb je de afgelopen week gehandeld in afwijking van [Gekozen kernwaarde 1]?"
               },
-              {
-                "id": "value1-deviation",
-                "type": "radio",
-                "groupLabel": {
-                  "en": "A2. Deviation from Value",
-                  "nl": "A2. Afwijking van waarde"
-                },
-                "text": {
-                  "en": "To what extent have you acted in deviation from [Selected Core Value 1] in the past week?",
-                  "nl": "In hoeverre heb je de afgelopen week gehandeld in afwijking van [Gekozen kernwaarde 1]?"
-                },
-                "scale": {
-                  "description": {
-                    "en": "(1 = Not at all, 5 = Completely)",
-                    "nl": "(1 = Helemaal niet, 5 = Volledig)"
-                  },
-                  "options": [
-                    {
-                      "value": "1",
-                      "label": {
-                        "en": "1 - Not at all",
-                        "nl": "1 - Helemaal niet"
-                      }
-                    },
-                    {
-                      "value": "5",
-                      "label": {
-                        "en": "5 - Completely",
-                        "nl": "5 - Volledig"
-                      }
-                    }
-                  ]
-                }
+              "options": [
+                { "value": "1", "label": { "en": "1 - Not at all", "nl": "1 - Helemaal niet" } },
+                { "value": "2", "label": { "en": "2", "nl": "2" } },
+                { "value": "3", "label": { "en": "3", "nl": "3" } },
+                { "value": "4", "label": { "en": "4", "nl": "4" } },
+                { "value": "5", "label": { "en": "5 - Completely", "nl": "5 - Volledig" } }
+              ]
+            },
+            {
+              "id": "value1-obstacles",
+              "type": "text",
+              "number": "A3",
+              "text": {
+                "en": "What factors or situations have prevented you from acting according to [Selected Core Value 1]?",
+                "nl": "Welke factoren of situaties hebben je weerhouden om volgens [Gekozen kernwaarde 1] te handelen?"
               },
-              {
-                "id": "value1-obstacles",
-                "type": "text",
-                "groupLabel": {
-                  "en": "A3. Obstacles",
-                  "nl": "A3. Obstakels"
-                },
-                "text": {
-                  "en": "What factors or situations have prevented you from acting according to [Selected Core Value 1]?",
-                  "nl": "Welke factoren of situaties hebben je weerhouden om volgens [Gekozen kernwaarde 1] te handelen?"
-                },
-                "hint": {
-                  "en": "(brief explanation)",
-                  "nl": "(korte toelichting)"
-                }
-              },
-              {
-                "id": "value1-success",
-                "type": "text",
-                "groupLabel": {
-                  "en": "A4. Moments of Success",
-                  "nl": "A4. Succesmomenten"
-                },
-                "text": {
-                  "en": "Describe an example of a time when you acted in accordance with [Selected Core Value 1].",
-                  "nl": "Beschrijf een voorbeeld van een moment waarop je juist wel in lijn met [Gekozen kernwaarde 1] hebt gehandeld."
-                },
-                "hint": {
-                  "en": "(brief explanation)",
-                  "nl": "(korte toelichting)"
-                }
+              "hint": {
+                "en": "(brief explanation)",
+                "nl": "(korte toelichting)"
               }
-            ]
-          }
+            },
+            {
+              "id": "value1-success",
+              "type": "text",
+              "number": "A4",
+              "text": {
+                "en": "Describe an example of a time when you acted in accordance with [Selected Core Value 1].",
+                "nl": "Beschrijf een voorbeeld van een moment waarop je juist wel in lijn met [Gekozen kernwaarde 1] hebt gehandeld."
+              },
+              "hint": {
+                "en": "(brief explanation)",
+                "nl": "(korte toelichting)"
+              }
+            }
+          ]
         },
         {
-          "condition": {
-            "field": "core-values-selection",
-            "operator": "hasValueAtIndex",
-            "index": 1
+          "id": "value2",
+          "number": "B",
+          "title": {
+            "en": "B. Selected Core Value 2",
+            "nl": "B. Gekozen kernwaarde 2"
           },
-          "content": {
-            "id": "value-2",
-            "title": {
-              "en": "B. Selected Core Value 2",
-              "nl": "B. Gekozen kernwaarde 2"
+          "questions": [
+            {
+              "id": "value2-aligned",
+              "type": "radio",
+              "number": "B1",
+              "text": {
+                "en": "To what extent have you acted in accordance with [Selected Core Value 2] in the past week?",
+                "nl": "In hoeverre heb je de afgelopen week gehandeld in overeenstemming met [Gekozen kernwaarde 2]?"
+              },
+              "options": [
+                { "value": "1", "label": { "en": "1 - Not at all", "nl": "1 - Helemaal niet" } },
+                { "value": "2", "label": { "en": "2", "nl": "2" } },
+                { "value": "3", "label": { "en": "3", "nl": "3" } },
+                { "value": "4", "label": { "en": "4", "nl": "4" } },
+                { "value": "5", "label": { "en": "5 - Completely", "nl": "5 - Volledig" } }
+              ]
             },
-            "questions": [
-              {
-                "id": "value2-aligned",
-                "type": "radio",
-                "groupLabel": {
-                  "en": "B1. Aligned with Value",
-                  "nl": "B1. In lijn met waarde"
-                },
-                "text": {
-                  "en": "To what extent have you acted in accordance with [Selected Core Value 2] in the past week?",
-                  "nl": "In hoeverre heb je de afgelopen week gehandeld in overeenstemming met [Gekozen kernwaarde 2]?"
-                },
-                "scale": {
-                  "description": {
-                    "en": "(1 = Not at all, 5 = Completely)",
-                    "nl": "(1 = Helemaal niet, 5 = Volledig)"
-                  },
-                  "options": [
-                    {
-                      "value": "1",
-                      "label": {
-                        "en": "1 - Not at all",
-                        "nl": "1 - Helemaal niet"
-                      }
-                    },
-                    {
-                      "value": "5",
-                      "label": {
-                        "en": "5 - Completely",
-                        "nl": "5 - Volledig"
-                      }
-                    }
-                  ]
-                }
+            {
+              "id": "value2-deviation",
+              "type": "radio",
+              "number": "B2",
+              "text": {
+                "en": "To what extent have you acted in deviation from [Selected Core Value 2] in the past week?",
+                "nl": "In hoeverre heb je de afgelopen week gehandeld in afwijking van [Gekozen kernwaarde 2]?"
               },
-              {
-                "id": "value2-deviation",
-                "type": "radio",
-                "groupLabel": {
-                  "en": "B2. Deviation from Value",
-                  "nl": "B2. Afwijking van waarde"
-                },
-                "text": {
-                  "en": "To what extent have you acted in deviation from [Selected Core Value 2] in the past week?",
-                  "nl": "In hoeverre heb je de afgelopen week gehandeld in afwijking van [Gekozen kernwaarde 2]?"
-                },
-                "scale": {
-                  "description": {
-                    "en": "(1 = Not at all, 5 = Completely)",
-                    "nl": "(1 = Helemaal niet, 5 = Volledig)"
-                  },
-                  "options": [
-                    {
-                      "value": "1",
-                      "label": {
-                        "en": "1 - Not at all",
-                        "nl": "1 - Helemaal niet"
-                      }
-                    },
-                    {
-                      "value": "5",
-                      "label": {
-                        "en": "5 - Completely",
-                        "nl": "5 - Volledig"
-                      }
-                    }
-                  ]
-                }
+              "options": [
+                { "value": "1", "label": { "en": "1 - Not at all", "nl": "1 - Helemaal niet" } },
+                { "value": "2", "label": { "en": "2", "nl": "2" } },
+                { "value": "3", "label": { "en": "3", "nl": "3" } },
+                { "value": "4", "label": { "en": "4", "nl": "4" } },
+                { "value": "5", "label": { "en": "5 - Completely", "nl": "5 - Volledig" } }
+              ]
+            },
+            {
+              "id": "value2-obstacles",
+              "type": "text",
+              "number": "B3",
+              "text": {
+                "en": "What factors or situations have prevented you from acting according to [Selected Core Value 2]?",
+                "nl": "Welke factoren of situaties hebben je weerhouden om volgens [Gekozen kernwaarde 2] te handelen?"
               },
-              {
-                "id": "value2-obstacles",
-                "type": "text",
-                "groupLabel": {
-                  "en": "B3. Obstacles",
-                  "nl": "B3. Obstakels"
-                },
-                "text": {
-                  "en": "What factors or situations have prevented you from acting according to [Selected Core Value 2]?",
-                  "nl": "Welke factoren of situaties hebben je weerhouden om volgens [Gekozen kernwaarde 2] te handelen?"
-                },
-                "hint": {
-                  "en": "(brief explanation)",
-                  "nl": "(korte toelichting)"
-                }
-              },
-              {
-                "id": "value2-success",
-                "type": "text",
-                "groupLabel": {
-                  "en": "B4. Moments of Success",
-                  "nl": "B4. Succesmomenten"
-                },
-                "text": {
-                  "en": "Describe an example of a time when you acted in accordance with [Selected Core Value 2].",
-                  "nl": "Beschrijf een voorbeeld van een moment waarop je juist wel in lijn met [Gekozen kernwaarde 2] hebt gehandeld."
-                },
-                "hint": {
-                  "en": "(brief explanation)",
-                  "nl": "(korte toelichting)"
-                }
+              "hint": {
+                "en": "(brief explanation)",
+                "nl": "(korte toelichting)"
               }
-            ]
-          }
+            },
+            {
+              "id": "value2-success",
+              "type": "text",
+              "number": "B4",
+              "text": {
+                "en": "Describe an example of a time when you acted in accordance with [Selected Core Value 2].",
+                "nl": "Beschrijf een voorbeeld van een moment waarop je juist wel in lijn met [Gekozen kernwaarde 2] hebt gehandeld."
+              },
+              "hint": {
+                "en": "(brief explanation)",
+                "nl": "(korte toelichting)"
+              }
+            }
+          ]
         },
         {
-          "condition": {
-            "field": "core-values-selection",
-            "operator": "hasValueAtIndex",
-            "index": 2
+          "id": "value3",
+          "number": "C",
+          "title": {
+            "en": "C. Selected Core Value 3",
+            "nl": "C. Gekozen kernwaarde 3"
           },
-          "content": {
-            "id": "value-3",
-            "title": {
-              "en": "C. Selected Core Value 3",
-              "nl": "C. Gekozen kernwaarde 3"
+          "questions": [
+            {
+              "id": "value3-aligned",
+              "type": "radio",
+              "number": "C1",
+              "text": {
+                "en": "To what extent have you acted in accordance with [Selected Core Value 3] in the past week?",
+                "nl": "In hoeverre heb je de afgelopen week gehandeld in overeenstemming met [Gekozen kernwaarde 3]?"
+              },
+              "options": [
+                { "value": "1", "label": { "en": "1 - Not at all", "nl": "1 - Helemaal niet" } },
+                { "value": "2", "label": { "en": "2", "nl": "2" } },
+                { "value": "3", "label": { "en": "3", "nl": "3" } },
+                { "value": "4", "label": { "en": "4", "nl": "4" } },
+                { "value": "5", "label": { "en": "5 - Completely", "nl": "5 - Volledig" } }
+              ]
             },
-            "questions": [
-              {
-                "id": "value3-aligned",
-                "type": "radio",
-                "groupLabel": {
-                  "en": "C1. Aligned with Value",
-                  "nl": "C1. In lijn met waarde"
-                },
-                "text": {
-                  "en": "To what extent have you acted in accordance with [Selected Core Value 3] in the past week?",
-                  "nl": "In hoeverre heb je de afgelopen week gehandeld in overeenstemming met [Gekozen kernwaarde 3]?"
-                },
-                "scale": {
-                  "description": {
-                    "en": "(1 = Not at all, 5 = Completely)",
-                    "nl": "(1 = Helemaal niet, 5 = Volledig)"
-                  },
-                  "options": [
-                    {
-                      "value": "1",
-                      "label": {
-                        "en": "1 - Not at all",
-                        "nl": "1 - Helemaal niet"
-                      }
-                    },                  
-                    {
-                      "value": "5",
-                      "label": {
-                        "en": "5 - Completely",
-                        "nl": "5 - Volledig"
-                      }
-                    }
-                  ]
-                }
+            {
+              "id": "value3-deviation",
+              "type": "radio",
+              "number": "C2",
+              "text": {
+                "en": "To what extent have you acted in deviation from [Selected Core Value 3] in the past week?",
+                "nl": "In hoeverre heb je de afgelopen week gehandeld in afwijking van [Gekozen kernwaarde 3]?"
               },
-              {
-                "id": "value3-deviation",
-                "type": "radio",
-                "groupLabel": {
-                  "en": "C2. Deviation from Value",
-                  "nl": "C2. Afwijking van waarde"
-                },
-                "text": {
-                  "en": "To what extent have you acted in deviation from [Selected Core Value 3] in the past week?",
-                  "nl": "In hoeverre heb je de afgelopen week gehandeld in afwijking van [Gekozen kernwaarde 3]?"
-                },
-                "scale": {
-                  "description": {
-                    "en": "(1 = Not at all, 5 = Completely)",
-                    "nl": "(1 = Helemaal niet, 5 = Volledig)"
-                  },
-                  "options": [
-                    {
-                      "value": "1",
-                      "label": {
-                        "en": "1 - Not at all",
-                        "nl": "1 - Helemaal niet"
-                      }
-                    },
-                    {
-                      "value": "5",
-                      "label": {
-                        "en": "5 - Completely",
-                        "nl": "5 - Volledig"
-                      }
-                    }
-                  ]
-                }
+              "options": [
+                { "value": "1", "label": { "en": "1 - Not at all", "nl": "1 - Helemaal niet" } },
+                { "value": "2", "label": { "en": "2", "nl": "2" } },
+                { "value": "3", "label": { "en": "3", "nl": "3" } },
+                { "value": "4", "label": { "en": "4", "nl": "4" } },
+                { "value": "5", "label": { "en": "5 - Completely", "nl": "5 - Volledig" } }
+              ]
+            },
+            {
+              "id": "value3-obstacles",
+              "type": "text",
+              "number": "C3",
+              "text": {
+                "en": "What factors or situations have prevented you from acting according to [Selected Core Value 3]?",
+                "nl": "Welke factoren of situaties hebben je weerhouden om volgens [Gekozen kernwaarde 3] te handelen?"
               },
-              {
-                "id": "value3-obstacles",
-                "type": "text",
-                "groupLabel": {
-                  "en": "C3. Obstacles",
-                  "nl": "C3. Obstakels"
-                },
-                "text": {
-                  "en": "What factors or situations have prevented you from acting according to [Selected Core Value 3]?",
-                  "nl": "Welke factoren of situaties hebben je weerhouden om volgens [Gekozen kernwaarde 3] te handelen?"
-                },
-                "hint": {
-                  "en": "(brief explanation)",
-                  "nl": "(korte toelichting)"
-                }
-              },
-              {
-                "id": "value3-success",
-                "type": "text",
-                "groupLabel": {
-                  "en": "C4. Moments of Success",
-                  "nl": "C4. Succesmomenten"
-                },
-                "text": {
-                  "en": "Describe an example of a time when you acted in accordance with [Selected Core Value 3].",
-                  "nl": "Beschrijf een voorbeeld van een moment waarop je juist wel in lijn met [Gekozen kernwaarde 3] hebt gehandeld."
-                },
-                "hint": {
-                  "en": "(brief explanation)",
-                  "nl": "(korte toelichting)"
-                }
+              "hint": {
+                "en": "(brief explanation)",
+                "nl": "(korte toelichting)"
               }
-            ]
-          }
+            },
+            {
+              "id": "value3-success",
+              "type": "text",
+              "number": "C4",
+              "text": {
+                "en": "Describe an example of a time when you acted in accordance with [Selected Core Value 3].",
+                "nl": "Beschrijf een voorbeeld van een moment waarop je juist wel in lijn met [Gekozen kernwaarde 3] hebt gehandeld."
+              },
+              "hint": {
+                "en": "(brief explanation)",
+                "nl": "(korte toelichting)"
+              }
+            }
+          ]
         },
         {
-          "condition": {
-            "field": "core-values-selection",
-            "operator": "hasValueAtIndex",
-            "index": 3
+          "id": "value4",
+          "number": "D",
+          "title": {
+            "en": "D. Selected Core Value 4",
+            "nl": "D. Gekozen kernwaarde 4"
           },
-          "content": {
-            "id": "value-4",
-            "title": {
-              "en": "D. Selected Core Value 4",
-              "nl": "D. Gekozen kernwaarde 4"
+          "questions": [
+            {
+              "id": "value4-aligned",
+              "type": "radio",
+              "number": "D1",
+              "text": {
+                "en": "To what extent have you acted in accordance with [Selected Core Value 4] in the past week?",
+                "nl": "In hoeverre heb je de afgelopen week gehandeld in overeenstemming met [Gekozen kernwaarde 4]?"
+              },
+              "options": [
+                { "value": "1", "label": { "en": "1 - Not at all", "nl": "1 - Helemaal niet" } },
+                { "value": "2", "label": { "en": "2", "nl": "2" } },
+                { "value": "3", "label": { "en": "3", "nl": "3" } },
+                { "value": "4", "label": { "en": "4", "nl": "4" } },
+                { "value": "5", "label": { "en": "5 - Completely", "nl": "5 - Volledig" } }
+              ]
             },
-            "questions": [
-              {
-                "id": "value4-aligned",
-                "type": "radio",
-                "groupLabel": {
-                  "en": "D1. Aligned with Value",
-                  "nl": "D1. In lijn met waarde"
-                },
-                "text": {
-                  "en": "To what extent have you acted in accordance with [Selected Core Value 4] in the past week?",
-                  "nl": "In hoeverre heb je de afgelopen week gehandeld in overeenstemming met [Gekozen kernwaarde 4]?"
-                },
-                "scale": {
-                  "description": {
-                    "en": "(1 = Not at all, 5 = Completely)",
-                    "nl": "(1 = Helemaal niet, 5 = Volledig)"
-                  },
-                  "options": [
-                    {
-                      "value": "1",
-                      "label": {
-                        "en": "1 - Not at all",
-                        "nl": "1 - Helemaal niet"
-                      }
-                    },
-                    {
-                      "value": "5",
-                      "label": {
-                        "en": "5 - Completely",
-                        "nl": "5 - Volledig"
-                      }
-                    }
-                  ]
-                }
+            {
+              "id": "value4-deviation",
+              "type": "radio",
+              "number": "D2",
+              "text": {
+                "en": "To what extent have you acted in deviation from [Selected Core Value 4] in the past week?",
+                "nl": "In hoeverre heb je de afgelopen week gehandeld in afwijking van [Gekozen kernwaarde 4]?"
               },
-              {
-                "id": "value4-deviation",
-                "type": "radio",
-                "groupLabel": {
-                  "en": "D2. Deviation from Value",
-                  "nl": "D2. Afwijking van waarde"
-                },
-                "text": {
-                  "en": "To what extent have you acted in deviation from [Selected Core Value 4] in the past week?",
-                  "nl": "In hoeverre heb je de afgelopen week gehandeld in afwijking van [Gekozen kernwaarde 4]?"
-                },
-                "scale": {
-                  "description": {
-                    "en": "(1 = Not at all, 5 = Completely)",
-                    "nl": "(1 = Helemaal niet, 5 = Volledig)"
-                  },
-                  "options": [
-                    {
-                      "value": "1",
-                      "label": {
-                        "en": "1 - Not at all",
-                        "nl": "1 - Helemaal niet"
-                      }
-                    },
-                    {
-                      "value": "5",
-                      "label": {
-                        "en": "5 - Completely",
-                        "nl": "5 - Volledig"
-                      }
-                    }
-                  ]
-                }
+              "options": [
+                { "value": "1", "label": { "en": "1 - Not at all", "nl": "1 - Helemaal niet" } },
+                { "value": "2", "label": { "en": "2", "nl": "2" } },
+                { "value": "3", "label": { "en": "3", "nl": "3" } },
+                { "value": "4", "label": { "en": "4", "nl": "4" } },
+                { "value": "5", "label": { "en": "5 - Completely", "nl": "5 - Volledig" } }
+              ]
+            },
+            {
+              "id": "value4-obstacles",
+              "type": "text",
+              "number": "D3",
+              "text": {
+                "en": "What factors or situations have prevented you from acting according to [Selected Core Value 4]?",
+                "nl": "Welke factoren of situaties hebben je weerhouden om volgens [Gekozen kernwaarde 4] te handelen?"
               },
-              {
-                "id": "value4-obstacles",
-                "type": "text",
-                "groupLabel": {
-                  "en": "D3. Obstacles",
-                  "nl": "D3. Obstakels"
-                },
-                "text": {
-                  "en": "What factors or situations have prevented you from acting according to [Selected Core Value 4]?",
-                  "nl": "Welke factoren of situaties hebben je weerhouden om volgens [Gekozen kernwaarde 4] te handelen?"
-                },
-                "hint": {
-                  "en": "(brief explanation)",
-                  "nl": "(korte toelichting)"
-                }
-              },
-              {
-                "id": "value4-success",
-                "type": "text",
-                "groupLabel": {
-                  "en": "D4. Moments of Success",
-                  "nl": "D4. Succesmomenten"
-                },
-                "text": {
-                  "en": "Describe an example of a time when you acted in accordance with [Selected Core Value 4].",
-                  "nl": "Beschrijf een voorbeeld van een moment waarop je juist wel in lijn met [Gekozen kernwaarde 4] hebt gehandeld."
-                },
-                "hint": {
-                  "en": "(brief explanation)",
-                  "nl": "(korte toelichting)"
-                }
+              "hint": {
+                "en": "(brief explanation)",
+                "nl": "(korte toelichting)"
               }
-            ]
-          }
+            },
+            {
+              "id": "value4-success",
+              "type": "text",
+              "number": "D4",
+              "text": {
+                "en": "Describe an example of a time when you acted in accordance with [Selected Core Value 4].",
+                "nl": "Beschrijf een voorbeeld van een moment waarop je juist wel in lijn met [Gekozen kernwaarde 4] hebt gehandeld."
+              },
+              "hint": {
+                "en": "(brief explanation)",
+                "nl": "(korte toelichting)"
+              }
+            }
+          ]
         }
       ]
     }
   ]
 }
-
