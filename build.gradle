@@ -59,7 +59,8 @@ dependencies {
     
     // OpenAI
     implementation 'com.openai:openai-java:3.0.3'
-    implementation 'org.springframework.ai:spring-ai-openai:1.0.0'
+    implementation 'com.jcraft:jsch:0.1.55'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
 	//Spring Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'

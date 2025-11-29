@@ -51,7 +51,7 @@ docker run -d \
   -e POSTGRES_DB=DAISY_DB \
   -e POSTGRES_USER=postgres \
   -e POSTGRES_PASSWORD=daisy \
-  -p 5433:5432 \
+  -p 5433:5433 \
   postgres:latest
 ```
 
