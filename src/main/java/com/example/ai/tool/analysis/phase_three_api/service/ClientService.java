@@ -36,9 +36,10 @@ public class ClientService {
             }
             logger.info("Found {} schemas containing 'clients' table: {}", schemas.size(), schemas);
 
-            // Step 2: Dynamically build the UNION ALL query
+            // Step 2: Dynamically build the UNION ALL query WITH TYPE CASTING
             String unionQuery = schemas.stream()
-                    .map(schema -> "SELECT id, email, first_name, family_name FROM " + schema + ".clients")
+                    .map(schema -> "SELECT id, CAST(client_gid_id AS TEXT) as client_gid_id, email, first_name, family_name FROM "
+                            + schema + ".clients")
                     .collect(Collectors.joining(" UNION ALL "));
 
             logger.debug("Executing dynamic union query: {}", unionQuery);
