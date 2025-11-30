@@ -15,6 +15,9 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_AI_OPENAI_API_KEY: ${OPEN_API_KEY}
       QUESTIONNAIRE_ENGINE_LOAD_ON_STARTUP: ${LOAD_QUESTIONNAIRES_ON_STARTUP}
+      SSH_HOST: ${SSH_HOST}
+      SSH_USER: ${SSH_USER}
+      SSH_PASS: ${SSH_PASS}
     depends_on:
       db:
         condition: service_healthy
