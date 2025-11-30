@@ -54,6 +54,8 @@ public class SshTunnelManager {
             // This is not recommended for production, but useful for development.
             // For production, it's better to use known hosts or public key auth.
             session.setConfig("StrictHostKeyChecking", "no");
+            session.setConfig("ServerAliveInterval", "60000"); // 1 minute
+            session.setConfig("ServerAliveMaxCount", "3");
 
             session.connect();
             logger.info("SSH session connected successfully.");
