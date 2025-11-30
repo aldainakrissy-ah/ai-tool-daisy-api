@@ -15,9 +15,26 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_AI_OPENAI_API_KEY: ${OPEN_API_KEY}
       QUESTIONNAIRE_ENGINE_LOAD_ON_STARTUP: ${LOAD_QUESTIONNAIRES_ON_STARTUP}
+      # SSH Tunnel Configuration
+      SSH_ENABLED: ${SSH_ENABLED:-true}
       SSH_HOST: ${SSH_HOST}
       SSH_USER: ${SSH_USER}
       SSH_PASS: ${SSH_PASS}
+      SSH_PORT: ${SSH_PORT:-22}
+      SECOND_DB_REMOTE_HOST: ${SECOND_DB_REMOTE_HOST:-localhost}
+      SECOND_DB_REMOTE_PORT: ${SECOND_DB_REMOTE_PORT:-5432}
+      SECOND_DB_LOCAL_PORT: ${SECOND_DB_LOCAL_PORT:-5433}
+      
+      # SSH Timeout Configuration for Production
+      SSH_CONNECTION_TIMEOUT: ${SSH_CONNECTION_TIMEOUT:-15000}
+      SSH_MAX_RETRIES: ${SSH_MAX_RETRIES:-5}
+      SSH_RETRY_DELAY: ${SSH_RETRY_DELAY:-3000}
+      
+      # Second Database Configuration
+      SECOND_DB_URL: ${SECOND_DB_URL}
+      SECOND_DB_USER: ${SECOND_DB_USER}
+      SECOND_DB_PASS: ${SECOND_DB_PASS}
+
     depends_on:
       db:
         condition: service_healthy
