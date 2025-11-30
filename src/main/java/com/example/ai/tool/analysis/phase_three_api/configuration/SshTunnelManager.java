@@ -1,17 +1,16 @@
 package com.example.ai.tool.analysis.phase_three_api.configuration;
 
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import com.jcraft.jsch.JSch;
-
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-import lombok.Data;
 
 @Component("sshTunnelManager")
 @ConfigurationProperties(prefix = "ssh")
@@ -27,10 +26,14 @@ public class SshTunnelManager {
     private String password;
     private Remote remote = new Remote();
     private int localPort = 5433;
+    
+    // Add timeout configurations
+    private int connectionTimeoutMs = 10000; // 10 seconds
+    private int maxRetryAttempts = 3;
+    private int retryDelayMs = 2000; // 2 seconds
 
     private Session session;
 
-    // Nested class for remote configuration
     @Data
     public static class Remote {
         private String host = "localhost";
@@ -45,28 +48,70 @@ public class SshTunnelManager {
         }
 
         validateSshProperties();
+        connectWithRetry();
+    }
 
-        try {
-            logger.info("Initializing SSH tunnel to {}...", host);
-            JSch jsch = new JSch();
-            session = jsch.getSession(user, host, port);
-            session.setPassword(password);
-            // This is not recommended for production, but useful for development.
-            // For production, it's better to use known hosts or public key auth.
-            session.setConfig("StrictHostKeyChecking", "no");
-            session.setConfig("ServerAliveInterval", "60000"); // 1 minute
-            session.setConfig("ServerAliveMaxCount", "3");
-
-            session.connect();
-            logger.info("SSH session connected successfully.");
-
-            int assignedPort = session.setPortForwardingL(localPort, remote.getHost(), remote.getPort());
-            logger.info("SSH tunnel established: localhost:{} -> {}:{}", assignedPort, remote.getHost(), remote.getPort());
-
-        } catch (Exception e) {
-            logger.error("Failed to create SSH tunnel. Please check SSH credentials and network connectivity.", e);
-            throw new RuntimeException("Failed to create SSH tunnel", e);
+    private void connectWithRetry() {
+        int attempt = 1;
+        
+        while (attempt <= maxRetryAttempts) {
+            try {
+                logger.info("SSH tunnel connection attempt {} of {}", attempt, maxRetryAttempts);
+                establishConnection();
+                logger.info("SSH tunnel established successfully on attempt {}", attempt);
+                return;
+                
+            } catch (Exception e) {
+                logger.warn("SSH tunnel attempt {} failed: {}", attempt, e.getMessage());
+                
+                if (attempt == maxRetryAttempts) {
+                    logger.error("All SSH tunnel connection attempts failed. Final error:", e);
+                    throw new RuntimeException("Failed to establish SSH tunnel after " + maxRetryAttempts + " attempts", e);
+                }
+                
+                attempt++;
+                try {
+                    Thread.sleep(retryDelayMs);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("SSH tunnel connection interrupted", ie);
+                }
+            }
         }
+    }
+
+    private void establishConnection() throws JSchException {
+        logger.info("Initializing SSH tunnel to {}:{}...", host, port);
+        
+        JSch jsch = new JSch();
+        session = jsch.getSession(user, host, port);
+        session.setPassword(password);
+        
+        // Production-friendly configurations
+        session.setConfig("StrictHostKeyChecking", "no");
+        session.setConfig("ServerAliveInterval", "30000"); // 30 seconds
+        session.setConfig("ServerAliveMaxCount", "3");
+        session.setConfig("ConnectTimeout", String.valueOf(connectionTimeoutMs));
+        
+        // Additional production settings
+        session.setConfig("TCPKeepAlive", "yes");
+        session.setConfig("Compression", "yes");
+        
+        session.connect(connectionTimeoutMs);
+        logger.info("SSH session connected successfully to {}:{}", host, port);
+
+        int assignedPort = session.setPortForwardingL(localPort, remote.getHost(), remote.getPort());
+        logger.info("SSH tunnel established: localhost:{} -> {}:{}", assignedPort, remote.getHost(), remote.getPort());
+        
+        // Verify tunnel is working
+        verifyTunnel();
+    }
+    
+    private void verifyTunnel() {
+        if (session == null || !session.isConnected()) {
+            throw new RuntimeException("SSH tunnel verification failed: session not connected");
+        }
+        logger.info("SSH tunnel verification passed");
     }
 
     private void validateSshProperties() {
@@ -84,9 +129,18 @@ public class SshTunnelManager {
     @PreDestroy
     public void stop() {
         if (session != null && session.isConnected()) {
-            logger.info("Closing SSH tunnel.");
-            session.disconnect();
-            logger.info("SSH tunnel closed.");
+            logger.info("Closing SSH tunnel...");
+            try {
+                session.disconnect();
+                logger.info("SSH tunnel closed successfully.");
+            } catch (Exception e) {
+                logger.warn("Error while closing SSH tunnel: {}", e.getMessage());
+            }
         }
+    }
+    
+    // Health check method
+    public boolean isConnected() {
+        return session != null && session.isConnected();
     }
 }

@@ -40,5 +40,5 @@ USER appuser
 EXPOSE 8080
 
 
-# Update ENTRYPOINT to use the specific jar name with optimized JVM settings
-ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=70.0", "-jar", "/app/libs/ai-tool-daisy-api-0.0.1-SNAPSHOT.jar"]
+# Update ENTRYPOINT to print environment variables for debugging and then run the app
+ENTRYPOINT ["/bin/sh", "-c", "echo 'Attempting to start with SSH_HOST:' $SSH_HOST 'SSH_USER:' $SSH_USER 'SSH_PASS is set:' $(if [ -n \"$SSH_PASS\" ]; then echo 'true'; else echo 'false'; fi) && java -XX:+UseContainerSupport -XX:MaxRAMPercentage=70.0 -jar /app/libs/ai-tool-daisy-api-0.0.1-SNAPSHOT.jar"]
