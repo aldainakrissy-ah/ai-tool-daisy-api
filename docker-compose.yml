@@ -10,7 +10,7 @@ services:
       - .env
     environment:
       # Override .env values for Docker container networking
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/DAISY_DB
+      POSTGRES_URL: jdbc:postgresql://db:5432/DAISY_DB
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_AI_OPENAI_API_KEY: ${OPEN_API_KEY}
@@ -27,7 +27,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5432:5432"
+      - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
