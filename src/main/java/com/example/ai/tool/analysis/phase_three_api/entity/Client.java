@@ -22,8 +22,8 @@ public class Client {
     @Id
     private Long id;
 
-    // @Column(name = "client_gid_id")
-    // private String clientGidId;
+    @Column(name = "client_gid_id")
+    private String clientGidId;
 
     private String email;
 
