@@ -16,7 +16,7 @@ services:
       SPRING_AI_OPENAI_API_KEY: ${OPEN_API_KEY}
       QUESTIONNAIRE_ENGINE_LOAD_ON_STARTUP: ${LOAD_QUESTIONNAIRES_ON_STARTUP}
       # SSH Tunnel Configuration
-      SSH_ENABLED: ${SSH_ENABLED:-true}
+      SSH_ENABLED: ${SSH_ENABLED:-false}
       SSH_HOST: ${SSH_HOST}
       SSH_USER: ${SSH_USER}
       SSH_PASS: ${SSH_PASS}
@@ -34,6 +34,7 @@ services:
       SECOND_DB_URL: ${SECOND_DB_URL}
       SECOND_DB_USER: ${SECOND_DB_USER}
       SECOND_DB_PASS: ${SECOND_DB_PASS}
+      SECOND_DATABASE_ENABLED: ${SECOND_DATABASE_ENABLED:-true}
 
     depends_on:
       db:
