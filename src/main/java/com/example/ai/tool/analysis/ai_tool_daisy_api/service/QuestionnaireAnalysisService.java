@@ -1,5 +1,6 @@
 package com.example.ai.tool.analysis.ai_tool_daisy_api.service;
 
+import com.example.ai.tool.analysis.ai_tool_daisy_api.constant.QuestionnaireInstructions;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1ResultEntity;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1Result;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.Prompt1ResultRepository;
@@ -12,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,7 +42,6 @@ public class QuestionnaireAnalysisService {
      * @return the response from the OpenAI API as a {@link String}.
      */
     @Transactional
-    @Async
     public Prompt1Result generatePreIntakeAnalysis(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("PDF file cannot be empty");
@@ -56,8 +55,9 @@ public class QuestionnaireAnalysisService {
 
             StructuredResponseCreateParams<Prompt1Result> params = StructuredResponseCreateParams.<Prompt1Result>builder()
                     .model(ChatModel.GPT_5)
+                    //.temperature(0.2)
                     .addFileSearchTool(Collections.singletonList(FILE_ID))
-                    .input("Extract intake and demographic data; produce one TPD hypothesis; map up to 3 primary fields; report only concretely triggered clusters using validated HETA mappings; follow the template-only output and validation checks.. Here is the content:\n" + content)
+                    .input(QuestionnaireInstructions.PROMPT1_DAISY + content)
                     .text(Prompt1Result.class)
                     .build();
 
@@ -69,10 +69,10 @@ public class QuestionnaireAnalysisService {
                     .flatMap(msg -> msg.content().stream())
                     .map(StructuredResponseOutputMessage.Content::asOutputText).findFirst().map(prompt1Result -> {
                         Prompt1ResultEntity prompt1ResultEntity = new Prompt1ResultEntity();
-                        prompt1ResultEntity.setProfessionalId(prompt1Result.getProfessionalId());
-                        prompt1ResultEntity.setPatientId(prompt1Result.getPatientId());
+                        prompt1ResultEntity.setProfessionalId(prompt1Result.getProfessionalName());
+                        prompt1ResultEntity.setPatientId(prompt1Result.getClientName());
                         prompt1ResultEntity.setResultJson(prompt1Result.toJson());
-                        prompt1ResultRepository.saveAsJson(prompt1Result.getProfessionalId(),prompt1Result.getPatientId(), prompt1Result.toJson());
+                        prompt1ResultRepository.saveAsJson(prompt1Result.getProfessionalName(),prompt1Result.getClientName(), prompt1Result.toJson());
                         return prompt1Result;
                     }).orElseThrow(() -> new RuntimeException("No valid response from OpenAI API"));
 
@@ -115,10 +115,10 @@ public class QuestionnaireAnalysisService {
     @Transactional
     public void savePrompt1Result(Prompt1Result prompt1Result)  {
         log.info("Saving Prompt1 result for professional id: {} and patient id: {}",
-                prompt1Result.getProfessionalId(), prompt1Result.getPatientId());
+                prompt1Result.getProfessionalName(), prompt1Result.getClientName());
         Prompt1ResultEntity prompt1ResultEntity = new  Prompt1ResultEntity();
-        prompt1ResultEntity.setProfessionalId(prompt1Result.getProfessionalId());
-        prompt1ResultEntity.setPatientId(prompt1Result.getPatientId());
+        prompt1ResultEntity.setProfessionalId(prompt1Result.getProfessionalName());
+        prompt1ResultEntity.setPatientId(prompt1Result.getClientName());
         prompt1ResultEntity.setResultJson(prompt1Result.toJson());
         prompt1ResultRepository.save(prompt1ResultEntity);
     }

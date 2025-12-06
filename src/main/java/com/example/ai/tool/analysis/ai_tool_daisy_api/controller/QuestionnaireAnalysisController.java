@@ -69,13 +69,13 @@ public class QuestionnaireAnalysisController {
             log.warn("Received null Prompt1Result payload");
             return ResponseEntity.badRequest().build();
         }
-        log.info("Saving Prompt1 result for professional id: {}", prompt1Result.getProfessionalId());
+        log.info("Saving Prompt1 result for professional id: {}", prompt1Result.getProfessionalName());
         try {
             questionnaireAnalysisService.savePrompt1Result(prompt1Result);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             log.error("Failed to save Prompt1 result for professionalId={}, {}",
-                    prompt1Result.getProfessionalId(), e.getMessage());
+                    prompt1Result.getProfessionalName(), e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

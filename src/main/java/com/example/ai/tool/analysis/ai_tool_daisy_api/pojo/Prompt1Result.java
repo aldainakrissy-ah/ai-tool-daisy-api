@@ -13,166 +13,226 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Prompt1Result {
 
-    @JsonProperty("professional_id")
-    private String professionalId;
+    @JsonProperty("client-name")
+    private String clientName;
 
-    @JsonProperty("patient_id")
-    private String patientId;
+    @JsonProperty("professional-name")
+    private String professionalName;
 
-    private Analysis analysis;
+    @JsonProperty("A1")
+    private A1 a1;
 
-    private Routing routing;
+    @JsonProperty("A2")
+    private List<A2> a2;
 
-    private static ObjectMapper MAPPER = new ObjectMapper();
+    @JsonProperty("A3")
+    private A3 a3;
 
+    @JsonProperty("A4a")
+    private A4 a4a;
+
+    @JsonProperty("A4b")
+    private A4 a4b;
+
+    @JsonProperty("A4c")
+    private A4 a4c;
+
+    @JsonProperty("A4d")
+    private A4 a4d;
+
+    @JsonProperty("A5")
+    private A5 a5;
+
+    @JsonProperty("A6")
+    private A6 a6;
+
+    @JsonProperty("B1")
+    private List<B1> b1;
+
+    @JsonProperty("B2")
+    private List<B2> b2;
+
+    @JsonProperty("B3")
+    private List<B3> b3;
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Data
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class Analysis {
-        @JsonProperty("preliminary_tpd_hypothesis")
-        private String preliminaryTpdHypothesis;
+    public static class A4 {
+        @JsonProperty("status")
+        private String status;
 
-        @JsonProperty("dysregulation_fields")
-        private List<String> dysregulationFields;
+        @JsonProperty("narrative")
+        private String narrative;
 
-        /**
-         * New: structured S&S clusters with number, cluster label, and core signals.
-         */
-        @JsonProperty("signs_symptoms_clusters")
-        private List<SignsSymptomsCluster> signsSymptomsClusters;
-
-        /**
-         * New: HETA coverage report with level + HETAs + short justification.
-         */
-        @JsonProperty("heta_coverage_report")
-        private List<HetaCoverageItem> hetaCoverageReport;
-
-        /**
-         * New: Optional additional data (triggered measurements).
-         * e.g., "HMA-analyse", "HRV-profiel", "Vitamine D-status"
-         */
-        @JsonProperty("optional_additional_data")
-        private List<String> optionalAdditionalData;
-
-        /**
-         * Previously "data_gaps"; keep same key for compatibility.
-         * e.g., "HMA-data ontbreekt", "HRV-metingen nog niet aangeleverd", "Geen recente Vitamine-D uitslag"
-         */
-        @JsonProperty("data_gaps")
-        private List<String> dataGaps;
+        @JsonProperty("data")
+        private String data;
     }
 
     @Data
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class SignsSymptomsCluster {
-        /** Example: 1, 2, 3... */
+    public static class A5 {
+        @JsonProperty("module_id")
+        private String moduleId;
+
+        @JsonProperty("ID")
+        private String id;
+
+        @JsonProperty("label")
+        private String label;
+
+        @JsonProperty("items")
+        private List<A5Item> items;
+
+        @JsonProperty("narrative")
+        private String narrative;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class A5Item {
+        @JsonProperty("analysis_id")
+        private String analysisId;
+
+        @JsonProperty("label")
+        private String label;
+
+        @JsonProperty("recommended_reason")
+        private String recommendedReason;
+
+        @JsonProperty("required_fields")
+        private List<String> requiredFields;
+
+        @JsonProperty("uncertainty_reason")
+        private String uncertaintyReason;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class A6 {
+        @JsonProperty("status")
+        private String status;
+
+        @JsonProperty("narrative")
+        private String narrative;
+
+        @JsonProperty("data")
+        private String data;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class B1 {
         @JsonProperty("nr")
         private Integer nr;
 
-        /** Example: "Slaap/doorslaap-architectuur (nachtcontinuïteit)" */
-        @JsonProperty("cluster")
-        private String cluster;
+        @JsonProperty("label")
+        private String label;
 
-        /** Example list of short strings extracted from intake */
-        @JsonProperty("core_signals")
-        private List<String> coreSignals;
+        @JsonProperty("ID")
+        private String id;
+
+        @JsonProperty("qest_json_code")
+        private String qestJsonCode;
+
+        @JsonProperty("toelichting")
+        private String toelichting;
+
+        @JsonProperty("status")
+        private String status;
     }
 
     @Data
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class HetaCoverageItem {
-        /**
-         * Allowed: HIGH / MEDIUM / LOW
-         * (maps from "Niveau: hoog/ gemiddeld/ laag")
-         */
-        @JsonProperty("level")
-        private CoverageLevel level;
+    public static class A1 {
+        @JsonProperty("primary_IE")
+        private String primaryIE;
 
-        /** List of HETA names (no spray names) */
-        @JsonProperty("hetas")
-        private List<String> hetas;
+        @JsonProperty("secondary_IEs")
+        private List<String> secondaryIEs;
 
-        /** Short justification text for this level */
-        @JsonProperty("justification")
-        private String justification;
-    }
+        @JsonProperty("uncertainty")
+        private String uncertainty;
 
-    public enum CoverageLevel {
-        @JsonProperty("HIGH") HIGH,
-        @JsonProperty("MEDIUM") MEDIUM,
-        @JsonProperty("LOW") LOW
+        @JsonProperty("narrative")
+        private String narrative;
     }
 
     @Data
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class Routing {
+    public static class A2 {
+        @JsonProperty("teleonic_cluster")
+        private String teleonicCluster;
 
-        /**
-         * Your new sample provides a descriptive Ethos text.
-         * Keep it a String to allow either "Volwassene/Kind/Hybride"
-         * or a fuller description like "Ethos Scan – waarden-gedrag congruentie..."
-         */
-        @JsonProperty("ethos_variant")
-        private String ethosVariant;
+        @JsonProperty("derived_from_IE")
+        private String derivedFromIE;
 
-        /**
-         * New: structured list of additional questionnaires with ID + name + short note + trigger.
-         * (Section 6.2 in your sample)
-         */
-        @JsonProperty("additional_questionnaires")
-        private List<Questionnaire> additionalQuestionnaires;
-
-        /**
-         * New: HETA questionnaires (advised) with small notes (Section 6.3).
-         */
-        @JsonProperty("heta_questionnaires")
-        private List<HetaQuestionnaire> hetaQuestionnaires;
+        @JsonProperty("projection")
+        private String projection;
     }
 
     @Data
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class Questionnaire {
-        /** e.g., 1, 2, 3 (optional) */
-        @JsonProperty("nr")
-        private Integer nr;
+    public static class A3 {
+        @JsonProperty("direct")
+        private List<HetaItem> direct;
 
-        /** e.g., "psqi", "fss", "food-diary-24h" */
+        @JsonProperty("indirect")
+        private List<HetaItem> indirect;
+
+        @JsonProperty("narrative")
+        private String narrative;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class HetaItem {
         @JsonProperty("id")
         private String id;
 
-        /** e.g., "Pittsburgh Sleep Quality Index (PSQI)" */
-        @JsonProperty("name")
-        private String name;
+        @JsonProperty("label")
+        private String label;
 
-        /** Short explanation/justification */
-        @JsonProperty("note")
-        private String note;
-
-        /** Trigger condition text */
-        @JsonProperty("trigger")
-        private String trigger;
+        @JsonProperty("json_ref")
+        private String jsonRef;
     }
 
     @Data
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class HetaQuestionnaire {
-        /** e.g., 1, 2, 3 (optional) */
-        @JsonProperty("nr")
-        private Integer nr;
+    public static class B2 {
+        @JsonProperty("id")
+        private String id;
 
-        /** e.g., "Histamine", "NPY (Resilience/settlingveld)", "Glycine" */
-        @JsonProperty("heta")
-        private String heta;
+        @JsonProperty("label")
+        private String label;
 
-        /** Short explanation */
-        @JsonProperty("note")
-        private String note;
+        @JsonProperty("json_ref")
+        private String jsonRef;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class B3 {
+        @JsonProperty("id")
+        private String id;
+
+        @JsonProperty("label")
+        private String label;
+
+        @JsonProperty("json_ref")
+        private String jsonRef;
     }
 
     public static Prompt1Result fromJson(String json) {
