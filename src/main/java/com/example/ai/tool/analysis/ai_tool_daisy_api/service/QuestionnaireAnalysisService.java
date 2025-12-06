@@ -22,7 +22,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Service class responsible for processing PDF files and interacting with the OpenAI API.
+ * Service for processing healthcare questionnaires using OpenAI's Response API.
+ * Handles PDF extraction, AI analysis, and database persistence of results.
  */
 @Slf4j
 @Service
@@ -30,96 +31,129 @@ import java.util.List;
 public class QuestionnaireAnalysisService {
 
     private final OpenAIClient client;
-
     private final Prompt1ResultRepository prompt1ResultRepository;
 
-    public static final String FILE_ID = "vs_68ca996f20ec8191974741691b169cae";
+    private static final String VECTOR_STORE_ID = "vs_68ca996f20ec8191974741691b169cae";
+    private static final String PROMPT_ID = "pmpt_691ba79e09b08194a5ba301215448deb029b9fd4f52a8b2e";
+    private static final String PROMPT_VERSION = "8";
 
     /**
-     * Processes the uploaded PDF file, extracts its content, and sends it to the OpenAI API for analysis.
+     * Processes an uploaded PDF file containing healthcare questionnaire data.
+     * Extracts text, sends to OpenAI for analysis, and persists the results.
      *
-     * @param file the uploaded PDF file as a {@link MultipartFile}.
-     * @return the response from the OpenAI API as a {@link String}.
+     * @param file the PDF file to process
+     * @return analyzed questionnaire results
+     * @throws IllegalArgumentException if the file is null or empty
+     * @throws RuntimeException if PDF processing or AI analysis fails
      */
     @Transactional
     public Prompt1Result generatePreIntakeAnalysis(MultipartFile file) {
-        if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("PDF file cannot be empty");
-        }
-
+        validateFile(file);
         log.info("Processing file: {}", file.getOriginalFilename());
 
         try (PDDocument document = PDDocument.load(file.getInputStream())) {
-            PDFTextStripper pdfStripper = new PDFTextStripper();
-            String content = pdfStripper.getText(document);
+            String pdfContent = extractPdfContent(document);
+            Prompt1Result result = analyzeWithOpenAI(pdfContent);
+            persistResult(result);
 
-            StructuredResponseCreateParams<Prompt1Result> params = StructuredResponseCreateParams.<Prompt1Result>builder()
-                    .model(ChatModel.GPT_5)
-                    //.temperature(0.2)
-                    .addFileSearchTool(Collections.singletonList(FILE_ID))
-                    .input(QuestionnaireInstructions.PROMPT1_DAISY + content)
-                    .text(Prompt1Result.class)
-                    .build();
+            log.info("Successfully processed analysis for professional: {}, patient: {}",
+                    result.getProfessionalName(), result.getClientName());
 
-            StructuredResponse<Prompt1Result> response = client.responses().create(params);
-            log.debug("OpenAI response: {}", response);
+            return result;
 
-            return response.output().stream()
-                    .flatMap(item -> item.message().stream())
-                    .flatMap(msg -> msg.content().stream())
-                    .map(StructuredResponseOutputMessage.Content::asOutputText).findFirst().map(prompt1Result -> {
-                        Prompt1ResultEntity prompt1ResultEntity = new Prompt1ResultEntity();
-                        prompt1ResultEntity.setProfessionalId(prompt1Result.getProfessionalName());
-                        prompt1ResultEntity.setPatientId(prompt1Result.getClientName());
-                        prompt1ResultEntity.setResultJson(prompt1Result.toJson());
-                        prompt1ResultRepository.saveAsJson(prompt1Result.getProfessionalName(),prompt1Result.getClientName(), prompt1Result.toJson());
-                        return prompt1Result;
-                    }).orElseThrow(() -> new RuntimeException("No valid response from OpenAI API"));
-
-
-        } catch (IOException | OpenAIException e) {
-            log.error("Error processing PDF file for healthcare analysis", e);
-            throw new RuntimeException("Error processing PDF file for healthcare analysis: " + e.getMessage(), e);
+        } catch (IOException e) {
+            log.error("Error reading PDF file: {}", file.getOriginalFilename(), e);
+            throw new RuntimeException("Failed to read PDF file: " + e.getMessage(), e);
+        } catch (OpenAIException e) {
+            log.error("Error communicating with OpenAI API", e);
+            throw new RuntimeException("OpenAI API error: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Retrieves Prompt1 results by patient ID from the database.
+     * Retrieves all pre-intake analysis results for a specific professional.
      *
-     * @param professionalId the patient ID to search for.
-     * @return a list of {@link Prompt1ResultEntity} matching the patient ID.
+     * @param professionalId the professional's unique identifier
+     * @return list of analysis results
      */
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Prompt1ResultEntity> getPreIntakeResult(String professionalId) {
-        log.info("Fetching Prompt1 results for professional id: {}", professionalId);
+        log.info("Fetching results for professional ID: {}", professionalId);
         return prompt1ResultRepository.findByProfessionalId(professionalId);
     }
+
     /**
-     * Retrieves Prompt1 result by professional ID and patient ID from the database.
+     * Retrieves pre-intake analysis results for a specific professional and patient.
      *
-     * @param professionalId the professional ID to search for.
-     * @param patientId the patient ID to search for.
-     * @return a list of {@link Prompt1ResultEntity} matching the professional ID and patient ID.
+     * @param professionalId the professional's unique identifier
+     * @param patientId the patient's unique identifier
+     * @return list of analysis results matching both IDs
      */
-    @Transactional
-    public List<Prompt1ResultEntity> getPreIntakeResultByProfessionalIdAndPatientId(String professionalId, String patientId) {
-        log.info("Fetching Prompt1 result for professional id: {} and patient id: {}", professionalId, patientId);
+    @Transactional(readOnly = true)
+    public List<Prompt1ResultEntity> getPreIntakeResultByProfessionalIdAndPatientId(
+            String professionalId, String patientId) {
+        log.info("Fetching result for professional: {}, patient: {}", professionalId, patientId);
         return prompt1ResultRepository.findByProfessionalIdAndPatientId(professionalId, patientId);
     }
 
     /**
-     * Saves a Prompt1 result to the database.
+     * Persists a Prompt1Result to the database.
      *
-     * @param prompt1Result the {@link Prompt1Result} to be saved.
+     * @param prompt1Result the analysis result to save
      */
     @Transactional
-    public void savePrompt1Result(Prompt1Result prompt1Result)  {
-        log.info("Saving Prompt1 result for professional id: {} and patient id: {}",
+    public void savePrompt1Result(Prompt1Result prompt1Result) {
+        log.info("Saving result for professional: {}, patient: {}",
                 prompt1Result.getProfessionalName(), prompt1Result.getClientName());
-        Prompt1ResultEntity prompt1ResultEntity = new  Prompt1ResultEntity();
-        prompt1ResultEntity.setProfessionalId(prompt1Result.getProfessionalName());
-        prompt1ResultEntity.setPatientId(prompt1Result.getClientName());
-        prompt1ResultEntity.setResultJson(prompt1Result.toJson());
-        prompt1ResultRepository.save(prompt1ResultEntity);
+        persistResult(prompt1Result);
+    }
+
+    // Private helper methods
+
+    private void validateFile(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("PDF file cannot be null or empty");
+        }
+    }
+
+    private String extractPdfContent(PDDocument document) throws IOException {
+        PDFTextStripper pdfStripper = new PDFTextStripper();
+        return pdfStripper.getText(document);
+    }
+
+    private Prompt1Result analyzeWithOpenAI(String content) {
+        ResponsePrompt prompt = ResponsePrompt.builder()
+                .id(PROMPT_ID)
+                .version(PROMPT_VERSION)
+                .build();
+
+        log.debug("Using Prompt ID: {}, Version: {}", PROMPT_ID, PROMPT_VERSION);
+
+        StructuredResponseCreateParams<Prompt1Result> params = StructuredResponseCreateParams
+                .<Prompt1Result>builder()
+                .model(ChatModel.GPT_5)
+                .prompt(prompt)
+                .addFileSearchTool(Collections.singletonList(VECTOR_STORE_ID))
+                .input(QuestionnaireInstructions.PROMPT1_DAISY + content)
+                .text(Prompt1Result.class)
+                .build();
+
+        StructuredResponse<Prompt1Result> response = client.responses().create(params);
+        log.debug("Received response from OpenAI");
+
+        return response.output().stream()
+                .flatMap(item -> item.message().stream())
+                .flatMap(msg -> msg.content().stream())
+                .map(StructuredResponseOutputMessage.Content::asOutputText)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No valid response from OpenAI API"));
+    }
+
+    private void persistResult(Prompt1Result result) {
+        Prompt1ResultEntity entity = new Prompt1ResultEntity();
+        entity.setProfessionalId(result.getProfessionalName());
+        entity.setPatientId(result.getClientName());
+        entity.setResultJson(result.toJson());
+        prompt1ResultRepository.save(entity);
     }
 }

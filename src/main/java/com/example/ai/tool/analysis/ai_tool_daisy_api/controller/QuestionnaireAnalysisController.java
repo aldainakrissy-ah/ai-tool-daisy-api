@@ -33,8 +33,8 @@ public class QuestionnaireAnalysisController {
     @PostMapping("/analyze")
     public ResponseEntity<Prompt1Result> readPdf(@RequestParam("file") MultipartFile file) {
         log.info("Received file: {}", file.getOriginalFilename());
-        Prompt1Result responseFuture = questionnaireAnalysisService.generatePreIntakeAnalysis(file);
-        return ResponseEntity.ok(responseFuture);
+        Prompt1Result result = questionnaireAnalysisService.generatePreIntakeAnalysis(file);
+        return ResponseEntity.ok(result);
     }
 
     /**
