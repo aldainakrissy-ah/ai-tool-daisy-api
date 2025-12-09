@@ -25,16 +25,36 @@ public class QuestionnaireAnalysisController {
     private final QuestionnaireAnalysisService questionnaireAnalysisService;
 
     /**
-     * Endpoint to upload and process a PDF file.
+     * Analyzes an uploaded PDF questionnaire file using AI.
+     * Extracts text content, sends to OpenAI for teleonic analysis, and persists results.
      *
-     * @param file the uploaded PDF file as a {@link MultipartFile}.
-     * @return a {@link ResponseEntity} containing the result of the processing or an error message.
+     * @param file the uploaded PDF file containing healthcare questionnaire data
+     * @return {@link ResponseEntity} with {@link Prompt1Result} containing the AI analysis
      */
     @PostMapping("/analyze")
-    public ResponseEntity<Prompt1Result> readPdf(@RequestParam("file") MultipartFile file) {
-        log.info("Received file: {}", file.getOriginalFilename());
-        Prompt1Result result = questionnaireAnalysisService.generatePreIntakeAnalysis(file);
-        return ResponseEntity.ok(result);
+    public ResponseEntity<Prompt1Result> analyzePdf(@RequestParam("file") MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            log.warn("Received empty or null file upload request");
+            return ResponseEntity.badRequest().build();
+        }
+
+        log.info("Received PDF for analysis: {} ({} bytes)",
+                file.getOriginalFilename(), file.getSize());
+
+        try {
+            Prompt1Result result = questionnaireAnalysisService.generatePreIntakeAnalysis(file);
+            log.info("Successfully analyzed PDF for professional: {}, client: {}",
+                    result.getProfessionalName(), result.getClientName());
+            return ResponseEntity.ok(result);
+
+        } catch (IllegalArgumentException e) {
+            log.error("Invalid file upload: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+
+        } catch (Exception e) {
+            log.error("Failed to analyze PDF: {}", file.getOriginalFilename(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     /**
