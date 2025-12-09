@@ -5,7 +5,6 @@ import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1Result;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.Prompt1ResultRepository;
 import com.openai.client.OpenAIClient;
 import com.openai.errors.OpenAIException;
-
 import com.openai.models.ChatModel;
 import com.openai.models.responses.*;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,7 @@ import java.util.List;
 
 /**
  * Service for processing healthcare questionnaires using OpenAI's Response API.
- * Handles PDF extraction, AI analysis, and database persistence of results.
+ * Handles PDF extraction, teleonic AI analysis, and database persistence of results.
  */
 @Slf4j
 @Service
@@ -33,37 +32,42 @@ public class QuestionnaireAnalysisService {
 
     private static final String PROMPT_ID = "pmpt_691ba79e09b08194a5ba301215448deb029b9fd4f52a8b2e";
     private static final String PROMPT_VERSION = "23";
+    private static final String PDF_ERROR_MESSAGE = "Failed to process PDF file";
+    private static final String OPENAI_ERROR_MESSAGE = "OpenAI API analysis failed";
+    private static final String NO_RESPONSE_ERROR = "No valid response received from OpenAI";
 
     /**
-     * Processes uploaded PDF file(s) containing healthcare questionnaire data.
-     * Extracts text from all files, combines content, sends to OpenAI for analysis, and persists the results.
+     * Processes uploaded PDF file containing healthcare questionnaire data.
+     * Extracts text, analyzes with OpenAI, and persists results.
      *
-     * @param files the PDF file(s) to process (accepts one or more files)
+     * @param file the uploaded PDF file
      * @return analyzed questionnaire results
-     * @throws IllegalArgumentException if files list is null or empty
+     * @throws IllegalArgumentException if file is null or empty
      * @throws RuntimeException if PDF processing or AI analysis fails
      */
     @Transactional
-    public Prompt1Result generatePreIntakeAnalysis(List<MultipartFile> files) {
-        validateFiles(files);
-        log.info("Processing {} file(s)", files.size());
+    public Prompt1Result generatePreIntakeAnalysis(MultipartFile file) {
+        validateFile(file);
+
+        log.info("Processing PDF file: {} ({} bytes)",
+                file.getOriginalFilename(), file.getSize());
 
         try {
-            String combinedContent = extractCombinedContent(files);
-            Prompt1Result result = analyzeWithOpenAI(combinedContent);
+            String content = extractPdfContent(file);
+            Prompt1Result result = analyzeWithOpenAI(content);
             persistResult(result);
 
-            log.info("Successfully processed analysis for professional: {}, patient: {}",
+            log.info("Analysis completed - Professional: {}, Patient: {}",
                     result.getProfessionalName(), result.getClientName());
 
             return result;
 
-        } catch (IOException e) {
-            log.error("Error reading PDF files", e);
-            throw new RuntimeException("Failed to read PDF files: " + e.getMessage(), e);
         } catch (OpenAIException e) {
-            log.error("Error communicating with OpenAI API", e);
-            throw new RuntimeException("OpenAI API error: " + e.getMessage(), e);
+            log.error("OpenAI API error for file: {}", file.getOriginalFilename(), e);
+            throw new RuntimeException(OPENAI_ERROR_MESSAGE + ": " + e.getMessage(), e);
+        } catch (RuntimeException e) {
+            log.error("Unexpected error processing file: {}", file.getOriginalFilename(), e);
+            throw e;
         }
     }
 
@@ -105,89 +109,107 @@ public class QuestionnaireAnalysisService {
         persistResult(prompt1Result);
     }
 
-    // Private helper methods
 
-    private void validateFiles(List<MultipartFile> files) {
-        if (files == null || files.isEmpty()) {
-            throw new IllegalArgumentException("At least one PDF file is required");
+    /**
+     * Validates that the uploaded file is not null or empty.
+     *
+     * @param file the file to validate
+     * @throws IllegalArgumentException if file is invalid
+     */
+    private void validateFile(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("PDF file must be provided and cannot be empty");
         }
-        for (MultipartFile file : files) {
-            if (file.isEmpty()) {
-                throw new IllegalArgumentException("PDF file cannot be empty: " + file.getOriginalFilename());
+
+        if (file.getOriginalFilename() == null || !file.getOriginalFilename().toLowerCase().endsWith(".pdf")) {
+            throw new IllegalArgumentException("File must be a PDF document");
+        }
+    }
+
+    /**
+     * Extracts text content from a PDF file.
+     *
+     * @param file the PDF file to extract text from
+     * @return extracted text content
+     * @throws RuntimeException if PDF extraction fails
+     */
+    private String extractPdfContent(MultipartFile file) {
+        try (PDDocument document = PDDocument.load(file.getInputStream())) {
+            PDFTextStripper stripper = new PDFTextStripper();
+            String content = stripper.getText(document);
+
+            log.debug("Extracted {} characters from PDF: {}",
+                    content.length(), file.getOriginalFilename());
+
+            if (content.trim().isEmpty()) {
+                throw new RuntimeException("PDF file contains no text content");
             }
+
+            return content;
+
+        } catch (IOException e) {
+            log.error("PDF extraction failed for file: {}", file.getOriginalFilename(), e);
+            throw new RuntimeException(PDF_ERROR_MESSAGE + ": " + file.getOriginalFilename(), e);
         }
     }
 
-    private String extractCombinedContent(List<MultipartFile> files) throws IOException {
-        StringBuilder combinedContent = new StringBuilder();
-
-        for (int i = 0; i < files.size(); i++) {
-            MultipartFile file = files.get(i);
-
-            try (PDDocument document = PDDocument.load(file.getInputStream())) {
-                String content = extractPdfContent(document);
-
-                if (files.size() > 1) {
-                    // Add separator when combining multiple files
-                    combinedContent.append("=== Document ").append(i + 1)
-                            .append(": ").append(file.getOriginalFilename())
-                            .append(" ===\n\n");
-                }
-
-                combinedContent.append(content);
-
-                if (i < files.size() - 1) {
-                    combinedContent.append("\n\n");
-                }
-
-                log.debug("Extracted {} characters from file: {}", content.length(), file.getOriginalFilename());
-            }
-        }
-
-        log.info("Combined content from {} file(s), total {} characters",
-                files.size(), combinedContent.length());
-
-        return combinedContent.toString();
-    }
-
-    private String extractPdfContent(PDDocument document) throws IOException {
-        PDFTextStripper pdfStripper = new PDFTextStripper();
-        return pdfStripper.getText(document);
-    }
-
+    /**
+     * Sends extracted content to OpenAI for teleonic analysis.
+     *
+     * @param content the extracted PDF text content
+     * @return analyzed result as Prompt1Result
+     * @throws RuntimeException if OpenAI analysis fails or returns no response
+     */
     private Prompt1Result analyzeWithOpenAI(String content) {
         ResponsePrompt prompt = ResponsePrompt.builder()
                 .id(PROMPT_ID)
                 .version(PROMPT_VERSION)
                 .build();
 
-        log.debug("Using Prompt ID: {}, Version: {}", PROMPT_ID, PROMPT_VERSION);
+        log.debug("Calling OpenAI with Prompt ID: {}, Version: {}", PROMPT_ID, PROMPT_VERSION);
 
         StructuredResponseCreateParams<Prompt1Result> params = StructuredResponseCreateParams
                 .<Prompt1Result>builder()
                 .model(ChatModel.GPT_5_NANO)
                 .prompt(prompt)
-                //.addFileSearchTool(Collections.singletonList(VECTOR_STORE_ID))
-                .input("Here is the intake PDF " + content)
+                .input("Process the following intake questionnaire data:\n\n" + content)
                 .text(Prompt1Result.class)
                 .build();
 
         StructuredResponse<Prompt1Result> response = client.responses().create(params);
-        log.debug("Received response from OpenAI");
+
+        log.debug("Received response from OpenAI API");
 
         return response.output().stream()
                 .flatMap(item -> item.message().stream())
                 .flatMap(msg -> msg.content().stream())
                 .map(StructuredResponseOutputMessage.Content::asOutputText)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("No valid response from OpenAI API"));
+                .orElseThrow(() -> new RuntimeException(NO_RESPONSE_ERROR));
     }
 
+    /**
+     * Persists analysis result to database.
+     *
+     * @param result the analysis result to persist
+     * @throws RuntimeException if persistence fails
+     */
     private void persistResult(Prompt1Result result) {
-        Prompt1ResultEntity entity = new Prompt1ResultEntity();
-        entity.setProfessionalId(result.getProfessionalName());
-        entity.setPatientId(result.getClientName());
-        entity.setResultJson(result.toJson());
-        prompt1ResultRepository.save(entity);
+        try {
+            Prompt1ResultEntity entity = new Prompt1ResultEntity();
+            entity.setProfessionalId(result.getProfessionalName());
+            entity.setPatientId(result.getClientName());
+            entity.setResultJson(result.toJson());
+
+            prompt1ResultRepository.save(entity);
+
+            log.debug("Persisted result to database for professional: {}, patient: {}",
+                    result.getProfessionalName(), result.getClientName());
+
+        } catch (Exception e) {
+            log.error("Failed to persist result for professional: {}, patient: {}",
+                    result.getProfessionalName(), result.getClientName(), e);
+            throw new RuntimeException("Database persistence failed", e);
+        }
     }
 }
