@@ -53,17 +53,14 @@ public class Prompt1Result {
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class A1 {
-        @JsonProperty("primary_ie")
-        private String primaryIe;
+        @JsonProperty("primary_IE")
+        private String primaryIE;
 
-        @JsonProperty("secondary_ies")
-        private List<String> secondaryIes;
+        @JsonProperty("secondary_IEs")
+        private List<String> secondaryIEs;
 
         @JsonProperty("narrative")
         private String narrative;
-
-        @JsonProperty("sources")
-        private List<String> sources;
     }
 
     /**
@@ -73,25 +70,22 @@ public class Prompt1Result {
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class A2 {
-        @JsonProperty("clusters")
-        private List<A2Cluster> clusters;
+        @JsonProperty("teleonic_clusters")
+        private List<A2TeleonicCluster> teleonicClusters;
     }
 
     /**
-     * Individual cluster within A2 section.
+     * Individual teleonic cluster within A2 section.
      */
     @Data
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class A2Cluster {
-        @JsonProperty("name")
-        private String name;
+    public static class A2TeleonicCluster {
+        @JsonProperty("IE")
+        private String ie;
 
-        @JsonProperty("description")
-        private String description;
-
-        @JsonProperty("linked_ie")
-        private String linkedIe;
+        @JsonProperty("teleonic_cluster")
+        private String teleonicCluster;
     }
 
     /**
@@ -109,20 +103,20 @@ public class Prompt1Result {
     }
 
     /**
-     * Individual HETA item with tier and rationale.
+     * Individual HETA item with id, label and json reference.
      */
     @Data
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class HetaItem {
-        @JsonProperty("heta_name")
-        private String hetaName;
+        @JsonProperty("id")
+        private String id;
 
-        @JsonProperty("tier")
-        private String tier;
+        @JsonProperty("label")
+        private String label;
 
-        @JsonProperty("rationale")
-        private String rationale;
+        @JsonProperty("json_ref")
+        private String jsonRef;
     }
 
     /**
@@ -138,8 +132,8 @@ public class Prompt1Result {
         @JsonProperty("name")
         private String name;
 
-        @JsonProperty("rationale")
-        private String rationale;
+        @JsonProperty("rational")
+        private String rational;
     }
 
     /**
@@ -152,11 +146,11 @@ public class Prompt1Result {
         @JsonProperty("id")
         private String id;
 
-        @JsonProperty("name")
-        private String name;
+        @JsonProperty("label")
+        private String label;
 
-        @JsonProperty("rationale")
-        private String rationale;
+        @JsonProperty("json_ref")
+        private String jsonRef;
     }
 
     /**
@@ -166,14 +160,14 @@ public class Prompt1Result {
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class B3 {
-        @JsonProperty("heta_name")
-        private String hetaName;
+        @JsonProperty("id")
+        private String id;
 
-        @JsonProperty("module_id")
-        private String moduleId;
+        @JsonProperty("label")
+        private String label;
 
-        @JsonProperty("rationale")
-        private String rationale;
+        @JsonProperty("json_ref")
+        private String jsonRef;
     }
 
     /**

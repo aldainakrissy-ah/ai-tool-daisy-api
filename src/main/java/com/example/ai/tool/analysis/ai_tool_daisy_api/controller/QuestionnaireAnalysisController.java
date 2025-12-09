@@ -25,15 +25,19 @@ public class QuestionnaireAnalysisController {
     private final QuestionnaireAnalysisService questionnaireAnalysisService;
 
     /**
-     * Endpoint to upload and process a PDF file.
+     * Endpoint to upload and process one or more PDF files.
+     * Accepts either a single file or multiple files.
+     * When multiple files are provided, their content is combined for analysis.
      *
-     * @param file the uploaded PDF file as a {@link MultipartFile}.
+     * @param files the uploaded PDF file(s) as {@link MultipartFile}.
      * @return a {@link ResponseEntity} containing the result of the processing or an error message.
      */
     @PostMapping("/analyze")
-    public ResponseEntity<Prompt1Result> readPdf(@RequestParam("file") MultipartFile file) {
-        log.info("Received file: {}", file.getOriginalFilename());
-        Prompt1Result result = questionnaireAnalysisService.generatePreIntakeAnalysis(file);
+    public ResponseEntity<Prompt1Result> analyzePdf(@RequestParam("files") List<MultipartFile> files) {
+        log.info("Received {} file(s) for analysis", files.size());
+        files.forEach(file -> log.debug("File: {}", file.getOriginalFilename()));
+
+        Prompt1Result result = questionnaireAnalysisService.generatePreIntakeAnalysis(files);
         return ResponseEntity.ok(result);
     }
 

@@ -1,6 +1,5 @@
 package com.example.ai.tool.analysis.ai_tool_daisy_api.service;
 
-import com.example.ai.tool.analysis.ai_tool_daisy_api.constant.QuestionnaireInstructions;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1ResultEntity;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1Result;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.Prompt1ResultRepository;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -33,27 +31,26 @@ public class QuestionnaireAnalysisService {
     private final OpenAIClient client;
     private final Prompt1ResultRepository prompt1ResultRepository;
 
-    private static final String VECTOR_STORE_ID = "vs_68ca996f20ec8191974741691b169cae";
     private static final String PROMPT_ID = "pmpt_691ba79e09b08194a5ba301215448deb029b9fd4f52a8b2e";
-    private static final String PROMPT_VERSION = "8";
+    private static final String PROMPT_VERSION = "23";
 
     /**
-     * Processes an uploaded PDF file containing healthcare questionnaire data.
-     * Extracts text, sends to OpenAI for analysis, and persists the results.
+     * Processes uploaded PDF file(s) containing healthcare questionnaire data.
+     * Extracts text from all files, combines content, sends to OpenAI for analysis, and persists the results.
      *
-     * @param file the PDF file to process
+     * @param files the PDF file(s) to process (accepts one or more files)
      * @return analyzed questionnaire results
-     * @throws IllegalArgumentException if the file is null or empty
+     * @throws IllegalArgumentException if files list is null or empty
      * @throws RuntimeException if PDF processing or AI analysis fails
      */
     @Transactional
-    public Prompt1Result generatePreIntakeAnalysis(MultipartFile file) {
-        validateFile(file);
-        log.info("Processing file: {}", file.getOriginalFilename());
+    public Prompt1Result generatePreIntakeAnalysis(List<MultipartFile> files) {
+        validateFiles(files);
+        log.info("Processing {} file(s)", files.size());
 
-        try (PDDocument document = PDDocument.load(file.getInputStream())) {
-            String pdfContent = extractPdfContent(document);
-            Prompt1Result result = analyzeWithOpenAI(pdfContent);
+        try {
+            String combinedContent = extractCombinedContent(files);
+            Prompt1Result result = analyzeWithOpenAI(combinedContent);
             persistResult(result);
 
             log.info("Successfully processed analysis for professional: {}, patient: {}",
@@ -62,8 +59,8 @@ public class QuestionnaireAnalysisService {
             return result;
 
         } catch (IOException e) {
-            log.error("Error reading PDF file: {}", file.getOriginalFilename(), e);
-            throw new RuntimeException("Failed to read PDF file: " + e.getMessage(), e);
+            log.error("Error reading PDF files", e);
+            throw new RuntimeException("Failed to read PDF files: " + e.getMessage(), e);
         } catch (OpenAIException e) {
             log.error("Error communicating with OpenAI API", e);
             throw new RuntimeException("OpenAI API error: " + e.getMessage(), e);
@@ -110,10 +107,47 @@ public class QuestionnaireAnalysisService {
 
     // Private helper methods
 
-    private void validateFile(MultipartFile file) {
-        if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("PDF file cannot be null or empty");
+    private void validateFiles(List<MultipartFile> files) {
+        if (files == null || files.isEmpty()) {
+            throw new IllegalArgumentException("At least one PDF file is required");
         }
+        for (MultipartFile file : files) {
+            if (file.isEmpty()) {
+                throw new IllegalArgumentException("PDF file cannot be empty: " + file.getOriginalFilename());
+            }
+        }
+    }
+
+    private String extractCombinedContent(List<MultipartFile> files) throws IOException {
+        StringBuilder combinedContent = new StringBuilder();
+
+        for (int i = 0; i < files.size(); i++) {
+            MultipartFile file = files.get(i);
+
+            try (PDDocument document = PDDocument.load(file.getInputStream())) {
+                String content = extractPdfContent(document);
+
+                if (files.size() > 1) {
+                    // Add separator when combining multiple files
+                    combinedContent.append("=== Document ").append(i + 1)
+                            .append(": ").append(file.getOriginalFilename())
+                            .append(" ===\n\n");
+                }
+
+                combinedContent.append(content);
+
+                if (i < files.size() - 1) {
+                    combinedContent.append("\n\n");
+                }
+
+                log.debug("Extracted {} characters from file: {}", content.length(), file.getOriginalFilename());
+            }
+        }
+
+        log.info("Combined content from {} file(s), total {} characters",
+                files.size(), combinedContent.length());
+
+        return combinedContent.toString();
     }
 
     private String extractPdfContent(PDDocument document) throws IOException {
@@ -131,10 +165,10 @@ public class QuestionnaireAnalysisService {
 
         StructuredResponseCreateParams<Prompt1Result> params = StructuredResponseCreateParams
                 .<Prompt1Result>builder()
-                .model(ChatModel.GPT_5)
+                .model(ChatModel.GPT_5_NANO)
                 .prompt(prompt)
-                .addFileSearchTool(Collections.singletonList(VECTOR_STORE_ID))
-                .input(QuestionnaireInstructions.PROMPT1_DAISY + content)
+                //.addFileSearchTool(Collections.singletonList(VECTOR_STORE_ID))
+                .input("Here is the intake PDF " + content)
                 .text(Prompt1Result.class)
                 .build();
 
