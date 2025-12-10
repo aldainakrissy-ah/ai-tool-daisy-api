@@ -6,6 +6,8 @@ import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.Prompt1ResultRe
 import com.openai.client.OpenAIClient;
 import com.openai.errors.OpenAIException;
 import com.openai.models.ChatModel;
+import com.openai.models.Reasoning;
+import com.openai.models.ReasoningEffort;
 import com.openai.models.responses.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -166,11 +168,14 @@ public class QuestionnaireAnalysisService {
                 .version(PROMPT_VERSION)
                 .build();
 
+        Reasoning reasoning = Reasoning.builder().effort(ReasoningEffort.MEDIUM).build();
+
         log.debug("Calling OpenAI with Prompt ID: {}, Version: {}", PROMPT_ID, PROMPT_VERSION);
 
         StructuredResponseCreateParams<Prompt1Result> params = StructuredResponseCreateParams
                 .<Prompt1Result>builder()
                 .model(ChatModel.GPT_5_NANO)
+                .reasoning(reasoning)
                 .prompt(prompt)
                 .input("Process the following intake questionnaire data:\n\n" + content)
                 .text(Prompt1Result.class)
