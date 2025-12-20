@@ -33,7 +33,7 @@ public class QuestionnaireAnalysisService {
     private final Prompt1ResultRepository prompt1ResultRepository;
 
     private static final String PROMPT_ID = "pmpt_691ba79e09b08194a5ba301215448deb029b9fd4f52a8b2e";
-    private static final String PROMPT_VERSION = "23";
+    private static final String PROMPT_VERSION = "89";
     private static final String PDF_ERROR_MESSAGE = "Failed to process PDF file";
     private static final String OPENAI_ERROR_MESSAGE = "OpenAI API analysis failed";
     private static final String NO_RESPONSE_ERROR = "No valid response received from OpenAI";
@@ -167,6 +167,7 @@ public class QuestionnaireAnalysisService {
                 .id(PROMPT_ID)
                 .version(PROMPT_VERSION)
                 .build();
+        System.out.println( prompt);
 
         Reasoning reasoning = Reasoning.builder().effort(ReasoningEffort.MEDIUM).build();
 
@@ -182,6 +183,7 @@ public class QuestionnaireAnalysisService {
                 .build();
 
         StructuredResponse<Prompt1Result> response = client.responses().create(params);
+        log.info("OpenAI analysis completed with response: {}", response);
 
         log.debug("Received response from OpenAI API");
 

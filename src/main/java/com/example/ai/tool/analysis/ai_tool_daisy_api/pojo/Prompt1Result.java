@@ -28,13 +28,31 @@ public class Prompt1Result {
     private A1 a1;
 
     @JsonProperty("A2")
-    private A2 a2;
+    private List<String> a2;
 
     @JsonProperty("A3")
     private A3 a3;
 
+//    @JsonProperty("A4a")
+//    private A4a a4a;
+//
+//    @JsonProperty("A4b")
+//    private A4b a4b;
+//
+//    @JsonProperty("A4c")
+//    private A4c a4c;
+//
+//    @JsonProperty("A4d")
+//    private A4d a4d;
+//
+//    @JsonProperty("A5")
+//    private A5 a5;
+//
+//    @JsonProperty("A6")
+//    private A6 a6;
+
     @JsonProperty("B1")
-    private B1 b1;
+    private List<B1> b1;
 
     @JsonProperty("B2")
     private List<B2> b2;
@@ -53,39 +71,14 @@ public class Prompt1Result {
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class A1 {
-        @JsonProperty("primary_IE")
-        private String primaryIE;
+        @JsonProperty("primary_ie")
+        private String primaryIe;
 
-        @JsonProperty("secondary_IEs")
-        private List<String> secondaryIEs;
+        @JsonProperty("secondary_ie")
+        private List<String> secondaryIe;
 
         @JsonProperty("narrative")
         private String narrative;
-    }
-
-    /**
-     * Section A2: Teleonic clusters derived from Integrative Endoteleons.
-     */
-    @Data
-    @NoArgsConstructor
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class A2 {
-        @JsonProperty("teleonic_clusters")
-        private List<A2TeleonicCluster> teleonicClusters;
-    }
-
-    /**
-     * Individual teleonic cluster within A2 section.
-     */
-    @Data
-    @NoArgsConstructor
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class A2TeleonicCluster {
-        @JsonProperty("IE")
-        private String ie;
-
-        @JsonProperty("teleonic_cluster")
-        private String teleonicCluster;
     }
 
     /**
@@ -96,27 +89,122 @@ public class Prompt1Result {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class A3 {
         @JsonProperty("direct")
-        private List<HetaItem> direct;
+        private List<String> direct;
 
         @JsonProperty("indirect")
-        private List<HetaItem> indirect;
+        private List<String> indirect;
     }
 
     /**
-     * Individual HETA item with id, label and json reference.
+     * Section A4a: Placeholder for future data structure.
+     * Currently empty object in JSON responses.
      */
     @Data
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class HetaItem {
-        @JsonProperty("id")
+    public static class A4a {
+        @JsonProperty("status")
+        private String status;
+
+    }
+
+    /**
+     * Section A4b: Placeholder for future data structure.
+     * Currently empty object in JSON responses.
+     */
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class A4b {
+        @JsonProperty("status")
+        private String status;
+
+    }
+
+    /**
+     * Section A4c: Placeholder for future data structure.
+     * Currently empty object in JSON responses.
+     */
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class A4c {
+        @JsonProperty("status")
+        private String status;
+    }
+
+    /**
+     * Section A4d: Placeholder for future data structure.
+     * Currently empty object in JSON responses.
+     */
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class A4d {
+        @JsonProperty("status")
+        private String status;
+    }
+
+    /**
+     * Section A5: Missing data overview and analysis recommendations.
+     */
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class A5 {
+        @JsonProperty("module_id")
+        private String moduleId;
+
+        @JsonProperty("ID")
         private String id;
 
         @JsonProperty("label")
         private String label;
 
-        @JsonProperty("json_ref")
-        private String jsonRef;
+        @JsonProperty("mode")
+        private String mode;
+
+
+        @JsonProperty("uncertainty_label")
+        private String uncertaintyLabel;
+    }
+
+    /**
+     * Section A6: Placeholder for future data structure.
+     * Currently empty object in JSON responses.
+     */
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class A6 {
+        @JsonProperty("module_id")
+        private String moduleId;
+
+        @JsonProperty("ID")
+        private String id;
+
+        @JsonProperty("label")
+        private String label;
+
+        @JsonProperty("primary_ie")
+        private String primaryIe;
+
+        @JsonProperty("supporting_hetas")
+        private List<SupportingHeta> supportingHetas;
+    }
+
+    /**
+     * Supporting HETA item for A6 section.
+     */
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class SupportingHeta {
+        @JsonProperty("heta_id")
+        private String hetaId;
+
+        @JsonProperty("heta_json_code")
+        private String hetaJsonCode;
     }
 
     /**
@@ -126,14 +214,14 @@ public class Prompt1Result {
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class B1 {
-        @JsonProperty("variant_id")
-        private String variantId;
+        @JsonProperty("nr")
+        private Integer nr;
 
-        @JsonProperty("name")
-        private String name;
+        @JsonProperty("label")
+        private String label;
 
-        @JsonProperty("rational")
-        private String rational;
+        @JsonProperty("ID")
+        private String id;
     }
 
     /**
@@ -143,14 +231,14 @@ public class Prompt1Result {
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class B2 {
-        @JsonProperty("id")
-        private String id;
+        @JsonProperty("nr")
+        private Integer nr;
 
         @JsonProperty("label")
         private String label;
 
-        @JsonProperty("json_ref")
-        private String jsonRef;
+        @JsonProperty("ID")
+        private String id;
     }
 
     /**
@@ -160,14 +248,14 @@ public class Prompt1Result {
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class B3 {
-        @JsonProperty("id")
-        private String id;
+        @JsonProperty("nr")
+        private Integer nr;
 
-        @JsonProperty("label")
-        private String label;
+        @JsonProperty("heta_id")
+        private String hetaId;
 
-        @JsonProperty("json_ref")
-        private String jsonRef;
+        @JsonProperty("heta_json_code")
+        private String hetaJsonCode;
     }
 
     /**
