@@ -3,6 +3,7 @@ package com.example.ai.tool.analysis.ai_tool_daisy_api.controller;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1ResultEntity;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1Result;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.QuestionnaireAnalysisService;
+import com.example.ai.tool.analysis.ai_tool_daisy_api.service.DatabaseHealthService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,13 +24,16 @@ import java.util.List;
 public class QuestionnaireAnalysisController {
 
     private final QuestionnaireAnalysisService questionnaireAnalysisService;
+    private final DatabaseHealthService databaseHealthService;
 
     /**
      * Analyzes an uploaded PDF questionnaire file using AI.
-     * Extracts text content, sends to OpenAI for teleonic analysis, and persists results.
+     * Extracts text content, sends to OpenAI for teleonic analysis, and persists
+     * results.
      *
      * @param file the uploaded PDF file containing healthcare questionnaire data
-     * @return {@link ResponseEntity} with {@link Prompt1Result} containing the AI analysis
+     * @return {@link ResponseEntity} with {@link Prompt1Result} containing the AI
+     *         analysis
      */
     @PostMapping("/analyze")
     public ResponseEntity<Prompt1Result> analyzePdf(@RequestParam("file") MultipartFile file) {
@@ -61,10 +65,12 @@ public class QuestionnaireAnalysisController {
      * Endpoint to retrieve Prompt1 results by professional ID.
      *
      * @param professionalId the patient ID to search for.
-     * @return a {@link ResponseEntity} containing a list of {@link Prompt1ResultEntity} or a not found status.
+     * @return a {@link ResponseEntity} containing a list of
+     *         {@link Prompt1ResultEntity} or a not found status.
      */
     @GetMapping("/analysis/{professionalId}")
-    public ResponseEntity<List<Prompt1ResultEntity>> getResultsByProfessionalId(@PathVariable("professionalId") String professionalId) {
+    public ResponseEntity<List<Prompt1ResultEntity>> getResultsByProfessionalId(
+            @PathVariable("professionalId") String professionalId) {
         List<Prompt1ResultEntity> result = questionnaireAnalysisService.getPreIntakeResult(professionalId);
         if (result == null || result.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -76,7 +82,8 @@ public class QuestionnaireAnalysisController {
     public ResponseEntity<List<Prompt1ResultEntity>> getResultByProfessionalIdAndPatientId(
             @PathVariable("professionalId") String professionalId,
             @PathVariable("patientId") String patientId) {
-        List<Prompt1ResultEntity> result = questionnaireAnalysisService.getPreIntakeResultByProfessionalIdAndPatientId(professionalId, patientId);
+        List<Prompt1ResultEntity> result = questionnaireAnalysisService
+                .getPreIntakeResultByProfessionalIdAndPatientId(professionalId, patientId);
         if (result == null) {
             return ResponseEntity.notFound().build();
         }
@@ -99,5 +106,34 @@ public class QuestionnaireAnalysisController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-}
 
+    /**
+     * Health check endpoint to monitor database status.
+     *
+     * @return {@link ResponseEntity} with the database health status.
+     */
+    @GetMapping("/health/database")
+    public ResponseEntity<String> checkDatabaseHealth() {
+        try {
+            DatabaseHealthService.DatabaseHealthStatus healthStatus = databaseHealthService.getDatabaseHealthStatus();
+
+            if (healthStatus.isOverallHealthy()) {
+                String message = String.format("Database health: Primary=%s, Second=%s (enabled=%s)",
+                        healthStatus.isPrimaryDatabaseHealthy() ? "healthy" : "unhealthy",
+                        healthStatus.isSecondDatabaseHealthy() ? "healthy" : "unhealthy",
+                        healthStatus.isSecondDatabaseEnabled());
+                return ResponseEntity.ok(message);
+            } else {
+                String message = String.format("Database not healthy: Primary=%s, Second=%s (enabled=%s)",
+                        healthStatus.isPrimaryDatabaseHealthy() ? "healthy" : "unhealthy",
+                        healthStatus.isSecondDatabaseHealthy() ? "healthy" : "unhealthy",
+                        healthStatus.isSecondDatabaseEnabled());
+                return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(message);
+            }
+        } catch (Exception e) {
+            log.error("Failed to check database health: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error checking database health: " + e.getMessage());
+        }
+    }
+}

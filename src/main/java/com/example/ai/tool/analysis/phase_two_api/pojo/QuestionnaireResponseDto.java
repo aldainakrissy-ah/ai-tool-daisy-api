@@ -15,6 +15,7 @@ public class QuestionnaireResponseDto {
     private Long id;
     private String questionnaireId;
     private String userId;
+    private String clientId;
     private String sessionId;
     private QuestionnaireResponse.ResponseStatus status;
     private LocalDateTime startedAt;
