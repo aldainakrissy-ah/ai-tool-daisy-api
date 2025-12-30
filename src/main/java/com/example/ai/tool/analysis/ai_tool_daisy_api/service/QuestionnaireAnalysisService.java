@@ -165,7 +165,7 @@ public class QuestionnaireAnalysisService {
 
         StructuredResponseCreateParams<Prompt1Result> params = StructuredResponseCreateParams.<Prompt1Result>builder()
                 .model(ChatModel.GPT_4_1)
-                .temperature(0.0)
+                .temperature(0.2)
                 .addFileSearchTool(Collections.singletonList(FILE_SEARCH_TOOL_ID))
                 .instructions(QuestionnaireInstructions.DAISY_PROMPT)
                 .input("Execute Prompt 1: Pre-Intake Analysis. \n\n" + content)

@@ -36,6 +36,24 @@ public final class QuestionnaireInstructions {
             "- Do NOT output placeholders, template markers, codes, or document references.\n" +
             "- Where a value is not canonically determinable, use empty strings \"\" and empty arrays [] only where permitted by the schema.\n" +
             "\n" +
+            "LANGUAGE DETECTION (MANDATORY)\n" +
+            "- Automatically detect the primary language of the intake document.\n" +
+            "- Supported languages: English (\"en\") and Dutch (\"nl\").\n" +
+            "- Set the \"language\" field in the JSON output to the detected ISO 639-1 language code:\n" +
+            "  - \"en\" for English documents\n" +
+            "  - \"nl\" for Dutch documents\n" +
+            "- If the document contains mixed languages, select the predominant language.\n" +
+            "- If language cannot be determined with confidence, default to \"en\".\n" +
+            "- All extracted text (names, narratives, etc.) MUST remain in the original language - do NOT translate.\n" +
+            "- IE/HETA identifiers, module IDs, and schema keys MUST always be in English regardless of document language.\n" +
+            "\n" +
+            "IDENTIFICATION RULES (MANDATORY)\n" +
+            "- professional-name: Extract the healthcare professional's full name EXACTLY as written in the PDF (therapist, counselor, doctor, etc.).\n" +
+            "- client-name: Extract the patient/client's full name EXACTLY as written in the PDF.\n" +
+            "- These fields are REQUIRED and MUST be populated from the PDF content.\n" +
+            "- Do NOT use generic placeholders like \"[Professional Name]\" or \"[Client Name]\".\n" +
+            "- If names are not explicitly stated in the PDF, use \"Name Not Provided\" for the respective field.\n" +
+            "\n" +
             "PROCESS RULES\n" +
             "- Stateless cold start: no memory, no context carry-over.\n" +
             "- Do not ask questions and do not confirm assumptions.\n" +
