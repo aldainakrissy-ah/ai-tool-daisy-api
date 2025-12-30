@@ -1,13 +1,12 @@
 package com.example.ai.tool.analysis.ai_tool_daisy_api.service;
 
+import com.example.ai.tool.analysis.ai_tool_daisy_api.constant.QuestionnaireInstructions;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1ResultEntity;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1Result;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.Prompt1ResultRepository;
 import com.openai.client.OpenAIClient;
 import com.openai.errors.OpenAIException;
 import com.openai.models.ChatModel;
-import com.openai.models.Reasoning;
-import com.openai.models.ReasoningEffort;
 import com.openai.models.responses.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,11 +32,13 @@ public class QuestionnaireAnalysisService {
     private final OpenAIClient client;
     private final Prompt1ResultRepository prompt1ResultRepository;
 
-    private static final String PROMPT_ID = "pmpt_691ba79e09b08194a5ba301215448deb029b9fd4f52a8b2e";
-    private static final String PROMPT_VERSION = "89";
+    private static final String FILE_SEARCH_TOOL_ID = "vs_68ca996f20ec8191974741691b169cae";
+
     private static final String PDF_ERROR_MESSAGE = "Failed to process PDF file";
+    private static final String EMPTY_CONTENT_ERROR = "Extracted PDF content is empty";
     private static final String OPENAI_ERROR_MESSAGE = "OpenAI API analysis failed";
     private static final String NO_RESPONSE_ERROR = "No valid response received from OpenAI";
+
 
     /**
      * Processes uploaded PDF file containing healthcare questionnaire data.
@@ -51,8 +53,7 @@ public class QuestionnaireAnalysisService {
     public Prompt1Result generatePreIntakeAnalysis(MultipartFile file) {
         validateFile(file);
 
-        log.info("Processing PDF file: {} ({} bytes)",
-                file.getOriginalFilename(), file.getSize());
+        log.info("Starting analysis for file: {}", file.getOriginalFilename());
 
         try {
             String content = extractPdfContent(file);
@@ -61,7 +62,6 @@ public class QuestionnaireAnalysisService {
 
             log.info("Analysis completed - Professional: {}, Patient: {}",
                     result.getProfessionalName(), result.getClientName());
-
             return result;
 
         } catch (OpenAIException e) {
@@ -133,20 +133,18 @@ public class QuestionnaireAnalysisService {
      *
      * @param file the PDF file to extract text from
      * @return extracted text content
-     * @throws RuntimeException if PDF extraction fails
+     * @throws RuntimeException if PDF extraction fails or content is empty
      */
     private String extractPdfContent(MultipartFile file) {
         try (PDDocument document = PDDocument.load(file.getInputStream())) {
             PDFTextStripper stripper = new PDFTextStripper();
             String content = stripper.getText(document);
 
-            log.debug("Extracted {} characters from PDF: {}",
-                    content.length(), file.getOriginalFilename());
-
-            if (content.trim().isEmpty()) {
-                throw new RuntimeException("PDF file contains no text content");
+            if (content == null || content.trim().isEmpty()) {
+                throw new RuntimeException(EMPTY_CONTENT_ERROR);
             }
 
+            log.debug("Extracted {} characters from PDF", content.length());
             return content;
 
         } catch (IOException e) {
@@ -157,35 +155,32 @@ public class QuestionnaireAnalysisService {
 
     /**
      * Sends extracted content to OpenAI for teleonic analysis.
+     * Uses structured output to prevent hallucinations and ensure schema compliance.
      *
      * @param content the extracted PDF text content
      * @return analyzed result as Prompt1Result
      * @throws RuntimeException if OpenAI analysis fails or returns no response
      */
     private Prompt1Result analyzeWithOpenAI(String content) {
-        ResponsePrompt prompt = ResponsePrompt.builder()
-                .id(PROMPT_ID)
-                .version(PROMPT_VERSION)
-                .build();
-        System.out.println( prompt);
 
-        Reasoning reasoning = Reasoning.builder().effort(ReasoningEffort.MEDIUM).build();
-
-        log.debug("Calling OpenAI with Prompt ID: {}, Version: {}", PROMPT_ID, PROMPT_VERSION);
-
-        StructuredResponseCreateParams<Prompt1Result> params = StructuredResponseCreateParams
-                .<Prompt1Result>builder()
-                .model(ChatModel.GPT_5_NANO)
-                .reasoning(reasoning)
-                .prompt(prompt)
-                .input("Process the following intake questionnaire data:\n\n" + content)
+        StructuredResponseCreateParams<Prompt1Result> params = StructuredResponseCreateParams.<Prompt1Result>builder()
+                .model(ChatModel.GPT_4_1)
+                .temperature(0.0)
+                .addFileSearchTool(Collections.singletonList(FILE_SEARCH_TOOL_ID))
+                .instructions(QuestionnaireInstructions.DAISY_PROMPT)
+                .input("Execute Prompt 1: Pre-Intake Analysis. \n\n" + content)
                 .text(Prompt1Result.class)
                 .build();
 
-        StructuredResponse<Prompt1Result> response = client.responses().create(params);
-        log.info("OpenAI analysis completed with response: {}", response);
+        log.debug("Sending {} characters to OpenAI for analysis", content.length());
 
-        log.debug("Received response from OpenAI API");
+        StructuredResponse<Prompt1Result> response = client.responses().create(params);
+
+        if (response.output().isEmpty()) {
+            throw new RuntimeException(NO_RESPONSE_ERROR);
+        }
+
+        log.info("OpenAI analysis completed successfully");
 
         return response.output().stream()
                 .flatMap(item -> item.message().stream())
@@ -207,7 +202,6 @@ public class QuestionnaireAnalysisService {
             entity.setProfessionalId(result.getProfessionalName());
             entity.setPatientId(result.getClientName());
             entity.setResultJson(result.toJson());
-
             prompt1ResultRepository.save(entity);
 
             log.debug("Persisted result to database for professional: {}, patient: {}",
