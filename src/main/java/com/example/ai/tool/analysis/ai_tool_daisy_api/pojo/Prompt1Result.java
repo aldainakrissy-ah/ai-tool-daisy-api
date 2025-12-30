@@ -33,23 +33,23 @@ public class Prompt1Result {
     @JsonProperty("A3")
     private A3 a3;
 
-//    @JsonProperty("A4a")
-//    private A4a a4a;
-//
-//    @JsonProperty("A4b")
-//    private A4b a4b;
-//
-//    @JsonProperty("A4c")
-//    private A4c a4c;
-//
-//    @JsonProperty("A4d")
-//    private A4d a4d;
-//
-//    @JsonProperty("A5")
-//    private A5 a5;
-//
-//    @JsonProperty("A6")
-//    private A6 a6;
+    @JsonProperty("A4a")
+    private A4a a4a;
+
+    @JsonProperty("A4b")
+    private A4b a4b;
+
+    @JsonProperty("A4c")
+    private A4c a4c;
+
+    @JsonProperty("A4d")
+    private A4d a4d;
+
+    @JsonProperty("A5")
+    private A5 a5;
+
+    @JsonProperty("A6")
+    private A6 a6;
 
     @JsonProperty("B1")
     private List<B1> b1;
@@ -77,6 +77,18 @@ public class Prompt1Result {
         @JsonProperty("secondary_ie")
         private List<String> secondaryIe;
 
+        @JsonProperty("teleonic_pattern")
+        private String teleonicPattern;
+
+        @JsonProperty("secondary_dynamics")
+        private List<String> secondaryDynamics;
+
+        @JsonProperty("uncertainty_level")
+        private Double uncertaintyLevel;
+
+        @JsonProperty("uncertainty_label")
+        private String uncertaintyLabel;
+
         @JsonProperty("narrative")
         private String narrative;
     }
@@ -103,9 +115,17 @@ public class Prompt1Result {
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class A4a {
+        @JsonProperty("module_id")
+        private String moduleId;
+
         @JsonProperty("status")
         private String status;
 
+        @JsonProperty("narrative")
+        private String narrative;
+
+        @JsonProperty("uncertainty_label")
+        private String uncertaintyLabel;
     }
 
     /**
@@ -116,9 +136,17 @@ public class Prompt1Result {
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class A4b {
+        @JsonProperty("module_id")
+        private String moduleId;
+
         @JsonProperty("status")
         private String status;
 
+        @JsonProperty("narrative")
+        private String narrative;
+
+        @JsonProperty("uncertainty_label")
+        private String uncertaintyLabel;
     }
 
     /**
@@ -129,8 +157,17 @@ public class Prompt1Result {
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class A4c {
+        @JsonProperty("module_id")
+        private String moduleId;
+
         @JsonProperty("status")
         private String status;
+
+        @JsonProperty("narrative")
+        private String narrative;
+
+        @JsonProperty("uncertainty_label")
+        private String uncertaintyLabel;
     }
 
     /**
@@ -141,8 +178,17 @@ public class Prompt1Result {
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class A4d {
+        @JsonProperty("module_id")
+        private String moduleId;
+
         @JsonProperty("status")
         private String status;
+
+        @JsonProperty("narrative")
+        private String narrative;
+
+        @JsonProperty("uncertainty_label")
+        private String uncertaintyLabel;
     }
 
     /**
@@ -164,9 +210,37 @@ public class Prompt1Result {
         @JsonProperty("mode")
         private String mode;
 
+        @JsonProperty("items")
+        private List<A5Item> items;
+
+        @JsonProperty("primary_ie")
+        private String primaryIe;
+
+        @JsonProperty("secondary_ie")
+        private List<String> secondaryIe;
+
+        @JsonProperty("supporting_modules")
+        private List<String> supportingModules;
+
+        @JsonProperty("narrative_core")
+        private String narrativeCore;
+
+        @JsonProperty("narrative_full")
+        private String narrativeFull;
 
         @JsonProperty("uncertainty_label")
         private String uncertaintyLabel;
+    }
+
+    /**
+     * Item within A5 missing data overview.
+     */
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class A5Item {
+        @JsonProperty("label")
+        private String label;
     }
 
     /**
@@ -191,6 +265,18 @@ public class Prompt1Result {
 
         @JsonProperty("supporting_hetas")
         private List<SupportingHeta> supportingHetas;
+
+        @JsonProperty("a4_references")
+        private List<String> a4References;
+
+        @JsonProperty("advice_core")
+        private String adviceCore;
+
+        @JsonProperty("advice_details")
+        private String adviceDetails;
+
+        @JsonProperty("uncertainty_label")
+        private String uncertaintyLabel;
     }
 
     /**
@@ -239,6 +325,9 @@ public class Prompt1Result {
 
         @JsonProperty("ID")
         private String id;
+
+        @JsonProperty("qest_json")
+        private String qestJson;
     }
 
     /**
@@ -254,23 +343,17 @@ public class Prompt1Result {
         @JsonProperty("heta_id")
         private String hetaId;
 
-        @JsonProperty("heta_json_code")
-        private String hetaJsonCode;
-    }
+        @JsonProperty("heta_json")
+        private String hetaJson;
 
-    /**
-     * Deserializes JSON string to Prompt1Result object.
-     *
-     * @param json JSON string to deserialize
-     * @return Prompt1Result object
-     * @throws RuntimeException if JSON parsing fails
-     */
-    public static Prompt1Result fromJson(String json) {
-        try {
-            return MAPPER.readValue(json, Prompt1Result.class);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to parse JSON to Prompt1Result: " + e.getMessage(), e);
-        }
+        @JsonProperty("label")
+        private String label;
+
+        @JsonProperty("tier")
+        private String tier;
+
+        @JsonProperty("source_ie")
+        private String sourceIe;
     }
 
     /**

@@ -37,28 +37,12 @@ public class QuestionnaireAnalysisController {
      */
     @PostMapping("/analyze")
     public ResponseEntity<Prompt1Result> analyzePdf(@RequestParam("file") MultipartFile file) {
-        if (file == null || file.isEmpty()) {
-            log.warn("Received empty or null file upload request");
-            return ResponseEntity.badRequest().build();
-        }
 
-        log.info("Received PDF for analysis: {} ({} bytes)",
-                file.getOriginalFilename(), file.getSize());
-
-        try {
-            Prompt1Result result = questionnaireAnalysisService.generatePreIntakeAnalysis(file);
-            log.info("Successfully analyzed PDF for professional: {}, client: {}",
-                    result.getProfessionalName(), result.getClientName());
+        Prompt1Result result = questionnaireAnalysisService.generatePreIntakeAnalysis(file);
+        log.info("Successfully analyzed PDF for professional: {}, client: {}",
+                result.getProfessionalName(), result.getClientName());
             return ResponseEntity.ok(result);
 
-        } catch (IllegalArgumentException e) {
-            log.error("Invalid file upload: {}", e.getMessage());
-            return ResponseEntity.badRequest().build();
-
-        } catch (Exception e) {
-            log.error("Failed to analyze PDF: {}", file.getOriginalFilename(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
     }
 
     /**
@@ -84,27 +68,16 @@ public class QuestionnaireAnalysisController {
             @PathVariable("patientId") String patientId) {
         List<Prompt1ResultEntity> result = questionnaireAnalysisService
                 .getPreIntakeResultByProfessionalIdAndPatientId(professionalId, patientId);
-        if (result == null) {
-            return ResponseEntity.notFound().build();
-        }
+
         return ResponseEntity.ok(result);
     }
 
     @PostMapping(value = "/analysis/save", consumes = "application/json")
     public ResponseEntity<Void> savePreIntakeResult(@RequestBody Prompt1Result prompt1Result) {
-        if (prompt1Result == null) {
-            log.warn("Received null Prompt1Result payload");
-            return ResponseEntity.badRequest().build();
-        }
         log.info("Saving Prompt1 result for professional id: {}", prompt1Result.getProfessionalName());
-        try {
             questionnaireAnalysisService.savePrompt1Result(prompt1Result);
             return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            log.error("Failed to save Prompt1 result for professionalId={}, {}",
-                    prompt1Result.getProfessionalName(), e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+
     }
 
     /**
