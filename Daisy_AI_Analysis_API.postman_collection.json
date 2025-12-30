@@ -1,0 +1,623 @@
+{
+	"info": {
+		"_postman_id": "daisy-ai-analysis-api-2025",
+		"name": "Daisy AI Analysis API",
+		"description": "Complete API collection for DAISY AI Tool - Healthcare Questionnaire Analysis System\n\nThis collection includes all endpoints for:\n- PDF questionnaire analysis\n- Result retrieval by professional ID\n- Result retrieval by professional and patient ID\n- Manual result saving\n- Database health monitoring",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "daisy-healthcare-api"
+	},
+	"item": [
+		{
+			"name": "Analysis",
+			"item": [
+				{
+					"name": "Analyze PDF Questionnaire",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has professional_name\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('professional-name');",
+									"});",
+									"",
+									"pm.test(\"Response has client_name\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('client-name');",
+									"});",
+									"",
+									"pm.test(\"Response has A1 analysis\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('A1');",
+									"});",
+									"",
+									"pm.test(\"B1 is not empty\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.B1).to.not.be.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{API_KEY}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "X-API-KEY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": [],
+									"description": "PDF file containing healthcare questionnaire data"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/ai-tool-daisy/analyze",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ai-tool-daisy",
+								"analyze"
+							]
+						},
+						"description": "Upload and analyze a PDF questionnaire file using OpenAI.\n\n**Request:**\n- Method: POST\n- Content-Type: multipart/form-data\n- Body: PDF file (key: \"file\")\n\n**Response:**\n- Returns complete Prompt1Result with A1-A6 and B1-B3 modules\n- Includes professional name, client name, and teleonic analysis\n\n**Authentication:**\n- Requires X-API-KEY header"
+					},
+					"response": [
+						{
+							"name": "Successful Analysis",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "sample-questionnaire.pdf"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/ai-tool-daisy/analyze",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"ai-tool-daisy",
+										"analyze"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"client-name\": \"John Doe\",\n    \"professional-name\": \"Dr. Jane Smith\",\n    \"A1\": {\n        \"primary_ie\": \"Circadian Regulation IE\",\n        \"secondary_ie\": [\"Energy Management IE\", \"Stress Adaptation IE\"],\n        \"teleonic_pattern\": \"Disturbed recovery-sympathetic overdrive\",\n        \"secondary_dynamics\": [\"Evening underactivation\", \"Melatonin-cortisol phase lag\"],\n        \"uncertainty_level\": 0.32,\n        \"uncertainty_label\": \"Gemiddeld\"\n    },\n    \"A2\": [\"Circadian Regulation IE\", \"Energy Management IE\"],\n    \"A3\": {\n        \"direct\": [\"melatonin\", \"cortisol\"],\n        \"indirect\": [\"GABA\", \"dopamine\"]\n    },\n    \"B1\": {\n        \"ethos_variant\": \"ethos-scan-adult\",\n        \"name\": \"Ethos Scan Adult\",\n        \"rationale\": \"Adult patient with circadian dysregulation\"\n    },\n    \"B2\": [],\n    \"B3\": []\n}"
+						}
+					]
+				},
+				{
+					"name": "Save Analysis Result",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{API_KEY}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "X-API-KEY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"client-name\": \"John Doe\",\n    \"professional-name\": \"Dr. Jane Smith\",\n    \"A1\": {\n        \"primary_ie\": \"Circadian Regulation IE\",\n        \"secondary_ie\": [\"Energy Management IE\"],\n        \"teleonic_pattern\": \"Sample pattern\",\n        \"secondary_dynamics\": [\"Dynamic 1\"],\n        \"uncertainty_level\": 0.3,\n        \"uncertainty_label\": \"Low\"\n    },\n    \"A2\": [\"IE1\", \"IE2\"],\n    \"A3\": {\n        \"direct\": [\"melatonin\"],\n        \"indirect\": [\"GABA\"]\n    },\n    \"A4a\": {\n        \"module_id\": \"A4a\",\n        \"status\": \"not_present\",\n        \"narrative\": \"\",\n        \"uncertainty_label\": \"\"\n    },\n    \"A4b\": {\n        \"module_id\": \"A4b\",\n        \"status\": \"not_present\",\n        \"narrative\": \"\",\n        \"uncertainty_label\": \"\"\n    },\n    \"A4c\": {\n        \"module_id\": \"A4c\",\n        \"status\": \"not_present\",\n        \"narrative\": \"\",\n        \"uncertainty_label\": \"\"\n    },\n    \"A4d\": {\n        \"module_id\": \"A4d\",\n        \"status\": \"not_present\",\n        \"narrative\": \"\",\n        \"uncertainty_label\": \"\"\n    },\n    \"A5\": {\n        \"module_id\": \"A5_missing_data\",\n        \"ID\": \"missing_data_overview\",\n        \"label\": \"Missing Data\",\n        \"mode\": \"missing_data_overview\",\n        \"items\": [],\n        \"primary_ie\": \"\",\n        \"secondary_ie\": [],\n        \"supporting_modules\": [],\n        \"narrative_core\": \"\",\n        \"narrative_full\": \"\",\n        \"uncertainty_label\": \"\"\n    },\n    \"A6\": {\n        \"module_id\": \"\",\n        \"ID\": \"\",\n        \"label\": \"\",\n        \"primary_ie\": \"\",\n        \"supporting_hetas\": [],\n        \"a4_references\": [],\n        \"advice_core\": \"\",\n        \"advice_details\": \"\",\n        \"uncertainty_label\": \"\"\n    },\n    \"B1\": {\n        \"ethos_variant\": \"ethos-scan-adult\",\n        \"name\": \"Ethos Scan Adult\",\n        \"rationale\": \"Adult patient analysis\"\n    },\n    \"B2\": [],\n    \"B3\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/ai-tool-daisy/analysis/save",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ai-tool-daisy",
+								"analysis",
+								"save"
+							]
+						},
+						"description": "Manually save a Prompt1Result to the database.\n\n**Request:**\n- Method: POST\n- Content-Type: application/json\n- Body: Complete Prompt1Result JSON object\n\n**Response:**\n- 200 OK on success\n\n**Authentication:**\n- Requires X-API-KEY header"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for analyzing PDF questionnaires and saving results"
+		},
+		{
+			"name": "Retrieval",
+			"item": [
+				{
+					"name": "Get Results by Professional ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 404\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+									"});",
+									"",
+									"if (pm.response.code === 200) {",
+									"    pm.test(\"Response is an array\", function () {",
+									"        var jsonData = pm.response.json();",
+									"        pm.expect(jsonData).to.be.an('array');",
+									"    });",
+									"    ",
+									"    pm.test(\"Each result has required fields\", function () {",
+									"        var jsonData = pm.response.json();",
+									"        if (jsonData.length > 0) {",
+									"            pm.expect(jsonData[0]).to.have.property('id');",
+									"            pm.expect(jsonData[0]).to.have.property('professionalId');",
+									"            pm.expect(jsonData[0]).to.have.property('patientId');",
+									"            pm.expect(jsonData[0]).to.have.property('resultJson');",
+									"        }",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{API_KEY}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "X-API-KEY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/ai-tool-daisy/analysis/:professionalId",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ai-tool-daisy",
+								"analysis",
+								":professionalId"
+							],
+							"variable": [
+								{
+									"key": "professionalId",
+									"value": "Dr. Jane Smith",
+									"description": "Professional/therapist identifier"
+								}
+							]
+						},
+						"description": "Retrieve all analysis results for a specific healthcare professional.\n\n**Request:**\n- Method: GET\n- Path Parameter: professionalId (string)\n\n**Response:**\n- 200 OK: Array of Prompt1ResultEntity objects\n- 404 Not Found: No results for this professional\n\n**Authentication:**\n- Requires X-API-KEY header"
+					},
+					"response": [
+						{
+							"name": "Results Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/ai-tool-daisy/analysis/Dr. Jane Smith",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"ai-tool-daisy",
+										"analysis",
+										"Dr. Jane Smith"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n        \"professionalId\": \"Dr. Jane Smith\",\n        \"patientId\": \"John Doe\",\n        \"resultJson\": \"{\\\"client-name\\\":\\\"John Doe\\\",\\\"professional-name\\\":\\\"Dr. Jane Smith\\\",\\\"A1\\\":{...}}\",\n        \"createdAt\": \"2025-12-31T10:30:00Z\"\n    }\n]"
+						},
+						{
+							"name": "No Results Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/ai-tool-daisy/analysis/Unknown",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"ai-tool-daisy",
+										"analysis",
+										"Unknown"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "plain",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Get Results by Professional and Patient ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Results match both IDs\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.length > 0) {",
+									"        pm.expect(jsonData[0].professionalId).to.eql(pm.variables.get('professionalId'));",
+									"        pm.expect(jsonData[0].patientId).to.eql(pm.variables.get('patientId'));",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{API_KEY}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "X-API-KEY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/ai-tool-daisy/analysis/:professionalId/client/:patientId",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ai-tool-daisy",
+								"analysis",
+								":professionalId",
+								"client",
+								":patientId"
+							],
+							"variable": [
+								{
+									"key": "professionalId",
+									"value": "Dr. Jane Smith",
+									"description": "Professional/therapist identifier"
+								},
+								{
+									"key": "patientId",
+									"value": "John Doe",
+									"description": "Patient/client identifier"
+								}
+							]
+						},
+						"description": "Retrieve analysis results for a specific professional-patient combination.\n\n**Request:**\n- Method: GET\n- Path Parameters:\n  - professionalId (string)\n  - patientId (string)\n\n**Response:**\n- 200 OK: Array of matching Prompt1ResultEntity objects\n- Empty array if no matches found\n\n**Authentication:**\n- Requires X-API-KEY header"
+					},
+					"response": [
+						{
+							"name": "Specific Patient Results",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/ai-tool-daisy/analysis/Dr. Jane Smith/client/John Doe",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"ai-tool-daisy",
+										"analysis",
+										"Dr. Jane Smith",
+										"client",
+										"John Doe"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n        \"professionalId\": \"Dr. Jane Smith\",\n        \"patientId\": \"John Doe\",\n        \"resultJson\": \"{\\\"client-name\\\":\\\"John Doe\\\",\\\"professional-name\\\":\\\"Dr. Jane Smith\\\",\\\"A1\\\":{...}}\",\n        \"createdAt\": \"2025-12-31T10:30:00Z\"\n    },\n    {\n        \"id\": \"660e8400-e29b-41d4-a716-446655440001\",\n        \"professionalId\": \"Dr. Jane Smith\",\n        \"patientId\": \"John Doe\",\n        \"resultJson\": \"{\\\"client-name\\\":\\\"John Doe\\\",\\\"professional-name\\\":\\\"Dr. Jane Smith\\\",\\\"A1\\\":{...}}\",\n        \"createdAt\": \"2025-12-30T15:20:00Z\"\n    }\n]"
+						}
+					]
+				}
+			],
+			"description": "Endpoints for retrieving stored analysis results"
+		},
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "Database Health Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 503\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 503]);",
+									"});",
+									"",
+									"pm.test(\"Response contains health status\", function () {",
+									"    var responseText = pm.response.text();",
+									"    pm.expect(responseText).to.include('Database health');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{API_KEY}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "X-API-KEY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/ai-tool-daisy/health/database",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ai-tool-daisy",
+								"health",
+								"database"
+							]
+						},
+						"description": "Check the health status of connected databases.\n\n**Request:**\n- Method: GET\n- No parameters required\n\n**Response:**\n- 200 OK: Database is healthy\n- 503 Service Unavailable: Database issues detected\n- 500 Internal Server Error: Health check failed\n\n**Response Format:**\n- Plain text message with primary and secondary database status\n\n**Authentication:**\n- Requires X-API-KEY header"
+					},
+					"response": [
+						{
+							"name": "Healthy Database",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/ai-tool-daisy/health/database",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"ai-tool-daisy",
+										"health",
+										"database"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": "Database health: Primary=healthy, Second=healthy (enabled=true)"
+						},
+						{
+							"name": "Unhealthy Database",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/ai-tool-daisy/health/database",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"ai-tool-daisy",
+										"health",
+										"database"
+									]
+								}
+							},
+							"status": "Service Unavailable",
+							"code": 503,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": "Database not healthy: Primary=unhealthy, Second=healthy (enabled=true)"
+						}
+					]
+				}
+			],
+			"description": "Endpoints for monitoring system health"
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "{{API_KEY}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "X-API-KEY",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:8081",
+			"type": "string"
+		},
+		{
+			"key": "API_KEY",
+			"value": "your-api-key-here",
+			"type": "string"
+		}
+	]
+}
+
