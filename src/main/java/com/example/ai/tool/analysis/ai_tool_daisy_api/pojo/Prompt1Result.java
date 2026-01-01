@@ -88,9 +88,6 @@ public class Prompt1Result {
 
         @JsonProperty("uncertainty_label")
         private String uncertaintyLabel;
-
-        @JsonProperty("narrative")
-        private String narrative;
     }
 
     /**
@@ -308,6 +305,9 @@ public class Prompt1Result {
 
         @JsonProperty("ID")
         private String id;
+
+        @JsonProperty("qest_json")
+        private String qestJson;
     }
 
     /**
@@ -367,6 +367,14 @@ public class Prompt1Result {
             return MAPPER.writeValueAsString(this);
         } catch (Exception e) {
             throw new RuntimeException("Failed to serialize Prompt1Result to JSON: " + e.getMessage(), e);
+        }
+    }
+
+    public static Prompt1Result fromJson(String json) {
+        try {
+            return MAPPER.readValue(json, Prompt1Result.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to deserialize JSON to Prompt1Result: " + e.getMessage(), e);
         }
     }
 }

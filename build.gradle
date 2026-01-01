@@ -58,7 +58,7 @@ dependencies {
     implementation 'org.apache.pdfbox:pdfbox:2.0.29'
     
     // OpenAI
-    implementation 'com.openai:openai-java:3.0.3'
+    implementation 'com.openai:openai-java:4.13.0'
     implementation 'com.jcraft:jsch:0.1.55'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 

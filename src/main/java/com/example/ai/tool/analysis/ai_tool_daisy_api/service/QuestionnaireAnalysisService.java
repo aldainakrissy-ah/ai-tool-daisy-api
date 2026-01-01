@@ -1,12 +1,10 @@
 package com.example.ai.tool.analysis.ai_tool_daisy_api.service;
 
-import com.example.ai.tool.analysis.ai_tool_daisy_api.constant.QuestionnaireInstructions;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1ResultEntity;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1Result;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.Prompt1ResultRepository;
 import com.openai.client.OpenAIClient;
 import com.openai.errors.OpenAIException;
-import com.openai.models.ChatModel;
 import com.openai.models.responses.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,8 +28,6 @@ public class QuestionnaireAnalysisService {
 
     private final OpenAIClient client;
     private final Prompt1ResultRepository prompt1ResultRepository;
-
-    private static final String FILE_SEARCH_TOOL_ID = "vs_68ca996f20ec8191974741691b169cae";
 
     private static final String PDF_ERROR_MESSAGE = "Failed to process PDF file";
     private static final String EMPTY_CONTENT_ERROR = "Extracted PDF content is empty";
@@ -155,7 +150,8 @@ public class QuestionnaireAnalysisService {
 
     /**
      * Sends extracted content to OpenAI for teleonic analysis.
-     * Uses structured output to prevent hallucinations and ensure schema compliance.
+     * Uses structured output with strict JSON schema to prevent hallucinations and ensure schema compliance.
+     * Configuration matches the DAISY BiomatrixAI Framework requirements.
      *
      * @param content the extracted PDF text content
      * @return analyzed result as Prompt1Result
@@ -163,31 +159,36 @@ public class QuestionnaireAnalysisService {
      */
     private Prompt1Result analyzeWithOpenAI(String content) {
 
-        StructuredResponseCreateParams<Prompt1Result> params = StructuredResponseCreateParams.<Prompt1Result>builder()
-                .model(ChatModel.GPT_4_1)
-                .temperature(0.2)
-                .addFileSearchTool(Collections.singletonList(FILE_SEARCH_TOOL_ID))
-                .instructions(QuestionnaireInstructions.DAISY_PROMPT)
-                .input("Execute Prompt 1: Pre-Intake Analysis. \n\n" + content)
-                .text(Prompt1Result.class)
+        // Configure the DAISY prompt from OpenAI dashboard
+        ResponsePrompt responsePrompt = ResponsePrompt.builder()
+                .id("pmpt_691db1ed039881908a001922e53791060b45ef8ce91f9109")
+                .version("87")
                 .build();
 
-        log.debug("Sending {} characters to OpenAI for analysis", content.length());
+        String userContent = "PROMPT 1\n" + content;
+        ResponseCreateParams params = ResponseCreateParams.builder()
+                .prompt(responsePrompt)
+                .input(userContent)
+                .build();
 
-        StructuredResponse<Prompt1Result> response = client.responses().create(params);
+        log.debug("Sending {} characters to OpenAI for DAISY teleonic analysis (prompt: v4, temp=0.0)", content.length());
+
+
+        Response response = client.responses().create(params);
 
         if (response.output().isEmpty()) {
             throw new RuntimeException(NO_RESPONSE_ERROR);
         }
 
-        log.info("OpenAI analysis completed successfully");
+        log.info("OpenAI DAISY analysis completed successfully");
 
-        return response.output().stream()
+        String textString = response.output().stream()
                 .flatMap(item -> item.message().stream())
                 .flatMap(msg -> msg.content().stream())
-                .map(StructuredResponseOutputMessage.Content::asOutputText)
+                .map(ResponseOutputMessage.Content::asOutputText)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException(NO_RESPONSE_ERROR));
+                .orElseThrow(() -> new RuntimeException(NO_RESPONSE_ERROR)).text();
+        return Prompt1Result.fromJson(textString);
     }
 
     /**
