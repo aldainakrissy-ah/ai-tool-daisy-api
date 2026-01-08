@@ -63,13 +63,13 @@ docker run -d \
 ## API Endpoints
 
 ### Health Check
-- `GET /api/v1/health` - Application health status
-- `GET /api/v1/endpoints` - List of all available endpoints
+- `GET /api/v1/ai-tool-daisy/health/database` - Database health status
 
 ### AI Analysis
-- `POST /api/v1/ai-tool-daisy` - Analyze medical PDF documents
-- `POST /api/v1/ai-tool-daisy/analysis/{professionalId}` - Analyze medical text for specific professional
-- `POST /api/v1/ai-tool-daisy/analysis/{professionalId}/client/{patientId}` - Analyze medical text for specific professional and patient
+- `POST /api/v1/ai-tool-daisy/analyze` - Analyze medical PDF documents
+- `GET /api/v1/ai-tool-daisy/analysis/professional/{professionalId}` - Get analysis results by professional ID
+- `GET /api/v1/ai-tool-daisy/analysis/professional/{professionalId}/client/{patientId}` - Get analysis results by professional and patient ID
+- `GET /api/v1/ai-tool-daisy/analysis/all` - Get all analysis results
 - `POST /api/v1/ai-tool-daisy/analysis/save` - Save analysis result
 
 ### Questionnaire Management
@@ -85,8 +85,11 @@ docker run -d \
 - `POST /api/v1/questionnaire-responses/start` - Start questionnaire session
 - `POST /api/v1/questionnaire-responses/{sessionId}/responses` - Save responses
 - `POST /api/v1/questionnaire-responses/{sessionId}/complete` - Complete questionnaire
+- `POST /api/v1/questionnaire-responses/{sessionId}/abandon` - Abandon questionnaire
 - `GET /api/v1/questionnaire-responses/{sessionId}` - Get session responses
 - `GET /api/v1/questionnaire-responses/user/{userId}` - Get user responses
+- `GET /api/v1/questionnaire-responses/user/{userId}/questionnaire/{questionnaireId}` - Get user responses by questionnaire
+- `DELETE /api/v1/questionnaire-responses` - Delete questionnaire response by client and questionnaire ID
 
 ## Available Questionnaires
 
