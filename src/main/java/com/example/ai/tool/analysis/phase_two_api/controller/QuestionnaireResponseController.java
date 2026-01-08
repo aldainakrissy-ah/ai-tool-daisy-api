@@ -119,4 +119,20 @@ public class QuestionnaireResponseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteQuestionnaireResponse(
+            @RequestParam String clientId,
+            @RequestParam String questionnaireId) {
+        try {
+            responseService.deleteQuestionnaireResponse(clientId, questionnaireId);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            log.error("Error deleting questionnaire response for client: {} and questionnaire: {}", clientId,
+                    questionnaireId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
