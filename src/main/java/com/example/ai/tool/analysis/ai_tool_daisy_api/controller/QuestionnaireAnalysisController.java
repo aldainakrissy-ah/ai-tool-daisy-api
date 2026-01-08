@@ -72,6 +72,12 @@ public class QuestionnaireAnalysisController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/analysis/all")
+    public ResponseEntity<List<Prompt1ResultEntity>> getAllResults() {
+        List<Prompt1ResultEntity> result = questionnaireAnalysisService.getAllPreIntakeResults();
+        return ResponseEntity.ok(result);
+    }
+
     @PostMapping(value = "/analysis/save", consumes = "application/json")
     public ResponseEntity<Void> savePreIntakeResult(@RequestBody Prompt1Result prompt1Result) {
         log.info("Saving Prompt1 result for professional id: {}", prompt1Result.getProfessionalName());

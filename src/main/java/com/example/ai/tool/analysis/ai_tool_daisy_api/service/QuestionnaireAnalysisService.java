@@ -98,6 +98,17 @@ public class QuestionnaireAnalysisService {
     }
 
     /**
+     * Retrieves all pre-intake analysis results.
+     *
+     * @return list of all analysis results
+     */
+    @Transactional(readOnly = true)
+    public List<Prompt1ResultEntity> getAllPreIntakeResults() {
+        log.info("Fetching all pre-intake results");
+        return prompt1ResultRepository.findAll();
+    }
+
+    /**
      * Persists a Prompt1Result to the database.
      *
      * @param prompt1Result the analysis result to save
