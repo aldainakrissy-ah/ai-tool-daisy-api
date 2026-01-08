@@ -1,10 +1,12 @@
 package com.example.ai.tool.analysis.ai_tool_daisy_api.service;
 
+import com.example.ai.tool.analysis.ai_tool_daisy_api.constant.QuestionnaireInstructions;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1ResultEntity;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1Result;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.Prompt1ResultRepository;
 import com.openai.client.OpenAIClient;
 import com.openai.errors.OpenAIException;
+import com.openai.models.ChatModel;
 import com.openai.models.responses.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -159,36 +162,28 @@ public class QuestionnaireAnalysisService {
      */
     private Prompt1Result analyzeWithOpenAI(String content) {
 
-        // Configure the DAISY prompt from OpenAI dashboard
-        ResponsePrompt responsePrompt = ResponsePrompt.builder()
-                .id("pmpt_691db1ed039881908a001922e53791060b45ef8ce91f9109")
-                .version("87")
+        StructuredResponseCreateParams<Prompt1Result> params = StructuredResponseCreateParams
+                .<Prompt1Result>builder()
+                .model(ChatModel.GPT_5_CHAT_LATEST)
+                .temperature(0.0)
+                .topP(1.0)
+                .addFileSearchTool(Collections.singletonList("vs_68ca996f20ec8191974741691b169cae"))
+                .instructions(QuestionnaireInstructions.DAISY_PROMPT)
+                .input("Prompt 1:\n" + content)
+                .text(Prompt1Result.class)
                 .build();
 
-        String userContent = "PROMPT 1\n" + content;
-        ResponseCreateParams params = ResponseCreateParams.builder()
-                .prompt(responsePrompt)
-                .input(userContent)
-                .build();
+        StructuredResponse<Prompt1Result> response = client.responses().create(params);
+        log.info("OpenAI analysis completed with response: {}", response);
 
-        log.debug("Sending {} characters to OpenAI for DAISY teleonic analysis (prompt: v4, temp=0.0)", content.length());
+        log.debug("Received response from OpenAI API");
 
-
-        Response response = client.responses().create(params);
-
-        if (response.output().isEmpty()) {
-            throw new RuntimeException(NO_RESPONSE_ERROR);
-        }
-
-        log.info("OpenAI DAISY analysis completed successfully");
-
-        String textString = response.output().stream()
+        return response.output().stream()
                 .flatMap(item -> item.message().stream())
                 .flatMap(msg -> msg.content().stream())
-                .map(ResponseOutputMessage.Content::asOutputText)
+                .map(StructuredResponseOutputMessage.Content::asOutputText)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException(NO_RESPONSE_ERROR)).text();
-        return Prompt1Result.fromJson(textString);
+                .orElseThrow(() -> new RuntimeException(NO_RESPONSE_ERROR));
     }
 
     /**
