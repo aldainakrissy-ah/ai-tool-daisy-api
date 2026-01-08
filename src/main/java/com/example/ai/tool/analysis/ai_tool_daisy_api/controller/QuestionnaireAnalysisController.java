@@ -52,7 +52,7 @@ public class QuestionnaireAnalysisController {
      * @return a {@link ResponseEntity} containing a list of
      *         {@link Prompt1ResultEntity} or a not found status.
      */
-    @GetMapping("/analysis/{professionalId}")
+    @GetMapping("/analysis/professional/{professionalId}")
     public ResponseEntity<List<Prompt1ResultEntity>> getResultsByProfessionalId(
             @PathVariable("professionalId") String professionalId) {
         List<Prompt1ResultEntity> result = questionnaireAnalysisService.getPreIntakeResult(professionalId);
@@ -62,7 +62,7 @@ public class QuestionnaireAnalysisController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/analysis/{professionalId}/client/{patientId}")
+    @GetMapping("/analysis/professional/{professionalId}/client/{patientId}")
     public ResponseEntity<List<Prompt1ResultEntity>> getResultByProfessionalIdAndPatientId(
             @PathVariable("professionalId") String professionalId,
             @PathVariable("patientId") String patientId) {
