@@ -23,4 +23,8 @@ public interface QuestionnaireResponseRepository extends JpaRepository<Questionn
     
     @Query("SELECT qr FROM QuestionnaireResponse qr WHERE qr.questionnaire.id = :questionnaireId AND qr.userId = :userId ORDER BY qr.startedAt DESC")
     List<QuestionnaireResponse> findByQuestionnaireIdAndUserId(@Param("questionnaireId") String questionnaireId, @Param("userId") String userId);
+
+    Optional<QuestionnaireResponse> findByUserIdAndQuestionnaireIdAndStatus(String userId, String questionnaireId, QuestionnaireResponse.ResponseStatus status);
+
+    void deleteByUserIdAndQuestionnaireId(String userId, String questionnaireId);
 }

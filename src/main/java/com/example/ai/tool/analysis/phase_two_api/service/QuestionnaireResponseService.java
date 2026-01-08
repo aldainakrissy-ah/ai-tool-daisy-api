@@ -51,54 +51,29 @@ public class QuestionnaireResponseService {
     public QuestionnaireResponseDto saveQuestionResponse(String sessionId, String clientId,
             String questionnaireId, List<QuestionResponseDto> responses) {
 
-        Optional<QuestionnaireResponse> existingResponse = responseRepository.findBySessionId(sessionId);
+        Optional<QuestionnaireResponse> optionalResponse = responseRepository.findBySessionId(sessionId)
+                .or(() -> responseRepository.findByUserIdAndQuestionnaireIdAndStatus(clientId, questionnaireId,
+                        QuestionnaireResponse.ResponseStatus.IN_PROGRESS));
+
         QuestionnaireResponse questionnaireResponse;
-
-        if (existingResponse.isPresent()) {
-            // Update existing session
-            questionnaireResponse = existingResponse.get();
-            log.info("Found existing questionnaire session: {}", sessionId);
-
-            // Update client ID if provided (using clientId for both client and user)
-            if (clientId != null && !clientId.trim().isEmpty()) {
-                questionnaireResponse.setClientId(clientId);
-                questionnaireResponse.setUserId(clientId); // Use same value for userId
-            }
-
-            // Clear existing responses for this session
-            if (questionnaireResponse.getQuestionResponses() != null) {
-                questionnaireResponse.getQuestionResponses().clear();
-            } else {
-                questionnaireResponse.setQuestionResponses(new ArrayList<>());
-            }
+        if (optionalResponse.isPresent()) {
+            questionnaireResponse = optionalResponse.get();
         } else {
-            // Create new session if not found
             log.info("Session {} not found. Creating new questionnaire response.", sessionId);
-
             questionnaireResponse = new QuestionnaireResponse();
             questionnaireResponse.setSessionId(sessionId);
             questionnaireResponse.setClientId(clientId);
-            questionnaireResponse.setUserId(clientId); // Use same value for userId
-            questionnaireResponse.setLanguageCode("en"); // default language
+            questionnaireResponse.setUserId(clientId);
+            questionnaireResponse.setLanguageCode("en");
             questionnaireResponse.setStatus(QuestionnaireResponse.ResponseStatus.IN_PROGRESS);
             questionnaireResponse.setStartedAt(LocalDateTime.now());
 
-            // Set questionnaire if provided
             if (questionnaireId != null && !questionnaireId.trim().isEmpty()) {
                 Questionnaire questionnaire = questionnaireRepository.findById(questionnaireId)
                         .orElseThrow(() -> new IllegalArgumentException("Questionnaire not found: " + questionnaireId));
                 questionnaireResponse.setQuestionnaire(questionnaire);
                 log.info("Associated new session {} with questionnaire: {}", sessionId, questionnaireId);
-            } else {
-                log.warn(
-                        "No questionnaire ID provided for new session: {}. Consider providing questionnaireId in the request.",
-                        sessionId);
             }
-        }
-
-        // Ensure questionResponses list is initialized
-        if (questionnaireResponse.getQuestionResponses() == null) {
-            questionnaireResponse.setQuestionResponses(new ArrayList<>());
         }
 
         // Add new responses
@@ -107,23 +82,44 @@ public class QuestionnaireResponseService {
                     .orElseThrow(
                             () -> new IllegalArgumentException("Question not found: " + responseDto.getQuestionId()));
 
-            QuestionResponse questionResponse = new QuestionResponse();
-            questionResponse.setQuestionnaireResponse(questionnaireResponse);
-            questionResponse.setQuestion(question);
-            questionResponse.setAnswerText(responseDto.getAnswerText());
-            questionResponse.setAnswerNumber(responseDto.getAnswerNumber());
-            questionResponse.setAnswerBoolean(responseDto.getAnswerBoolean());
+            Optional<QuestionResponse> existingQuestionResponse = questionnaireResponse.getQuestionResponses()
+                    .stream()
+                    .filter(qr -> qr.getQuestion().getId().equals(responseDto.getQuestionId()))
+                    .findFirst();
 
-            if (responseDto.getAnswerJson() != null) {
-                try {
-                    questionResponse.setAnswerJson(objectMapper.writeValueAsString(responseDto.getAnswerJson()));
-                } catch (JsonProcessingException e) {
-                    log.warn("Failed to serialize answer JSON for question {}: {}", responseDto.getQuestionId(),
-                            responseDto.getAnswerJson(), e);
+            if (existingQuestionResponse.isPresent()) {
+                QuestionResponse questionResponse = existingQuestionResponse.get();
+                questionResponse.setAnswerText(responseDto.getAnswerText());
+                questionResponse.setAnswerNumber(responseDto.getAnswerNumber());
+                questionResponse.setAnswerBoolean(responseDto.getAnswerBoolean());
+
+                if (responseDto.getAnswerJson() != null) {
+                    try {
+                        questionResponse.setAnswerJson(objectMapper.writeValueAsString(responseDto.getAnswerJson()));
+                    } catch (JsonProcessingException e) {
+                        log.warn("Failed to serialize answer JSON for question {}: {}", responseDto.getQuestionId(),
+                                responseDto.getAnswerJson(), e);
+                    }
                 }
-            }
+            } else {
+                QuestionResponse questionResponse = new QuestionResponse();
+                questionResponse.setQuestionnaireResponse(questionnaireResponse);
+                questionResponse.setQuestion(question);
+                questionResponse.setAnswerText(responseDto.getAnswerText());
+                questionResponse.setAnswerNumber(responseDto.getAnswerNumber());
+                questionResponse.setAnswerBoolean(responseDto.getAnswerBoolean());
 
-            questionnaireResponse.getQuestionResponses().add(questionResponse);
+                if (responseDto.getAnswerJson() != null) {
+                    try {
+                        questionResponse.setAnswerJson(objectMapper.writeValueAsString(responseDto.getAnswerJson()));
+                    } catch (JsonProcessingException e) {
+                        log.warn("Failed to serialize answer JSON for question {}: {}", responseDto.getQuestionId(),
+                                responseDto.getAnswerJson(), e);
+                    }
+                }
+
+                questionnaireResponse.getQuestionResponses().add(questionResponse);
+            }
         }
 
         QuestionnaireResponse savedResponse = responseRepository.save(questionnaireResponse);
@@ -172,6 +168,11 @@ public class QuestionnaireResponseService {
 
         response.setStatus(QuestionnaireResponse.ResponseStatus.ABANDONED);
         responseRepository.save(response);
+    }
+
+    @Transactional
+    public void deleteQuestionnaireResponse(String clientId, String questionnaireId) {
+        responseRepository.deleteByUserIdAndQuestionnaireId(clientId, questionnaireId);
     }
 
     private QuestionnaireResponseDto convertToDto(QuestionnaireResponse response) {
