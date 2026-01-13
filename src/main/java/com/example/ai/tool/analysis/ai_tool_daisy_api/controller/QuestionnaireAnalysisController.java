@@ -85,6 +85,16 @@ public class QuestionnaireAnalysisController {
             return ResponseEntity.ok().build();
 
     }
+    @GetMapping("/analysis/patient/{patientId}")
+    public ResponseEntity<List<Prompt1ResultEntity>> getResultByPatientId(
+            @PathVariable("patientId") String patientId) {
+        List<Prompt1ResultEntity> result = questionnaireAnalysisService
+                .getPreIntakeResultByPatientId(patientId);
+        if (result == null || result.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(result);
+    }
 
     /**
      * Health check endpoint to monitor database status.

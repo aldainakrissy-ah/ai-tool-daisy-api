@@ -108,6 +108,12 @@ public class QuestionnaireAnalysisService {
         return prompt1ResultRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public List<Prompt1ResultEntity> getPreIntakeResultByPatientId(String patientId) {
+        log.info("Fetching result for patient: {}", patientId);
+        return prompt1ResultRepository.findByPatientId(patientId);
+    }
+
     /**
      * Persists a Prompt1Result to the database.
      *

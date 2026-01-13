@@ -14,6 +14,7 @@ import java.util.List;
 public interface Prompt1ResultRepository extends  JpaRepository<Prompt1ResultEntity, Long> {
     List<Prompt1ResultEntity> findByProfessionalId(String professionalId);
     List<Prompt1ResultEntity> findByProfessionalIdAndPatientId(String professionalId, String patientId);
+    List<Prompt1ResultEntity> findByPatientId(String patientId);
 
     @Modifying
     @Transactional
