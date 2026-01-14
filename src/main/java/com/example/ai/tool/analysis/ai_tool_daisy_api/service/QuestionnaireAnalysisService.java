@@ -1,12 +1,10 @@
 package com.example.ai.tool.analysis.ai_tool_daisy_api.service;
 
-import com.example.ai.tool.analysis.ai_tool_daisy_api.constant.QuestionnaireInstructions;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1ResultEntity;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1Result;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.Prompt1ResultRepository;
 import com.openai.client.OpenAIClient;
 import com.openai.errors.OpenAIException;
-import com.openai.models.ChatModel;
 import com.openai.models.responses.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -179,28 +177,41 @@ public class QuestionnaireAnalysisService {
      */
     private Prompt1Result analyzeWithOpenAI(String content) {
 
-        StructuredResponseCreateParams<Prompt1Result> params = StructuredResponseCreateParams
-                .<Prompt1Result>builder()
-                .model(ChatModel.GPT_5_CHAT_LATEST)
-                .temperature(0.0)
-                .topP(1.0)
-                .addFileSearchTool(Collections.singletonList("vs_68ca996f20ec8191974741691b169cae"))
-                .instructions(QuestionnaireInstructions.DAISY_PROMPT)
-                .input("Prompt 1:\n" + content)
-                .text(Prompt1Result.class)
+        ResponsePrompt prompt = ResponsePrompt.builder().id("pmpt_691db1ed039881908a001922e53791060b45ef8ce91f9109")
+                .version("98")
                 .build();
 
-        StructuredResponse<Prompt1Result> response = client.responses().create(params);
+        List<ResponseIncludable> includes = Collections.singletonList(ResponseIncludable.of("web_search_call.action.sources"));
+
+        FileSearchTool fileSearchTool = FileSearchTool.builder()
+                .addVectorStoreId("vs_68ca996f20ec8191974741691b169cae")
+                .build();
+
+        List<Tool> tools = Collections.singletonList(Tool.ofFileSearch(fileSearchTool));
+
+        ResponseCreateParams params = ResponseCreateParams
+                .builder()
+                .temperature(0.0)
+                .topP(1.0)
+                .prompt(prompt)
+                .tools(tools)
+                .store(true)
+                .maxOutputTokens(6000)
+                .include(includes)
+                .input("Prompt 1:\n" + content)
+                //.text(Prompt1Result.class)
+                .build();
+
+        Response response = client.responses().create(params);
         log.info("OpenAI analysis completed with response: {}", response);
 
         log.debug("Received response from OpenAI API");
 
-        return response.output().stream()
+        String res =  response.output().stream()
                 .flatMap(item -> item.message().stream())
-                .flatMap(msg -> msg.content().stream())
-                .map(StructuredResponseOutputMessage.Content::asOutputText)
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException(NO_RESPONSE_ERROR));
+                .flatMap(msg -> msg.content().stream()).findFirst()
+                .orElseThrow(() -> new RuntimeException(NO_RESPONSE_ERROR)).asOutputText().text();
+        return Prompt1Result.fromJson(res);
     }
 
     /**
