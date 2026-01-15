@@ -201,8 +201,6 @@ public class QuestionnaireAnalysisService {
                         "QUESTIONNAIRE DATA:\n" + content)
                 .build();
 
-        System.out.println("params: " + params);
-
         Response response = client.responses().create(params);
 
         log.debug("Received response from OpenAI API");
