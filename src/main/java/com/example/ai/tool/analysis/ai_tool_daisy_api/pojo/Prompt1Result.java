@@ -92,6 +92,7 @@ public class Prompt1Result {
 
     /**
      * Section A3: HETA (Health Endoteleon Tuning Agents) recommendations.
+     * Contains direct and indirect HETA arrays.
      */
     @Data
     @NoArgsConstructor
@@ -286,8 +287,8 @@ public class Prompt1Result {
         @JsonProperty("heta_id")
         private String hetaId;
 
-        @JsonProperty("heta_json_code")
-        private String hetaJsonCode;
+        @JsonProperty("heta_json")
+        private String hetaJson;
     }
 
     /**
