@@ -1,0 +1,54 @@
+{
+  "id": "glucose",
+  "title": {
+    "en": "Glucose",
+    "nl": "Glucose"
+  },
+  "description": {
+    "en": "The following questions are about your energy levels throughout the day, your need for quick energy, your sensitivity to hunger swings, and your stability in focus and mood.",
+    "nl": "De volgende vragen gaan over je energieniveau door de dag heen, je behoefte aan snelle energie, je gevoeligheid voor hongerschommelingen en je stabiliteit in focus en stemming."
+  },
+  "sections": [
+    {
+      "id": "glucose",
+      "title": {
+        "en": "Glucose",
+        "nl": "Glucose"
+      },
+      "questions": [
+        {
+          "id": "glucose-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you regularly experience sudden energy dips or dizziness when you haven't eaten for a long time?",
+            "nl": "Heb je geregeld last van plotselinge energiedips of duizeligheid wanneer je langere tijd niets eet?"
+          }
+        },
+        {
+          "id": "glucose-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you experience mood swings or irritability just before you get hungry or when you're feeling low?",
+            "nl": "Heb je stemmingswisselingen of prikkelbaarheid die je merkt vlak voor je honger krijgt of wanneer je 'laag' in je energie zit?"
+          }
+        },
+        {
+          "id": "glucose-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you find it difficult to maintain a stable energy level throughout the day, with a tendency to experience rapid peaks and troughs in energy or cravings?",
+            "nl": "Merk je dat je moeilijk een stabiel energieniveau kunt behouden over de dag, met neiging tot snelle pieken en dalen in energie of trek?"
+          }
+        },
+        {
+          "id": "glucose-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you've become dependent on quick energy boosts like sugar, coffee, or snacks to keep you going?",
+            "nl": "Heb je het gevoel dat je afhankelijk bent geworden van snelle energie-oppepper zoals suiker, koffie of snacks om je 'aan de gang te houden'?"
+          }
+        }
+      ]
+    }
+  ]
+}

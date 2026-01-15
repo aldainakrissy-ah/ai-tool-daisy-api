@@ -1,0 +1,54 @@
+{
+  "id": "substancep",
+  "title": {
+    "en": "Substance P",
+    "nl": "Substance P"
+  },
+  "description": {
+    "en": "The following questions are about your sensitivity to pain, sensitivity to stress stimuli, recovery from pain experiences and your ability to regulate stimuli properly.",
+    "nl": "De volgende vragen gaan over je pijngevoeligheid, gevoeligheid voor stressprikkels, herstel na pijnervaringen en je vermogen om prikkels goed te reguleren."
+  },
+  "sections": [
+    {
+      "id": "substancep",
+      "title": {
+        "en": "Substance P",
+        "nl": "Substance P"
+      },
+      "questions": [
+        {
+          "id": "substancep-q1",
+          "type": "text",
+          "text": {
+            "en": "Are you easily affected by pain stimuli, or do you experience prolonged pain, even after seemingly minor physical triggers?",
+            "nl": "Heb je snel last van pijnprikkels of blijf je langdurig last houden van pijn, ook na ogenschijnlijk kleine fysieke triggers?"
+          }
+        },
+        {
+          "id": "substancep-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel that stress exacerbates your physical symptoms, for example, that you are more likely to experience headaches, muscle pain, or joint pain?",
+            "nl": "Heb je het gevoel dat stress je fysieke klachten verergert, bijvoorbeeld dat je sneller last krijgt van hoofdpijn, spierpijn of gewrichtspijn?"
+          }
+        },
+        {
+          "id": "substancep-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system has difficulty exiting pain mode, for example, that pain lingers for a long time after exertion?",
+            "nl": "Heb je het idee dat je systeem moeite heeft om uit een pijn-modus te komen, bijvoorbeeld dat pijn lang 'blijft hangen' na belasting?"
+          }
+        },
+        {
+          "id": "substancep-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body experiences pain more quickly and struggles to return to a pain-free, relaxed state?",
+            "nl": "Heb je het gevoel dat je lichaam sneller 'in de pijn schiet' en moeite heeft om terug te keren naar een pijnvrije, ontspannen staat?"
+          }
+        }
+      ]
+    }
+  ]
+}

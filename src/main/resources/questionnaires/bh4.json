@@ -1,0 +1,54 @@
+{
+  "id": "bh4",
+  "title": {
+    "en": "BH4",
+    "nl": "BH4"
+  },
+  "description": {
+    "en": "The following questions are about your mental energy, mood stability, motivation to exercise, and recovery after exercise.",
+    "nl": "De volgende vragen gaan over je mentale energie, stabiliteit van stemming, je motivatie om in beweging te komen en je herstel na inspanning."
+  },
+  "sections": [
+    {
+      "id": "bh4",
+      "title": {
+        "en": "BH4",
+        "nl": "BH4"
+      },
+      "questions": [
+        {
+          "id": "bh4-q1",
+          "type": "text",
+          "text": {
+            "en": "Despite rest, do you often feel deeply physically or mentally drained, as if your system isn't properly refueling?",
+            "nl": "Voel je ondanks rust vaak een diep lichamelijk of geestelijk uitgeput gevoel, alsof je systeem niet goed 'bijtankt'?"
+          }
+        },
+        {
+          "id": "bh4-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer from a flat mood, reduced resilience, or the feeling of going through the day \"flat\" without any real emotional peaks?",
+            "nl": "Heb je last van een vlakke stemming, verminderde veerkracht of het gevoel 'vlak' door de dag heen te gaan zonder echte emotionele pieken?"
+          }
+        },
+        {
+          "id": "bh4-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you struggle to get your energy going in the morning, or do you tend to experience dips throughout the day?",
+            "nl": "Heb je moeite om in de ochtend energie op gang te krijgen, of juist een neiging tot energiedalingen gedurende de dag?"
+          }
+        },
+        {
+          "id": "bh4-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system is functioning at half capacity, as if something isn't working properly in your basal energy production or mood?",
+            "nl": "Heb je het gevoel dat je systeem 'op halve kracht' functioneert, alsof er iets in je basale energieproductie of stemming niet goed aangaat?"
+          }
+        }
+      ]
+    }
+  ]
+}

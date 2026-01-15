@@ -1,0 +1,54 @@
+{
+  "id": "oxytocine",
+  "title": {
+    "en": "Oxytocine",
+    "nl": "Oxytocine"
+  },
+  "description": {
+    "en": "The following questions are about your sense of connectedness, your ability to relax in social situations, and your experience of peace and safety with others.",
+    "nl": "De volgende vragen gaan over je gevoel van verbondenheid, je vermogen tot ontspanning in sociale situaties en je ervaring van rust en veiligheid bij anderen."
+  },
+  "sections": [
+    {
+      "id": "oxytocine",
+      "title": {
+        "en": "Oxytocine",
+        "nl": "Oxytocine"
+      },
+      "questions": [
+        {
+          "id": "oxytocine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you notice physical tension or anxiety in social situations, even with people you know?",
+            "nl": "Merk je lichamelijke spanning of onrust wanneer je in sociale situaties bent, zelfs bij mensen die je kent?"
+          }
+        },
+        {
+          "id": "oxytocine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you often feel emotionally withdrawn or struggle to truly connect with others?",
+            "nl": "Voel je je vaak emotioneel teruggetrokken of heb je moeite om echt verbinding te voelen met anderen?"
+          }
+        },
+        {
+          "id": "oxytocine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you can't relax after social interactions, or that you remain overstimulated?",
+            "nl": "Heb je het gevoel dat je na sociale interactie niet tot rust komt of juist overprikkeld blijft hangen?"
+          }
+        },
+        {
+          "id": "oxytocine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you struggle to experience safety and peace within yourself or in relationships, as if connection doesn't feel natural?",
+            "nl": "Heb je het gevoel dat je moeite hebt om veiligheid en rust in jezelf of in relaties te ervaren, alsof verbondenheid niet vanzelfsprekend voelt?"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "id": "beta-endorfinen",
+  "title": {
+    "en": "Beta endorfinen",
+    "nl": "Beta endorfinen"
+  },
+  "description": {
+    "en": "The following questions are about your sensitivity to pain, inner pleasure capacity, stress buffering, and your ability to experience contentment.",
+    "nl": "De volgende vragen gaan over je pijngevoeligheid, innerlijk genotsvermogen, stress-buffering en je vermogen om tevredenheid te ervaren."
+  },
+  "sections": [
+    {
+      "id": "beta-endorfinen",
+      "title": {
+        "en": "Beta endorfinen",
+        "nl": "Beta endorfinen"
+      },
+      "questions": [
+        {
+          "id": "beta-endorfinen-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer from persistent pain or increased sensitivity to pain, even from mild physical stimuli?",
+            "nl": "Heb je last van aanhoudende pijnklachten of verhoogde gevoeligheid voor pijn, ook bij milde fysieke prikkels?"
+          }
+        },
+        {
+          "id": "beta-endorfinen-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you struggle to experience moments of happiness or satisfaction, or do you often experience a flat, subdued mood?",
+            "nl": "Heb je moeite om momenten van geluk of voldoening te ervaren, of voel je vaker een vlakke, gedempte stemming?"
+          }
+        },
+        {
+          "id": "beta-endorfinen-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that during periods of stress or overload, you more quickly resort to pleasurable behaviors like eating, screen time, or other short-term pleasures?",
+            "nl": "Merk je dat je in periodes van stress of overbelasting sneller teruggrijpt naar genotsgedrag zoals eten, schermgebruik of andere korte-termijnpleziertjes?"
+          }
+        },
+        {
+          "id": "beta-endorfinen-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body struggles to generate natural contentment or well-being, as if there's an internal shortage of soothing or happiness-producing impulses?",
+            "nl": "Heb je het gevoel dat je lichaam moeite heeft om natuurlijke tevredenheid of welzijn te genereren, alsof er een intern tekort is aan rustgevende of geluk-gevende impulsen?"
+          }
+        }
+      ]
+    }
+  ]
+}

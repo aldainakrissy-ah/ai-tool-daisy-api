@@ -1,0 +1,54 @@
+{
+  "id": "dopamine",
+  "title": {
+    "en": "Dopamine",
+    "nl": "Dopamine"
+  },
+  "description": {
+    "en": "The following questions are about your motivation, perseverance, energy to tackle things, and your ability to enjoy activities.",
+    "nl": "De volgende vragen gaan over je motivatie, doorzettingsvermogen, energie om dingen aan te pakken en je vermogen om plezier te beleven aan activiteiten."
+  },
+  "sections": [
+    {
+      "id": "dopamine",
+      "title": {
+        "en": "Dopamine",
+        "nl": "Dopamine"
+      },
+      "questions": [
+        {
+          "id": "dopamine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience physical sluggishness, stiffness, or reduced flexibility, especially when you feel less motivated?",
+            "nl": "Heb je last van lichamelijke traagheid, stijfheid of verminderde soepelheid, vooral wanneer je je minder gemotiveerd voelt?"
+          }
+        },
+        {
+          "id": "dopamine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you often feel a lack of motivation or enjoyment, as if things you used to enjoy now bring you little satisfaction?",
+            "nl": "Voel je vaak een gebrek aan motivatie of plezier, alsof dingen die je vroeger leuk vond je nu weinig voldoening geven?"
+          }
+        },
+        {
+          "id": "dopamine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you find it difficult to boost your energy levels during the day, even after rest or sleep, or that you quickly feel drained?",
+            "nl": "Merk je dat je energiepeil gedurende de dag moeilijk stijgt, zelfs na rust of slaap, of dat je je snel 'leeggelopen' voelt?"
+          }
+        },
+        {
+          "id": "dopamine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you lack the drive to actively participate in life, as if your system is struggling to get itself moving?",
+            "nl": "Heb je het gevoel dat je 'de drive mist' om actief deel te nemen aan het leven, alsof je systeem moeite heeft om zichzelf in beweging te zetten?"
+          }
+        }
+      ]
+    }
+  ]
+}

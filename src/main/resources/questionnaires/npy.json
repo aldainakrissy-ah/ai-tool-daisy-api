@@ -1,0 +1,54 @@
+{
+  "id": "npy",
+  "title": {
+    "en": "NPY",
+    "nl": "NPY"
+  },
+  "description": {
+    "en": "The following questions are about your stress resistance, your eating habits during stressful periods and your ability to remain calm and stable when under pressure.",
+    "nl": "De volgende vragen gaan over je stressbestendigheid, je eetpatroon in stressvolle periodes en je vermogen om kalmte en stabiliteit te bewaren wanneer je onder druk staat."
+  },
+  "sections": [
+    {
+      "id": "npy",
+      "title": {
+        "en": "NPY",
+        "nl": "NPY"
+      },
+      "questions": [
+        {
+          "id": "npy-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience an increased appetite or a preference for high-calorie foods during stressful moments?",
+            "nl": "Heb je last van verhoogde eetlust of voorkeur voor calorierijk voedsel tijdens stressmomenten?"
+          }
+        },
+        {
+          "id": "npy-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you lose your balance more quickly under prolonged stress or react more emotionally than you're used to?",
+            "nl": "Heb je het gevoel dat je onder langdurige stress sneller uit balans raakt of emotioneler reageert dan je van jezelf gewend bent?"
+          }
+        },
+        {
+          "id": "npy-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you find it difficult to recover during stressful periods, for example, that you struggle to regain your energy and calm after stress?",
+            "nl": "Merk je dat je in stressvolle periodes moeilijk herstelt, bijvoorbeeld moeite hebt om je energie en kalmte terug te vinden na stress?"
+          }
+        },
+        {
+          "id": "npy-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body is functioning in a \"survival-oriented\" way, as if your system quickly goes into save mode or overdrive under stress?",
+            "nl": "Heb je het gevoel dat je lichaam 'overlevingsgericht' functioneert, alsof je systeem snel in spaarstand of overdrive schiet bij spanning?"
+          }
+        }
+      ]
+    }
+  ]
+}

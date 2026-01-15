@@ -1,0 +1,54 @@
+{
+  "id": "noradrenaline",
+  "title": {
+    "en": "Noradrenaline",
+    "nl": "Noradrenaline"
+  },
+  "description": {
+    "en": "The following questions are about your focus, alertness, sensitivity to stimuli, and your ability to switch between wakefulness and relaxation.",
+    "nl": "De volgende vragen gaan over je focus, alertheid, gevoeligheid voor prikkels en je vermogen om te schakelen tussen waakzaamheid en ontspanning."
+  },
+  "sections": [
+    {
+      "id": "noradrenaline",
+      "title": {
+        "en": "Noradrenaline",
+        "nl": "Noradrenaline"
+      },
+      "questions": [
+        {
+          "id": "noradrenaline-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience a rapid heartbeat or tense muscles, especially in stressful or unexpected situations?",
+            "nl": "Heb je last van een snelle hartslag of gespannen spieren, vooral in stressvolle of onverwachte situaties?"
+          }
+        },
+        {
+          "id": "noradrenaline-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you struggle to stay focused on tasks or find yourself easily distracted, even when you want to focus?",
+            "nl": "Heb je moeite om je aandacht bij taken te houden of merk je dat je snel afgeleid bent, zelfs wanneer je wilt focussen?"
+          }
+        },
+        {
+          "id": "noradrenaline-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you find it difficult to unwind in the evening or do you find yourself in a kind of heightened state of alertness, even when you want to relax?",
+            "nl": "Vind je het lastig om 's avonds tot rust te komen of blijf je in een soort verhoogde staat van paraatheid hangen, ook wanneer je wilt ontspannen?"
+          }
+        },
+        {
+          "id": "noradrenaline-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you're always on or have trouble getting into a calm, safe state?",
+            "nl": "Heb je het gevoel dat je 'altijd aan' staat of moeite hebt om jezelf in een rustige, veilige modus te brengen?"
+          }
+        }
+      ]
+    }
+  ]
+}

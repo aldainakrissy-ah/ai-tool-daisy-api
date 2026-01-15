@@ -1,0 +1,54 @@
+{
+  "id": "adenosine",
+  "title": {
+    "en": "Adenosine",
+    "nl": "Adenosine"
+  },
+  "description": {
+    "en": "The following questions are about your post-exertion energy drop, your recovery rate, your ability to resume activity, and your susceptibility to persistent fatigue.",
+    "nl": "De volgende vragen gaan over je energie daling na belasting, je hersteltempo, je vermogen om weer actief te worden en je gevoeligheid voor aanhoudende vermoeidheid."
+  },
+  "sections": [
+    {
+      "id": "adenosine",
+      "title": {
+        "en": "Adenosine",
+        "nl": "Adenosine"
+      },
+      "questions": [
+        {
+          "id": "adenosine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience severe, slow fatigue after physical or mental exertion, which isn't improved by rest or sleep?",
+            "nl": "Heb je last van zware, trage vermoeidheid na fysieke of mentale inspanning, die niet verbetert door rust of slaap?"
+          }
+        },
+        {
+          "id": "adenosine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you're more likely to give up on tasks or have little mental motivation to stay active, especially after exertion?",
+            "nl": "Heb je het gevoel dat je sneller 'afhaakt' bij taken of dat je weinig mentale motivatie voelt om actief te blijven, vooral na inspanning?"
+          }
+        },
+        {
+          "id": "adenosine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you find it difficult to emerge from periods of recovery or rest, as if your system is struggling to \"switch back on\"?",
+            "nl": "Merk je dat je moeilijk uit periodes van herstel of rust komt, alsof je systeem moeite heeft om 'weer aan te gaan'?"
+          }
+        },
+        {
+          "id": "adenosine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body has put itself into a kind of \"saving mode,\" making it difficult to truly rebuild your energy?",
+            "nl": "Heb je het gevoel dat je lichaam zichzelf in een soort 'spaarstand' heeft gezet, waardoor je moeite hebt om je energie weer echt op te bouwen?"
+          }
+        }
+      ]
+    }
+  ]
+}

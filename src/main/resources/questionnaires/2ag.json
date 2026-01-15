@@ -1,0 +1,54 @@
+{
+  "id": "2ag",
+  "title": {
+    "en": "2-Arachidonoylglycerol (2-AG)",
+    "nl": "2-Arachidonoylglycerol (2-AG)"
+  },
+  "description": {
+    "en": "The following questions are about your ability to release stress, your sense of inner calm, your appetite regulation, and your sensitivity to overstimulation.",
+    "nl": "De volgende vragen gaan over je vermogen om stress los te laten, je gevoel van innerlijke kalmte, je eetlustregulatie en je gevoeligheid voor overprikkeling."
+  },
+  "sections": [
+    {
+      "id": "2ag",
+      "title": {
+        "en": "2-Arachidonoylglycerol (2-AG)",
+        "nl": "2-Arachidonoylglycerol (2-AG)"
+      },
+      "questions": [
+        {
+          "id": "2ag-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience restlessness or tension that doesn't easily disappear, even after relaxing or resting?",
+            "nl": "Heb je last van onrust of gespannenheid die niet makkelijk verdwijnt, ook na ontspanning of rustmomenten?"
+          }
+        },
+        {
+          "id": "2ag-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you find it difficult to regain emotional balance after a stressful event, as if stress \"lingers\"?",
+            "nl": "Voel je moeite om emotionele balans te hervinden na een stressvolle gebeurtenis, alsof stress 'blijft hangen'?"
+          }
+        },
+        {
+          "id": "2ag-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you experience fluctuations in your appetite, for example, increased hunger during stress or decreased appetite when you're restless?",
+            "nl": "Heb je last van schommelingen in eetlust, bijvoorbeeld sterke honger bij stress of juist verminderde eetlust wanneer je onrustig bent?"
+          }
+        },
+        {
+          "id": "2ag-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system is less able to achieve a relaxed, calming state?",
+            "nl": "Heb je het gevoel dat je systeem minder goed in staat is om een ontspannen, rustgevende toestand te bereiken?"
+          }
+        }
+      ]
+    }
+  ]
+}

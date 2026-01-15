@@ -1,0 +1,54 @@
+{
+  "id": "testosteron",
+  "title": {
+    "en": "Testosteron",
+    "nl": "Testosteron"
+  },
+  "description": {
+    "en": "The following questions are about your sense of strength, physical resilience, motivation, and sexual energy. For women, this also includes your sense of physical strength, perseverance, and healthy assertiveness.",
+    "nl": "De volgende vragen gaan over je krachtgevoel, fysieke veerkracht, motivatie en seksuele energie. Voor vrouwen gaat dit ook over je gevoel van fysieke stevigheid, doorzettingsvermogen en gezonde assertiviteit."
+  },
+  "sections": [
+    {
+      "id": "testosteron",
+      "title": {
+        "en": "Testosteron",
+        "nl": "Testosteron"
+      },
+      "questions": [
+        {
+          "id": "testosteron-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you notice a decrease in your muscle strength or physical endurance, even when you try to stay active?",
+            "nl": "Merk je dat je spierkracht of fysieke uithoudingsvermogen verminderd is, ook wanneer je actief probeert te blijven?"
+          }
+        },
+        {
+          "id": "testosteron-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel less driven to take initiative or actively pursue goals?",
+            "nl": "Heb je het gevoel minder 'drive' te hebben om initiatief te nemen of actief doelen na te streven?"
+          }
+        },
+        {
+          "id": "testosteron-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you notice a decrease in morning energy or drive, for example, reduced alertness or muscle strength upon waking?",
+            "nl": "Merk je een afname van ochtendenergie of ochtenddrive, bijvoorbeeld verminderde alertheid of spierkracht bij het opstaan?"
+          }
+        },
+        {
+          "id": "testosteron-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel your strength and vitality as a person are declining, as if your system is functioning less powerfully or decisively?",
+            "nl": "Heb je het gevoel dat je kracht en vitaliteit als persoon afneemt, alsof je systeem minder krachtig of minder daadkrachtig functioneert?"
+          }
+        }
+      ]
+    }
+  ]
+}

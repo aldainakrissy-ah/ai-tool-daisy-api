@@ -1,0 +1,54 @@
+{
+  "id": "leptine",
+  "title": {
+    "en": "Leptine",
+    "nl": "Leptine"
+  },
+  "description": {
+    "en": "The following questions are about your feeling of satiety, stability of body weight, hunger perception and your energy level during the day.",
+    "nl": "De volgende vragen gaan over je gevoel van verzadiging, stabiliteit van lichaamsgewicht, hongerbeleving en je energieniveau gedurende de dag."
+  },
+  "sections": [
+    {
+      "id": "leptine",
+      "title": {
+        "en": "Leptine",
+        "nl": "Leptine"
+      },
+      "questions": [
+        {
+          "id": "leptine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you struggle to feel full after meals, causing you to keep eating or get hungry more quickly?",
+            "nl": "Heb je moeite om je verzadigd te voelen na maaltijden, waardoor je blijft eten of sneller trek hebt?"
+          }
+        },
+        {
+          "id": "leptine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you often feel tired or sluggish, despite adequate nutrition or rest?",
+            "nl": "Voel je je vaker vermoeid of traag, ondanks voldoende voeding of rust?"
+          }
+        },
+        {
+          "id": "leptine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you experience weight fluctuations or a feeling of \"energy drain,\" regardless of how much or what you eat?",
+            "nl": "Heb je last van gewichtsschommelingen of een gevoel van 'energie-lek', ongeacht hoeveel of wat je eet?"
+          }
+        },
+        {
+          "id": "leptine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body is struggling to maintain its energy reserves, as if your metabolic stability is lacking?",
+            "nl": "Heb je het gevoel dat je lichaam moeite heeft om zijn energiereserves in balans te houden, alsof je metabole stabiliteit ontbreekt?"
+          }
+        }
+      ]
+    }
+  ]
+}

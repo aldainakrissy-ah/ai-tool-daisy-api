@@ -1,0 +1,54 @@
+{
+  "id": "vasopressine",
+  "title": {
+    "en": "Vasopressine",
+    "nl": "Vasopressine"
+  },
+  "description": {
+    "en": "The following questions are about your fluid balance, your stress resistance in social situations and your ability to let go of control.",
+    "nl": "De volgende vragen gaan over je vochtbalans, je stressbestendigheid in sociale situaties en je vermogen om controle los te laten."
+  },
+  "sections": [
+    {
+      "id": "vasopressine",
+      "title": {
+        "en": "Vasopressine",
+        "nl": "Vasopressine"
+      },
+      "questions": [
+        {
+          "id": "vasopressine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you regularly experience bloating, water retention, or excessive thirst without a clear explanation?",
+            "nl": "Heb je regelmatig last van een opgeblazen gevoel, vocht vasthouden of juist overmatige dorst zonder duidelijke verklaring?"
+          }
+        },
+        {
+          "id": "vasopressine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you tend to want to maintain control over situations or people, and feel anxious when you can't?",
+            "nl": "Heb je de neiging om controle te willen houden over situaties of mensen, en voel je onrust als dat niet lukt?"
+          }
+        },
+        {
+          "id": "vasopressine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that you become irritated or tense more quickly than you'd like, especially in social interactions?",
+            "nl": "Merk je dat je vooral in sociale interacties sneller geprikkeld of gespannen raakt dan je zou willen?"
+          }
+        },
+        {
+          "id": "vasopressine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system struggles to move smoothly in relationships or situations, as if you're stuck in tension or control?",
+            "nl": "Heb je het gevoel dat je systeem moeite heeft om soepel mee te bewegen in relaties of situaties, alsof je vastloopt in spanning of controle?"
+          }
+        }
+      ]
+    }
+  ]
+}

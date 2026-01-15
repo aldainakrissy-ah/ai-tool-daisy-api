@@ -1,0 +1,54 @@
+{
+  "id": "histamine",
+  "title": {
+    "en": "Histamine",
+    "nl": "Histamine"
+  },
+  "description": {
+    "en": "The following questions are about your sensitivity to stimuli, allergies, your sleep quality and your physical reactions to external influences.",
+    "nl": "De volgende vragen gaan over je gevoeligheid voor prikkels, allergieën, je slaapkwaliteit en je lichamelijke reacties op externe invloeden."
+  },
+  "sections": [
+    {
+      "id": "histamine",
+      "title": {
+        "en": "Histamine",
+        "nl": "Histamine"
+      },
+      "questions": [
+        {
+          "id": "histamine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience allergic reactions such as itching, sneezing, rashes, or shortness of breath, especially when in contact with certain substances or with seasonal changes?",
+            "nl": "Heb je last van allergische reacties zoals jeuk, niezen, huiduitslag of benauwdheid, vooral bij contact met bepaalde stoffen of seizoensveranderingen?"
+          }
+        },
+        {
+          "id": "histamine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that you become overstimulated more easily, for example, by noise, light, or social situations, and that this affects your emotional balance?",
+            "nl": "Merk je dat je sneller overprikkeld bent, bijvoorbeeld door geluid, licht of sociale situaties, en dat dit je emotionele balans beïnvloedt?"
+          }
+        },
+        {
+          "id": "histamine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you have trouble sleeping through the night or do you wake up frequently during the night for no apparent reason?",
+            "nl": "Heb je moeite om goed door te slapen of wordt je 's nachts regelmatig wakker zonder duidelijke aanleiding?"
+          }
+        },
+        {
+          "id": "histamine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system is on high alert, as if your body is constantly alert or sensitive to internal or external stimuli?",
+            "nl": "Heb je het gevoel dat je systeem 'op scherp staat', alsof je lichaam continu alert of gevoelig is voor interne of externe prikkels?"
+          }
+        }
+      ]
+    }
+  ]
+}

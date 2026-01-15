@@ -1,0 +1,54 @@
+{
+  "id": "glutamate",
+  "title": {
+    "en": "Glutamate",
+    "nl": "Glutamaat"
+  },
+  "description": {
+    "en": "The following questions are about your mental acuity, sensitivity to overstimulation, speed of thinking, and your ability to calm down mentally.",
+    "nl": "De volgende vragen gaan over je mentale scherpte, gevoeligheid voor overprikkeling, snelheid van denken en je vermogen om mentaal tot rust te komen."
+  },
+  "sections": [
+    {
+      "id": "glutamate",
+      "title": {
+        "en": "Glutamate",
+        "nl": "Glutamaat"
+      },
+      "questions": [
+        {
+          "id": "glutamate-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience physical restlessness or increased muscle tension, particularly during mental activity or stressful moments?",
+            "nl": "Heb je lichamelijke onrust of verhoogde spierspanning die vooral opkomt bij mentale activiteit of stressmomenten?"
+          }
+        },
+        {
+          "id": "glutamate-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer from racing thoughts, worrying, or difficulty clearing your head?",
+            "nl": "Heb je last van gedachten die blijven doordraaien, piekeren of moeite om je hoofd leeg te maken?"
+          }
+        },
+        {
+          "id": "glutamate-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you have trouble calming down mentally in the evening or after exertion, perhaps due to a hyperactive mind?",
+            "nl": "Heb je moeite om 's avonds of na inspanning mentaal tot rust te komen, bijvoorbeeld door een hyperactieve geest?"
+          }
+        },
+        {
+          "id": "glutamate-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your brain is constantly \"on,\" as if your system no longer has a natural rest or recovery mode?",
+            "nl": "Heb je het gevoel dat je brein voortdurend 'aan staat', alsof je systeem geen natuurlijke rust- of herstelmodus meer kent?"
+          }
+        }
+      ]
+    }
+  ]
+}

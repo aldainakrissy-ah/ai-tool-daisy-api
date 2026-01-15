@@ -1,0 +1,54 @@
+{
+  "id": "bradykinine",
+  "title": {
+    "en": "Bradykinine",
+    "nl": "Bradykinine"
+  },
+  "description": {
+    "en": "The following questions are about your sensitivity to inflammation, pain reactions, swelling and your physical resilience after exertion.",
+    "nl": "De volgende vragen gaan over je gevoeligheid voor ontsteking, pijnreacties, zwelling en je lichamelijke veerkracht na belasting."
+  },
+  "sections": [
+    {
+      "id": "bradykinine",
+      "title": {
+        "en": "Bradykinine",
+        "nl": "Bradykinine"
+      },
+      "questions": [
+        {
+          "id": "bradykinine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience rapid swelling or redness, for example, from insect bites, minor injuries, or pressure sores?",
+            "nl": "Heb je last van snel optredende zwelling of roodheid bij bijvoorbeeld insectenbeten, kleine blessures of drukplekken?"
+          }
+        },
+        {
+          "id": "bradykinine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that physical complaints (such as pain or swelling) affect your mood more quickly, for example, due to irritation or emotional irritability?",
+            "nl": "Merk je dat lichamelijke klachten (zoals pijn of zwelling) je stemming sneller beïnvloeden, bijvoorbeeld door irritatie of emotionele prikkelbaarheid?"
+          }
+        },
+        {
+          "id": "bradykinine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body is stuck in an inflammatory response for a longer period of time, for example, after an injury or infection?",
+            "nl": "Heb je het gevoel dat je lichaam langer 'blijft hangen' in een ontstekingsreactie, bijvoorbeeld na een blessure of infectie?"
+          }
+        },
+        {
+          "id": "bradykinine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body is overreacting too quickly to minor stimuli, as if your natural healing balance has been disrupted?",
+            "nl": "Heb je het gevoel dat je lichaam te snel in een 'overreactie' schiet op kleine prikkels, alsof je natuurlijke herstelbalans verstoord is?"
+          }
+        }
+      ]
+    }
+  ]
+}

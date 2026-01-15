@@ -1,0 +1,54 @@
+{
+  "id": "somatropine",
+  "title": {
+    "en": "Somatropine",
+    "nl": "Somatropine"
+  },
+  "description": {
+    "en": "The following questions are about your physical recovery, your sense of strength and vitality, your recovery rate after exercise, and your youthfulness in physical functioning.",
+    "nl": "De volgende vragen gaan over je fysieke herstel, je gevoel van kracht en vitaliteit, je herstelsnelheid na inspanning en je jeugdigheid in lichamelijk functioneren."
+  },
+  "sections": [
+    {
+      "id": "somatropine",
+      "title": {
+        "en": "Somatropine",
+        "nl": "Somatropine"
+      },
+      "questions": [
+        {
+          "id": "somatropine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you find it harder to recover after physical exertion or do you experience prolonged muscle pain or stiffness more often?",
+            "nl": "Merk je dat je minder makkelijk herstelt na fysieke inspanning of vaker last hebt van langdurige spierpijn of stijfheid?"
+          }
+        },
+        {
+          "id": "somatropine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel less vital or physically youthful, even when you exercise enough?",
+            "nl": "Heb je het gevoel minder vitaliteit of fysieke jeugdigheid te ervaren, ook wanneer je voldoende beweegt?"
+          }
+        },
+        {
+          "id": "somatropine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you find your sleep less restorative, for example, waking up tired after a full night's sleep?",
+            "nl": "Merk je dat je slaap minder herstellend is, bijvoorbeeld dat je na een volledige nacht slapen toch vermoeid wakker wordt?"
+          }
+        },
+        {
+          "id": "somatropine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body is less able to repair itself, as if your physical aging seems to be accelerating?",
+            "nl": "Heb je het gevoel dat je lichaam minder goed in staat is om zichzelf te herstellen, alsof je fysieke veroudering sneller lijkt te verlopen?"
+          }
+        }
+      ]
+    }
+  ]
+}

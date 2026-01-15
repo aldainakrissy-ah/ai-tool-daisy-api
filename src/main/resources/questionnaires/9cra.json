@@ -1,0 +1,54 @@
+{
+  "id": "9cra",
+  "title": {
+    "en": "9-cis-retinolzuur",
+    "nl": "9-cis-retinolzuur"
+  },
+  "description": {
+    "en": "The following questions are about your recovery capacity, skin and mucous membrane condition, visual acuity in low light, and your mental clarity.",
+    "nl": "De volgende vragen gaan over je herstelvermogen, huid- en slijmvliesconditie, visuele scherpte bij weinig licht en je mentale helderheid."
+  },
+  "sections": [
+    {
+      "id": "9cra",
+      "title": {
+        "en": "9-cis-retinolzuur",
+        "nl": "9-cis-retinolzuur"
+      },
+      "questions": [
+        {
+          "id": "retinol-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that wounds or skin irritations heal slowly, or that you are more prone to dry skin or mucous membranes?",
+            "nl": "Merk je dat wondjes of huidirritaties bij jou traag genezen of dat je sneller last hebt van droge huid of slijmvliezen?"
+          }
+        },
+        {
+          "id": "retinol-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you're experiencing brain fog or slow thinking and concentration, especially when you're tired?",
+            "nl": "Heb je het gevoel dat je last hebt van een brain fog of traagheid in denken en concentratie, vooral wanneer je vermoeid bent?"
+          }
+        },
+        {
+          "id": "retinol-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer from night blindness, or do you notice that your visual acuity is noticeably reduced in the evening or night?",
+            "nl": "Heb je last van nachtblindheid of merk je dat je visuele scherpte in de avond of nacht duidelijk verminderd is?"
+          }
+        },
+        {
+          "id": "retinol-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system isn't recovering or rejuvenating sufficiently, as if repair mechanisms aren't cleaning or renewing themselves sufficiently?",
+            "nl": "Heb je het gevoel dat je systeem onvoldoende herstelt of verjongt, alsof herstelmechanismen niet voldoende opschonen of vernieuwen?"
+          }
+        }
+      ]
+    }
+  ]
+}

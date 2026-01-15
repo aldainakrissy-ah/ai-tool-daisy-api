@@ -1,0 +1,54 @@
+{
+  "id": "anandaminde",
+  "title": {
+    "en": "Anandaminde",
+    "nl": "Anandaminde"
+  },
+  "description": {
+    "en": "The following questions are about your ability to experience peace and contentment, your resistance to stress, your sensitivity to pain, and your sense of inner well-being.",
+    "nl": "De volgende vragen gaan over je vermogen om rust en tevredenheid te ervaren, je stressbestendigheid, je gevoeligheid voor pijn en je gevoel van innerlijk welzijn."
+  },
+  "sections": [
+    {
+      "id": "anandaminde",
+      "title": {
+        "en": "Anandaminde",
+        "nl": "Anandaminde"
+      },
+      "questions": [
+        {
+          "id": "anandaminde-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience increased sensitivity to pain or physical discomfort, even with relatively mild stimuli?",
+            "nl": "Heb je last van een verhoogde gevoeligheid voor pijn of lichamelijke ongemakken, ook bij relatief milde prikkels?"
+          }
+        },
+        {
+          "id": "anandaminde-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you find it difficult to truly relax or experience moments of happiness or contentment, even when prompted?",
+            "nl": "Heb je moeite om echt te ontspannen of momenten van geluk of tevredenheid te voelen, zelfs wanneer daar aanleiding toe is?"
+          }
+        },
+        {
+          "id": "anandaminde-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you find it difficult to quiet your thoughts or fully relax your body during moments of rest?",
+            "nl": "Merk je dat je moeite hebt om in rustmomenten je gedachten tot stilte te brengen of je lichaam volledig te laten ontspannen?"
+          }
+        },
+        {
+          "id": "anandaminde-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel disconnected from inner contentment or well-being, as if joy or peace are less accessible?",
+            "nl": "Heb je het gevoel dat je 'losgekoppeld' bent geraakt van innerlijke tevredenheid of welzijn, alsof vreugde of rust minder toegankelijk zijn?"
+          }
+        }
+      ]
+    }
+  ]
+}

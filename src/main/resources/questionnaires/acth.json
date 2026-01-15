@@ -1,0 +1,54 @@
+{
+  "id": "acth",
+  "title": {
+    "en": "ACTH",
+    "nl": "ACTH"
+  },
+  "description": {
+    "en": "The following questions are about your energy levels when you wake up, your response to stress, and how your system switches between action and recovery.",
+    "nl": "De volgende vragen gaan over je energieniveau bij het opstaan, je reactie op stress en hoe je systeem schakelt tussen actie en herstel."
+  },
+  "sections": [
+    {
+      "id": "acth",
+      "title": {
+        "en": "ACTH",
+        "nl": "ACTH"
+      },
+      "questions": [
+        {
+          "id": "acth-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you often feel exhausted when you wake up or have trouble getting going, even after enough sleep?",
+            "nl": "Voel je je bij het opstaan vaak uitgeput of heb je moeite om op gang te komen, zelfs na voldoende slaap?"
+          }
+        },
+        {
+          "id": "acth-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you quickly go into overdrive when stressed, or that you freeze up?",
+            "nl": "Heb je het gevoel dat je bij stress snel in een soort overdrive schiet, of juist blokkeert?"
+          }
+        },
+        {
+          "id": "acth-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you struggle to maintain a stable energy level throughout the day?",
+            "nl": "Heb je moeite om over de dag heen een stabiel energieniveau te behouden?"
+          }
+        },
+        {
+          "id": "acth-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system no longer knows when to activate and when to recover?",
+            "nl": "Heb je het gevoel dat je systeem niet meer weet wanneer het moet activeren en wanneer het moet herstellen?"
+          }
+        }
+      ]
+    }
+  ]
+}

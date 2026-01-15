@@ -1,0 +1,54 @@
+{
+  "id": "estradiol",
+  "title": {
+    "en": "Estradiol",
+    "nl": "Estradiol"
+  },
+  "description": {
+    "en": "The following questions are about your feminine health, your cycle, your mood in relation to hormonal changes and your sense of feminine vitality.",
+    "nl": "De volgende vragen gaan over je vrouwelijke gezondheid, je cyclus, je stemming in relatie tot hormonale veranderingen en je gevoel van vrouwelijke vitaliteit."
+  },
+  "sections": [
+    {
+      "id": "estradiol",
+      "title": {
+        "en": "Estradiol",
+        "nl": "Estradiol"
+      },
+      "questions": [
+        {
+          "id": "estradiol-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience physical complaints that you feel strongly connected to your cycle, such as painful periods, tender breasts, or fatigue around menstruation?",
+            "nl": "Heb je last van lichamelijke klachten die je sterk verbonden voelt met je cyclus, zoals pijnlijke menstruaties, gevoelige borsten of vermoeidheid rond de menstruatie?"
+          }
+        },
+        {
+          "id": "estradiol-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that your mood is strongly influenced by your cycle, for example, by periods of irritability, sadness, or emotional instability?",
+            "nl": "Merk je dat je stemming sterk beïnvloed wordt door je cyclus, bijvoorbeeld door periodes van prikkelbaarheid, somberte of emotionele labiliteit?"
+          }
+        },
+        {
+          "id": "estradiol-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer from irregular cycles or notice that the usual rhythms of your female body, such as menstruation or ovulation, seem disrupted?",
+            "nl": "Heb je last van onregelmatige cycli of merk je dat de gebruikelijke ritmes van je vrouwelijke lichaam, zoals menstruatie of ovulatie, verstoord lijken?"
+          }
+        },
+        {
+          "id": "estradiol-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel that your feminine energy, your feminine power, or your sense of womanhood is diminished, for example, due to exhaustion, menstrual problems, or hormonal imbalance?",
+            "nl": "Heb je het gevoel dat je vrouwelijke energie, je vrouwelijke kracht of je gevoel van vrouw-zijn verminderd is, bijvoorbeeld door uitputting, cyclusproblemen of hormonale disbalans?"
+          }
+        }
+      ]
+    }
+  ]
+}

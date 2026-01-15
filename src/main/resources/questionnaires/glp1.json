@@ -1,0 +1,54 @@
+{
+  "id": "glp1",
+  "title": {
+    "en": "GLP-1",
+    "nl": "GLP-1"
+  },
+  "description": {
+    "en": "The following questions are about your feeling of fullness, your need for food between meals, your sensitivity to sugars and your energy after eating.",
+    "nl": "De volgende vragen gaan over je verzadigingsgevoel, je behoefte aan eten tussen maaltijden door, je gevoeligheid voor suikers en je energie na het eten."
+  },
+  "sections": [
+    {
+      "id": "glp1",
+      "title": {
+        "en": "GLP-1",
+        "nl": "GLP-1"
+      },
+      "questions": [
+        {
+          "id": "glp1-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you struggle to feel full after a meal, causing you to continue eating or quickly become hungry again?",
+            "nl": "Heb je moeite om je verzadigd te voelen na een maaltijd, waardoor je blijft dooreten of snel weer trek krijgt?"
+          }
+        },
+        {
+          "id": "glp1-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you often feel lethargic, sleepy, or mentally sluggish after eating, especially after larger or carbohydrate-rich meals?",
+            "nl": "Voel je je vaak loom, slaperig of mentaal traag na het eten, vooral na grotere of koolhydraatrijke maaltijden?"
+          }
+        },
+        {
+          "id": "glp1-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer from irregular eating patterns or the feeling of constantly needing to eat something without actually being hungry?",
+            "nl": "Heb je last van onregelmatige eetpatronen of het gevoel voortdurend 'iets te moeten eten' zonder echte honger?"
+          }
+        },
+        {
+          "id": "glp1-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body doesn't communicate well when it's had enough, as if your satiety signal isn't functioning properly?",
+            "nl": "Heb je het gevoel dat je lichaam slecht communiceert wanneer het genoeg heeft gehad, alsof je verzadigingssignaal niet goed functioneert?"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "id": "melatonin",
+  "title": {
+    "en": "Melatonine",
+    "nl": "Melatonine"
+  },
+  "description": {
+    "en": "The following questions are about your sleep quality, ability to fall asleep, nighttime recovery, and your sense of circadian rhythm.",
+    "nl": "De volgende vragen gaan over je slaapkwaliteit, inslaapvermogen, nachtelijk herstel en je gevoel voor dag-nachtritme."
+  },
+  "sections": [
+    {
+      "id": "melatonine",
+      "title": {
+        "en": "Melatonine",
+        "nl": "Melatonine"
+      },
+      "questions": [
+        {
+          "id": "melatonine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you have trouble falling asleep at night, even when you're tired?",
+            "nl": "Heb je moeite om 's avonds in slaap te vallen, zelfs wanneer je moe bent?"
+          }
+        },
+        {
+          "id": "melatonine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you often wake up feeling unrefreshed, lethargic, or groggy?",
+            "nl": "Voel je je regelmatig 's ochtends niet hersteld wakker worden, met een loom of suf gevoel?"
+          }
+        },
+        {
+          "id": "melatonine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you notice your circadian rhythm easily disrupted, for example, by time differences, seasonal changes, or irregular work hours?",
+            "nl": "Merk je dat je bioritme makkelijk ontregeld raakt, bijvoorbeeld bij tijdsverschil, seizoenswisselingen of onregelmatige werktijden?"
+          }
+        },
+        {
+          "id": "melatonine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your internal clock isn't properly calibrated, as if your system no longer experiences a natural flow between day and night?",
+            "nl": "Heb je het gevoel dat je interne klok niet goed afgestemd is, alsof je systeem geen natuurlijke 'flow' meer ervaart tussen dag en nacht?"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "id": "progesteron",
+  "title": {
+    "en": "Progesteron",
+    "nl": "Progesteron"
+  },
+  "description": {
+    "en": "The following questions are about your hormonal balance around your menstrual cycle, your sense of calm, your sleep quality and your feminine well-being.",
+    "nl": "De volgende vragen gaan over je hormonale balans rond je menstruatiecyclus, je gevoel van kalmte, je slaapkwaliteit en je vrouwelijke welzijn."
+  },
+  "sections": [
+    {
+      "id": "progesteron",
+      "title": {
+        "en": "Progesteron",
+        "nl": "Progesteron"
+      },
+      "questions": [
+        {
+          "id": "progesteron-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience physical restlessness or tension, especially in the second half of your cycle or around your period?",
+            "nl": "Heb je last van lichamelijke onrust of gespannenheid, vooral in de tweede helft van je cyclus of rond je menstruatie?"
+          }
+        },
+        {
+          "id": "progesteron-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel more irritable or emotionally volatile in the days leading up to your period?",
+            "nl": "Voel je je sneller prikkelbaar of emotioneel schommelend in de dagen voor je menstruatie?"
+          }
+        },
+        {
+          "id": "progesteron-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you have trouble sleeping well during certain phases of your cycle, for example, just before your period?",
+            "nl": "Heb je moeite om goed door te slapen in bepaalde fasen van je cyclus, bijvoorbeeld vlak voor je menstruatie?"
+          }
+        },
+        {
+          "id": "progesteron-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your feminine rhythm is disrupted, as if you're less in touch with your natural cyclical strength and calmness?",
+            "nl": "Heb je het gevoel dat je vrouwelijke ritme verstoord is, alsof je minder in contact bent met je natuurlijke cyclische kracht en verzachting?"
+          }
+        }
+      ]
+    }
+  ]
+}

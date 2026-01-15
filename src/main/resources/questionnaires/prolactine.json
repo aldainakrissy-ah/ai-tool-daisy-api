@@ -1,0 +1,54 @@
+{
+  "id": "prolactine",
+  "title": {
+    "en": "Prolactine",
+    "nl": "Prolactine"
+  },
+  "description": {
+    "en": "The following questions are about your sense of recovery from stress, your ability to feel calm, your caring attitude, and your hormonal balance.",
+    "nl": "De volgende vragen gaan over je gevoel van herstel na stress, je innerlijke rustvermogen, je zorggerichtheid en je hormonale balans."
+  },
+  "sections": [
+    {
+      "id": "prolactine",
+      "title": {
+        "en": "Prolactine",
+        "nl": "Prolactine"
+      },
+      "questions": [
+        {
+          "id": "prolactine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you find yourself slow to get going or more likely to linger in a passive, sluggish state, even when you want to activate?",
+            "nl": "Merk je dat je traag op gang komt of juist sneller in een passieve, trage toestand blijft hangen, ook wanneer je wilt activeren?"
+          }
+        },
+        {
+          "id": "prolactine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel a decrease in caring, emotional connection, or motivation to connect socially?",
+            "nl": "Voel je een afname van zorgzaamheid, affectieve verbinding of motivatie om je sociaal te verbinden?"
+          }
+        },
+        {
+          "id": "prolactine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you notice disruptions in your hormonal rhythms, such as irregular cycles (for women), loss of libido, or fluctuations in satiety or appetite?",
+            "nl": "Merk je verstoringen in je hormonale ritmes, zoals onregelmatigheid van cyclus (vrouwen), libidoverlies of schommelingen in verzadiging of eetlust?"
+          }
+        },
+        {
+          "id": "prolactine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system is \"stuck\" in recovery mode or inhibited in spontaneous activation and zest for life?",
+            "nl": "Heb je het gevoel dat je systeem 'vastloopt' in herstelmodus of geremd raakt in spontane activatie en levenslust?"
+          }
+        }
+      ]
+    }
+  ]
+}

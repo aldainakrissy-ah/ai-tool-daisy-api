@@ -1,0 +1,54 @@
+{
+  "id": "serotonine",
+  "title": {
+    "en": "Serotonine",
+    "nl": "Serotonine"
+  },
+  "description": {
+    "en": "The following questions are about your mood, your inner peace, your sleep quality, and your sense of connection with yourself and others.",
+    "nl": "De volgende vragen gaan over je stemming, je innerlijke rust, je slaapkwaliteit en je gevoel van verbondenheid met jezelf en anderen."
+  },
+  "sections": [
+    {
+      "id": "serotonine",
+      "title": {
+        "en": "Serotonine",
+        "nl": "Serotonine"
+      },
+      "questions": [
+        {
+          "id": "serotonine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience physical restlessness or tension, for example, due to an upset stomach or a jittery feeling for no apparent reason?",
+            "nl": "Merk je lichamelijke onrust of gespannenheid, bijvoorbeeld door een gespannen maag of een gejaagd gevoel zonder duidelijke reden?"
+          }
+        },
+        {
+          "id": "serotonine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer from recurring sadness, irritability, or a sense of emotional instability?",
+            "nl": "Heb je last van terugkerende somberheid, prikkelbaarheid of een gevoel van emotionele instabiliteit?"
+          }
+        },
+        {
+          "id": "serotonine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you have trouble sleeping through the night or do you wake up feeling emotionally flat or empty in the morning?",
+            "nl": "Heb je moeite met doorslapen of voel je je 's ochtends bij het ontwaken emotioneel vlak of leeg?"
+          }
+        },
+        {
+          "id": "serotonine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you're struggling to truly connect with yourself or others, as if your emotional resilience has weakened?",
+            "nl": "Heb je het gevoel dat je moeite hebt om echt contact te maken met jezelf of anderen, alsof je emotionele veerkracht verzwakt is?"
+          }
+        }
+      ]
+    }
+  ]
+}

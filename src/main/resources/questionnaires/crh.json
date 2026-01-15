@@ -1,0 +1,54 @@
+{
+  "id": "crh",
+  "title": {
+    "en": "CRH",
+    "nl": "CRH"
+  },
+  "description": {
+    "en": "The following questions are about your response to acute stress, your tendency to rapid activation or anxiety spikes, and your ability to calm down again.",
+    "nl": "De volgende vragen gaan over je reactie op acute stress, je neiging tot snelle activatie of angstpieken, en je vermogen om weer tot rust te komen."
+  },
+  "sections": [
+    {
+      "id": "crh",
+      "title": {
+        "en": "CRH",
+        "nl": "CRH"
+      },
+      "questions": [
+        {
+          "id": "crh-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you notice your body quickly becoming tense and agitated when unexpected events occur?",
+            "nl": "Merk je dat je lichaam snel in een gespannen, gejaagde toestand schiet bij onverwachte gebeurtenissen?"
+          }
+        },
+        {
+          "id": "crh-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you regularly experience feelings of panic or sudden anxiety reactions, even with relatively minor triggers?",
+            "nl": "Heb je geregeld last van paniekgevoelens of plotselinge angstreacties, zelfs bij relatief kleine triggers?"
+          }
+        },
+        {
+          "id": "crh-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you have trouble relaxing quickly after a stressful situation, for example, in the evening after a busy day?",
+            "nl": "Heb je moeite om je na een stressvolle situatie weer snel te ontspannen, bijvoorbeeld 's avonds na een drukke dag?"
+          }
+        },
+        {
+          "id": "crh-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system is overreacting to stress, as if your alarm button is being pressed too quickly?",
+            "nl": "Heb je het gevoel dat je systeem 'overgevoelig' reageert op stress, alsof je alarmknop te snel wordt ingedrukt?"
+          }
+        }
+      ]
+    }
+  ]
+}

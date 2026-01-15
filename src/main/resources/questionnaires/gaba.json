@@ -1,0 +1,54 @@
+{
+  "id": "gaba",
+  "title": {
+    "en": "GABA",
+    "nl": "GABA"
+  },
+  "description": {
+    "en": "The following questions are about your inner peace, your ability to sleep well, your sensitivity to overstimulation and your ability to recover.",
+    "nl": "De volgende vragen gaan over je innerlijke rust, je vermogen om goed te slapen, je gevoeligheid voor overprikkeling en je herstelvermogen."
+  },
+  "sections": [
+    {
+      "id": "gaba",
+      "title": {
+        "en": "GABA",
+        "nl": "GABA"
+      },
+      "questions": [
+        {
+          "id": "gaba-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience increased muscle tension or physical restlessness, especially during rest periods or in the evening?",
+            "nl": "Heb je last van verhoogde spierspanning of lichamelijke onrust, vooral in rustmomenten of 's avonds?"
+          }
+        },
+        {
+          "id": "gaba-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you have difficulty calming down mentally, for example, due to worrying thoughts or increased inner turmoil?",
+            "nl": "Heb je moeite om mentaal tot rust te komen, bijvoorbeeld door piekergedachten of verhoogde innerlijke onrust?"
+          }
+        },
+        {
+          "id": "gaba-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you have trouble falling asleep or do you often wake up at night for no apparent reason?",
+            "nl": "Heb je moeite om goed in te slapen of word je 's nachts vaak wakker zonder duidelijke reden?"
+          }
+        },
+        {
+          "id": "gaba-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system can't shut down properly, as if you're no longer reaching deep recovery mode?",
+            "nl": "Heb je het gevoel dat je systeem onvoldoende kan afschakelen, alsof je geen diepe herstelmodus meer bereikt?"
+          }
+        }
+      ]
+    }
+  ]
+}

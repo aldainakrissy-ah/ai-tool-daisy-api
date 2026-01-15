@@ -1,0 +1,54 @@
+{
+  "id": "endorfine-mdk",
+  "title": {
+    "en": "mu-, delta-, en kappa endorfine",
+    "nl": "mu-, delta-, en kappa endorfine"
+  },
+  "description": {
+    "en": "The following questions are about your sensitivity to pain, your ability to experience satisfaction after exertion or social interaction, and your ability to recover after physical or mental stress.",
+    "nl": "De volgende vragen gaan over je pijngevoeligheid, je vermogen om voldoening te ervaren na inspanning of sociale interactie, en je herstellend vermogen na fysieke of mentale belasting."
+  },
+  "sections": [
+    {
+      "id": "endorfine-mdk",
+      "title": {
+        "en": "mu-, delta-, en kappa endorfine",
+        "nl": "mu-, delta-, en kappa endorfine"
+      },
+      "questions": [
+        {
+          "id": "endorfine-mdk-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience increased pain sensitivity or difficulty tolerating physical exertion without prolonged after-pain?",
+            "nl": "Heb je last van verhoogde pijngevoeligheid of moeite om fysieke inspanning zonder langdurige napijn te verdragen?"
+          }
+        },
+        {
+          "id": "endorfine-mdk-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel less fulfilled or \"good tired\" after exertion or social activities, but rather run out faster?",
+            "nl": "Heb je het gevoel dat je na inspanning of sociale activiteiten minder voldoening of 'goede moeheid' ervaart, maar juist eerder leegloopt?"
+          }
+        },
+        {
+          "id": "endorfine-mdk-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that you recover less well after physical or mental strain, for example, experiencing more muscle soreness, slow recovery, or emotional exhaustion?",
+            "nl": "Merk je dat je minder goed herstelt na fysieke of mentale belasting, bijvoorbeeld meer last hebt van spierpijn, traag herstel of emotionele uitputting?"
+          }
+        },
+        {
+          "id": "endorfine-mdk-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your natural \"feel-good\" has disappeared after healthy exertion or social interaction, as if reward and recovery are lacking?",
+            "nl": "Heb je het gevoel dat je natuurlijke 'feelgood' na gezonde inspanning of sociaal contact verdwenen is, alsof beloning en herstel uitblijven?"
+          }
+        }
+      ]
+    }
+  ]
+}

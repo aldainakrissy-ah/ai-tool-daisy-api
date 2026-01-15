@@ -1,0 +1,54 @@
+{
+  "id": "cortisol",
+  "title": {
+    "en": "Cortisol",
+    "nl": "Cortisol"
+  },
+  "description": {
+    "en": "The following questions are about your stress levels, energy balance during the day, recovery time after busy times, and your sleep pattern.",
+    "nl": "De volgende vragen gaan over je stressbelasting, energiebalans gedurende de dag, hersteltijd na drukte en je slaappatroon."
+  },
+  "sections": [
+    {
+      "id": "cortisol",
+      "title": {
+        "en": "Cortisol",
+        "nl": "Cortisol"
+      },
+      "questions": [
+        {
+          "id": "cortisol-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you struggle to get going in the morning or feel exhausted after exertion or busy periods?",
+            "nl": "Heb je moeite om in de ochtend op gang te komen of voel je een gevoel van uitputting na inspanning of drukke perioden?"
+          }
+        },
+        {
+          "id": "cortisol-q2",
+          "type": "text",
+          "text": {
+            "en": "Are you more likely to experience irritability or restlessness during busy times, unexpected situations, or social pressures?",
+            "nl": "Heb je sneller last van prikkelbaarheid of onrust bij drukte, onverwachte situaties of sociale belasting?"
+          }
+        },
+        {
+          "id": "cortisol-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer from disrupted circadian rhythms, such as difficulty falling asleep or struggling with energy levels throughout the day?",
+            "nl": "Heb je last van ontregelde dag-nachtritmes, bijvoorbeeld moeilijk in slaap vallen of moeite met energieniveau door de dag heen?"
+          }
+        },
+        {
+          "id": "cortisol-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system is constantly \"on\" or burnt out, as if the transition between action and recovery isn't smooth?",
+            "nl": "Heb je het gevoel dat je systeem voortdurend 'aan' staat of juist opgebrand is, alsof het schakelen tussen actie en herstel niet soepel verloopt?"
+          }
+        }
+      ]
+    }
+  ]
+}

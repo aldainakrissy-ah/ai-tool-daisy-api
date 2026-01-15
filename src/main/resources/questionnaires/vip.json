@@ -1,0 +1,54 @@
+{
+  "id": "vip",
+  "title": {
+    "en": "VIP",
+    "nl": "VIP"
+  },
+  "description": {
+    "en": "The following questions are about your ability to recover, your sensitivity to inflammation, your sleep quality and your perception of social calm.",
+    "nl": "De volgende vragen gaan over je vermogen om te herstellen, je gevoeligheid voor ontstekingsklachten, je slaapkwaliteit en je sociale rustbeleving."
+  },
+  "sections": [
+    {
+      "id": "vip",
+      "title": {
+        "en": "VIP",
+        "nl": "VIP"
+      },
+      "questions": [
+        {
+          "id": "vip-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience symptoms related to low-grade inflammation, such as stiffness, pain, or a feeling of being \"agitated,\" especially during rest periods?",
+            "nl": "Heb je last van klachten die samenhangen met laaggradige ontsteking, zoals stijfheid, pijn of 'opgejaagdheid' in je lijf, vooral in rustmomenten?"
+          }
+        },
+        {
+          "id": "vip-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you struggle to feel connected in social situations, for example, because you become overstimulated or withdraw easily?",
+            "nl": "Heb je moeite om je verbonden te voelen in sociale situaties, bijvoorbeeld doordat je snel overprikkeld raakt of je terugtrekt?"
+          }
+        },
+        {
+          "id": "vip-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you sleep restlessly or find yourself struggling to sleep deeply, with frequent nighttime awakenings or restless mornings?",
+            "nl": "Slaap je onrustig of merk je dat je moeite hebt om 'diep' te slapen, met veel nachtelijk ontwaken of een onrustige ochtend?"
+          }
+        },
+        {
+          "id": "vip-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system struggles to truly enter a deep recovery mode, as if you're always \"on\" or in a low-level alert state?",
+            "nl": "Heb je het gevoel dat je systeem moeite heeft om echt in een diepe herstelstand te komen, alsof je altijd 'aan staat' of in een laaggradige alarmtoestand verkeert?"
+          }
+        }
+      ]
+    }
+  ]
+}

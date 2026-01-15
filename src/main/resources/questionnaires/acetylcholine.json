@@ -1,0 +1,54 @@
+{
+  "id": "acetylcholine",
+  "title": {
+    "en": "Acetylcholine",
+    "nl": "Acetylcholine"
+  },
+  "description": {
+    "en": "The following questions are about your concentration, memory, muscle tension, and your ability to function clearly and relaxed.",
+    "nl": "De volgende vragen gaan over je concentratievermogen, geheugen, spierspanning en je vermogen om helder en ontspannen te functioneren."
+  },
+  "sections": [
+    {
+      "id": "acetylcholine",
+      "title": {
+        "en": "Acetylcholine",
+        "nl": "Acetylcholine"
+      },
+      "questions": [
+        {
+          "id": "acetylcholine-q1",
+          "type": "text",
+          "text": {
+            "en": "Are you experiencing increased muscle tension or weakness, without a clear physical explanation?",
+            "nl": "Ervaar je last van verhoogde spierspanning of juist spierzwakte, zonder duidelijke lichamelijke verklaring?"
+          }
+        },
+        {
+          "id": "acetylcholine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you notice your memory failing you more often or that you have difficulty absorbing new information?",
+            "nl": "Merk je dat je geheugen je vaker in de steek laat of dat je moeite hebt om nieuwe informatie goed op te nemen?"
+          }
+        },
+        {
+          "id": "acetylcholine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you have moments when you suddenly \"slow down\" mentally, such as sudden lethargy or mental sluggishness during the day?",
+            "nl": "Heb je momenten dat je plotseling mentaal 'wegzakt', zoals plotselinge loomheid of mentale traagheid gedurende de dag?"
+          }
+        },
+        {
+          "id": "acetylcholine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your mental sharpness has decreased, as if you're \"foggy\" or slower in thinking and acting than you actually are?",
+            "nl": "Heb je het gevoel dat je mentale scherpte is afgenomen, alsof je 'mistig' of trager bent in denken en handelen dan je eigenlijk bent?"
+          }
+        }
+      ]
+    }
+  ]
+}

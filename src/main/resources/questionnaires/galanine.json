@@ -1,0 +1,54 @@
+{
+  "id": "galanine",
+  "title": {
+    "en": "Galanine",
+    "nl": "Galanine"
+  },
+  "description": {
+    "en": "The following questions are about your resting capacity, sleep recovery, stress relief, and your relationship with food (particularly high-fat foods).",
+    "nl": "De volgende vragen gaan over je rustvermogen, slaapherstel, stressontlading en je relatie tot voeding (met name vetrijke voeding)."
+  },
+  "sections": [
+    {
+      "id": "galanine",
+      "title": {
+        "en": "Galanine",
+        "nl": "Galanine"
+      },
+      "questions": [
+        {
+          "id": "galanine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you have difficulty physically relaxing after exertion or stress, for example, due to muscle tension or internal tension?",
+            "nl": "Heb je moeite om lichamelijk tot rust te komen na inspanning of stress, bijvoorbeeld door onrust in spieren of inwendige spanning?"
+          }
+        },
+        {
+          "id": "galanine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you find yourself regularly craving fatty or comforting foods, especially during periods of stress or fatigue?",
+            "nl": "Merk je dat je geregeld behoefte hebt aan vetrijke of troostrijke voeding, vooral in periodes van stress of vermoeidheid?"
+          }
+        },
+        {
+          "id": "galanine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you sleep restlessly or find it difficult to fall into deep, restorative sleep?",
+            "nl": "Slaap je onrustig of merk je dat je moeite hebt om in een diepe, herstellende slaap te komen?"
+          }
+        },
+        {
+          "id": "galanine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your recovery capacity is under pressure, as if your system can't relax or regenerate sufficiently?",
+            "nl": "Heb je het gevoel dat je herstelvermogen onder druk staat, alsof je systeem onvoldoende kan ontspannen of regenereren?"
+          }
+        }
+      ]
+    }
+  ]
+}

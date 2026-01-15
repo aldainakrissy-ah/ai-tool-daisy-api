@@ -1,0 +1,54 @@
+{
+  "id": "glycine",
+  "title": {
+    "en": "Glycine",
+    "nl": "Glycine"
+  },
+  "description": {
+    "en": "The following questions are about your muscle relaxation, sleep quality, wound healing, and your ability to relax physically and mentally.",
+    "nl": "De volgende vragen gaan over je spierontspanning, slaapkwaliteit, wondherstel en je vermogen om lichamelijk en geestelijk tot rust te komen."
+  },
+  "sections": [
+    {
+      "id": "glycine",
+      "title": {
+        "en": "Glycine",
+        "nl": "Glycine"
+      },
+      "questions": [
+        {
+          "id": "glycine-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience increased muscle tension or stiffness, especially at rest or after exertion?",
+            "nl": "Heb je last van verhoogde spierspanning of stijfheid, vooral in rust of na inspanning?"
+          }
+        },
+        {
+          "id": "glycine-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you find yourself restless or having difficulty relaxing deeply, even when you consciously take the time to do so?",
+            "nl": "Merk je dat je onrustig bent of moeilijk diep kunt ontspannen, ook wanneer je daar bewust tijd voor neemt?"
+          }
+        },
+        {
+          "id": "glycine-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you struggle to sleep deeply and restoratively, for example, due to frequent waking or restless nights?",
+            "nl": "Heb je moeite om diep en herstellend te slapen, bijvoorbeeld door vaak wakker worden of onrustige nachten?"
+          }
+        },
+        {
+          "id": "glycine-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your body recovers less well after exertion or minor injuries, as if the recovery process is slowed down?",
+            "nl": "Heb je het gevoel dat je lichaam minder goed herstelt na inspanning of kleine blessures, alsof het herstelproces vertraagd verloopt?"
+          }
+        }
+      ]
+    }
+  ]
+}

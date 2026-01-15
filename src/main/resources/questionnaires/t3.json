@@ -1,0 +1,54 @@
+{
+  "id": "t3",
+  "title": {
+    "en": "T3",
+    "nl": "T3"
+  },
+  "description": {
+    "en": "The following questions are about your energy balance, temperature sensitivity, speed of thought, and physical recovery capacity.",
+    "nl": "De volgende vragen gaan over je energiebalans, gevoeligheid voor temperatuur, snelheid van denken en lichamelijke herstelcapaciteit."
+  },
+  "sections": [
+    {
+      "id": "t3",
+      "title": {
+        "en": "T3",
+        "nl": "T3"
+      },
+      "questions": [
+        {
+          "id": "t3-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience chills or cold extremities, even when others feel comfortable?",
+            "nl": "Heb je last van kouwelijkheid of koude ledematen, zelfs wanneer anderen zich comfortabel voelen qua temperatuur?"
+          }
+        },
+        {
+          "id": "t3-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you notice a decrease in your mental acuity, for example, difficulty concentrating, slow thinking, or a \"cotton-like feeling\"?",
+            "nl": "Merk je dat je mentale scherpte verminderd is, bijvoorbeeld moeite met concentratie, traag denken of 'watten in je hoofd'?"
+          }
+        },
+        {
+          "id": "t3-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like your system struggles to \"get going\" in the morning or that your recovery after exertion is slow?",
+            "nl": "Heb je het idee dat je systeem moeite heeft om 'op gang te komen' in de ochtend of dat je herstel na inspanning traag is?"
+          }
+        },
+        {
+          "id": "t3-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you're functioning at a low ebb, as if your internal fire has gone out?",
+            "nl": "Heb je het gevoel dat je 'op een laag pitje' functioneert, alsof je interne vuurtje gedoofd is?"
+          }
+        }
+      ]
+    }
+  ]
+}

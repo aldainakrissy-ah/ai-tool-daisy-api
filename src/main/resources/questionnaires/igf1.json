@@ -1,0 +1,54 @@
+{
+  "id": "igf1",
+  "title": {
+    "en": "IGF-1",
+    "nl": "IGF-1"
+  },
+  "description": {
+    "en": "The following questions are about your strength, recovery after exercise, sense of youthfulness, and structural resilience of your body.",
+    "nl": "De volgende vragen gaan over je kracht, herstel na inspanning, gevoel van jeugdigheid en structurele veerkracht van je lichaam."
+  },
+  "sections": [
+    {
+      "id": "igf1",
+      "title": {
+        "en": "IGF-1",
+        "nl": "IGF-1"
+      },
+      "questions": [
+        {
+          "id": "igf1-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that your recovery after physical exertion is slow, or that you experience muscle soreness or loss of strength more quickly?",
+            "nl": "Merk je dat je herstel na fysieke inspanning traag is of dat je sneller last hebt van spierpijn of krachtverlies?"
+          }
+        },
+        {
+          "id": "igf1-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel your physical strength or vitality declining, even when you exercise enough?",
+            "nl": "Heb je het gevoel dat je lichamelijke kracht of vitaliteit achteruitgaat, ook als je voldoende beweegt?"
+          }
+        },
+        {
+          "id": "igf1-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you feel your body responding less smoothly or vitally to physical challenges than you used to, for example, in the morning or after a longer rest period?",
+            "nl": "Voel je dat je lichaam minder soepel of vitaal reageert op fysieke uitdagingen dan je gewend was, bijvoorbeeld in de ochtend of na langere rust?"
+          }
+        },
+        {
+          "id": "igf1-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel like you're \"aging\" or deteriorating in structural vitality, as if your system is less able to rejuvenate or strengthen itself?",
+            "nl": "Heb je het gevoel dat je 'veroudert' of achteruitgaat in structurele vitaliteit, alsof je systeem minder goed in staat is zichzelf te verjongen of versterken?"
+          }
+        }
+      ]
+    }
+  ]
+}
