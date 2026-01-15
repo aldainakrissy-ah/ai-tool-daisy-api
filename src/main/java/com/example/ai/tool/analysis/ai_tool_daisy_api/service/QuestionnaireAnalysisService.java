@@ -177,11 +177,11 @@ public class QuestionnaireAnalysisService {
      */
     private Prompt1Result analyzeWithOpenAI(String content) {
 
-        ResponsePrompt prompt = ResponsePrompt.builder().id("pmpt_691db1ed039881908a001922e53791060b45ef8ce91f9109")
-                .version("100")
+        ResponsePrompt prompt = ResponsePrompt.builder().id("pmpt_69530227d8048195b28d15776355cad8048112a0d46452c6")
+                .version("65")
                 .build();
 
-        List<ResponseIncludable> includes = Collections.singletonList(ResponseIncludable.of("web_search_call.action.sources"));
+        List<ResponseIncludable> includes = Collections.singletonList(ResponseIncludable.FILE_SEARCH_CALL_RESULTS);
 
         FileSearchTool fileSearchTool = FileSearchTool.builder()
                 .addVectorStoreId("vs_68ca996f20ec8191974741691b169cae")
@@ -196,11 +196,12 @@ public class QuestionnaireAnalysisService {
                 .tools(tools)
                 .store(true)
                 .maxOutputTokens(6000)
-                .promptCacheKey("pre_intake_analysis_v1"+content.hashCode())
                 .include(includes)
                 .input("PROMPT 1: Pre-Intake " +
                         "QUESTIONNAIRE DATA:\n" + content)
                 .build();
+
+        System.out.println("params: " + params);
 
         Response response = client.responses().create(params);
 
