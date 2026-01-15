@@ -178,7 +178,7 @@ public class QuestionnaireAnalysisService {
     private Prompt1Result analyzeWithOpenAI(String content) {
 
         ResponsePrompt prompt = ResponsePrompt.builder().id("pmpt_691db1ed039881908a001922e53791060b45ef8ce91f9109")
-                .version("98")
+                .version("100")
                 .build();
 
         List<ResponseIncludable> includes = Collections.singletonList(ResponseIncludable.of("web_search_call.action.sources"));
@@ -188,7 +188,6 @@ public class QuestionnaireAnalysisService {
                 .build();
 
         List<Tool> tools = Collections.singletonList(Tool.ofFileSearch(fileSearchTool));
-
         ResponseCreateParams params = ResponseCreateParams
                 .builder()
                 .temperature(0.0)
@@ -197,13 +196,13 @@ public class QuestionnaireAnalysisService {
                 .tools(tools)
                 .store(true)
                 .maxOutputTokens(6000)
+                .promptCacheKey("pre_intake_analysis_v1"+content.hashCode())
                 .include(includes)
-                .input("Prompt 1:\n" + content)
-                //.text(Prompt1Result.class)
+                .input("PROMPT 1: Pre-Intake " +
+                        "QUESTIONNAIRE DATA:\n" + content)
                 .build();
 
         Response response = client.responses().create(params);
-        log.info("OpenAI analysis completed with response: {}", response);
 
         log.debug("Received response from OpenAI API");
 
