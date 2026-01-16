@@ -45,9 +45,7 @@ public class QuestionnaireResponseController {
         try {
             QuestionnaireResponseDto updatedResponse = responseService.saveQuestionResponse(
                     sessionId,
-                    request.getClientId(),
-                    request.getQuestionnaireId(),
-                    request.getResponses());
+                    request);
             return ResponseEntity.ok(updatedResponse);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

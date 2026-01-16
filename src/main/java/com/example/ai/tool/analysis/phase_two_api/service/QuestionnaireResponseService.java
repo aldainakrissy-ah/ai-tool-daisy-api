@@ -3,6 +3,7 @@ package com.example.ai.tool.analysis.phase_two_api.service;
 import com.example.ai.tool.analysis.phase_two_api.entity.*;
 import com.example.ai.tool.analysis.phase_two_api.pojo.QuestionResponseDto;
 import com.example.ai.tool.analysis.phase_two_api.pojo.QuestionnaireResponseDto;
+import com.example.ai.tool.analysis.phase_two_api.pojo.SaveQuestionnaireResponseRequest;
 import com.example.ai.tool.analysis.phase_two_api.repository.QuestionRepository;
 import com.example.ai.tool.analysis.phase_two_api.repository.QuestionnaireRepository;
 import com.example.ai.tool.analysis.phase_two_api.repository.QuestionnaireResponseRepository;
@@ -48,11 +49,10 @@ public class QuestionnaireResponseService {
     }
 
     @Transactional
-    public QuestionnaireResponseDto saveQuestionResponse(String sessionId, String clientId,
-            String questionnaireId, List<QuestionResponseDto> responses) {
+    public QuestionnaireResponseDto saveQuestionResponse(String sessionId, SaveQuestionnaireResponseRequest request) {
 
         Optional<QuestionnaireResponse> optionalResponse = responseRepository.findBySessionId(sessionId)
-                .or(() -> responseRepository.findByUserIdAndQuestionnaireIdAndStatus(clientId, questionnaireId,
+                .or(() -> responseRepository.findByUserIdAndQuestionnaireIdAndStatus(request.getClientId(), request.getQuestionnaireId(),
                         QuestionnaireResponse.ResponseStatus.IN_PROGRESS));
 
         QuestionnaireResponse questionnaireResponse;
@@ -62,22 +62,22 @@ public class QuestionnaireResponseService {
             log.info("Session {} not found. Creating new questionnaire response.", sessionId);
             questionnaireResponse = new QuestionnaireResponse();
             questionnaireResponse.setSessionId(sessionId);
-            questionnaireResponse.setClientId(clientId);
-            questionnaireResponse.setUserId(clientId);
+            questionnaireResponse.setClientId(request.getClientId());
+            questionnaireResponse.setUserId(request.getClientId());
             questionnaireResponse.setLanguageCode("en");
             questionnaireResponse.setStatus(QuestionnaireResponse.ResponseStatus.IN_PROGRESS);
             questionnaireResponse.setStartedAt(LocalDateTime.now());
 
-            if (questionnaireId != null && !questionnaireId.trim().isEmpty()) {
-                Questionnaire questionnaire = questionnaireRepository.findById(questionnaireId)
-                        .orElseThrow(() -> new IllegalArgumentException("Questionnaire not found: " + questionnaireId));
+            if (request.getQuestionnaireId() != null && !request.getQuestionnaireId().trim().isEmpty()) {
+                Questionnaire questionnaire = questionnaireRepository.findById(request.getQuestionnaireId())
+                        .orElseThrow(() -> new IllegalArgumentException("Questionnaire not found: " + request.getQuestionnaireId()));
                 questionnaireResponse.setQuestionnaire(questionnaire);
-                log.info("Associated new session {} with questionnaire: {}", sessionId, questionnaireId);
+                log.info("Associated new session {} with questionnaire: {}", sessionId, request.getQuestionnaireId());
             }
         }
 
         // Add new responses
-        for (QuestionResponseDto responseDto : responses) {
+        for (QuestionResponseDto responseDto : request.getResponses()) {
             Question question = questionRepository.findById(responseDto.getQuestionId())
                     .orElseThrow(
                             () -> new IllegalArgumentException("Question not found: " + responseDto.getQuestionId()));
@@ -92,6 +92,8 @@ public class QuestionnaireResponseService {
                 questionResponse.setAnswerText(responseDto.getAnswerText());
                 questionResponse.setAnswerNumber(responseDto.getAnswerNumber());
                 questionResponse.setAnswerBoolean(responseDto.getAnswerBoolean());
+                questionResponse.setQuestionOrder(responseDto.getQuestionOrder());
+                questionResponse.setQuestionText(responseDto.getQuestionText());
 
                 if (responseDto.getAnswerJson() != null) {
                     try {
@@ -108,6 +110,8 @@ public class QuestionnaireResponseService {
                 questionResponse.setAnswerText(responseDto.getAnswerText());
                 questionResponse.setAnswerNumber(responseDto.getAnswerNumber());
                 questionResponse.setAnswerBoolean(responseDto.getAnswerBoolean());
+                questionResponse.setQuestionOrder(responseDto.getQuestionOrder());
+                questionResponse.setQuestionText(responseDto.getQuestionText());
 
                 if (responseDto.getAnswerJson() != null) {
                     try {
@@ -203,6 +207,8 @@ public class QuestionnaireResponseService {
         dto.setAnswerText(response.getAnswerText());
         dto.setAnswerNumber(response.getAnswerNumber());
         dto.setAnswerBoolean(response.getAnswerBoolean());
+        dto.setQuestionOrder(response.getQuestionOrder());
+        dto.setQuestionText(response.getQuestionText());
 
         if (response.getAnswerJson() != null) {
             try {

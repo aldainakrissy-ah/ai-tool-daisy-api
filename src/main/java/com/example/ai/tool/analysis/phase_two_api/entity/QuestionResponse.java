@@ -38,4 +38,11 @@ public class QuestionResponse {
 
     @Column(name = "answer_boolean")
     private Boolean answerBoolean;
+
+    @Column(name = "question_order")
+    private Integer questionOrder;
+
+    @Column(name = "question_text", columnDefinition = "TEXT")
+    private String questionText;
+
 }
