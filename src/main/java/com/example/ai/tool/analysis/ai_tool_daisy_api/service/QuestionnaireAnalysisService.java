@@ -35,17 +35,17 @@ public class QuestionnaireAnalysisService {
     private static final String OPENAI_ERROR_MESSAGE = "OpenAI API analysis failed";
     private static final String NO_RESPONSE_ERROR = "No valid response received from OpenAI";
     private static final String PROMPT_ID = "pmpt_69530227d8048195b28d15776355cad8048112a0d46452c6";
-    private static final String PROMPT_VERSION = "65";
+    private static final String PROMPT_VERSION = "82";
     private static final String VECTOR_STORE_ID = "vs_68ca996f20ec8191974741691b169cae";
 
 
-    public AiAnalysisResult generatePreIntakeAnalysis(MultipartFile file, String promptType) {
+    public AiAnalysisResult generatePreIntakeAnalysis(MultipartFile file) {
         validateFile(file);
         log.info("Starting analysis for file: {}", file.getOriginalFilename());
 
         try {
             String content = extractPdfContent(file);
-            AiAnalysisResult result = analyzeWithOpenAI(content, promptType);
+            AiAnalysisResult result = analyzeWithOpenAI(content);
             persistResult(result);
 
             log.info("Analysis completed - Professional: {}, Patient: {}",
@@ -123,27 +123,22 @@ public class QuestionnaireAnalysisService {
         }
     }
 
-    private AiAnalysisResult analyzeWithOpenAI(String content, String promptType) {
-        ResponseCreateParams params = buildResponseParams(content,promptType);
+    private AiAnalysisResult analyzeWithOpenAI(String content) {
+        ResponseCreateParams params = buildResponseParams(content);
         Response response = client.responses().create(params);
 
         log.debug("Received response from OpenAI API");
 
         String openAIResponse = extractResponseText(response);
         if (openAIResponse.trim().isEmpty()) {
-            log.error("OpenAI returned empty response for promptType: {}", promptType);
+            log.error("OpenAI returned empty response");
             throw new RuntimeException("OpenAI returned empty response");
         }
-        AiAnalysisResult result = AiAnalysisResult.fromJson(openAIResponse);
 
-        if (result.getClientName() == null) {
-            log.warn("Client name is null in parsed result. Check if OpenAI response contains patient/client information");
-        }
-        result.setPromptType(promptType);
-        return result;
+        return AiAnalysisResult.fromJson(openAIResponse);
     }
 
-    private ResponseCreateParams buildResponseParams(String content, String promptType) {
+    private ResponseCreateParams buildResponseParams(String content) {
         ResponsePrompt prompt = ResponsePrompt.builder()
                 .id(PROMPT_ID)
                 .version(PROMPT_VERSION)
@@ -161,7 +156,7 @@ public class QuestionnaireAnalysisService {
                 .store(true)
                 .maxOutputTokens(6000)
                 .include(Collections.singletonList(ResponseIncludable.FILE_SEARCH_CALL_RESULTS))
-                .input("Execute " + promptType + "analysis on the following content: " + content)
+                .input("Extract and analyze the following healthcare questionnaire data:\n\n" + content)
                 .build();
     }
 

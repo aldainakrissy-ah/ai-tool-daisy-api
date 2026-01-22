@@ -43,10 +43,8 @@ public class AiAnalysisResult implements Serializable {
      * Type of prompt used for analysis (e.g., "PROMPT 1", "PROMPT 2", "PROMPT 3").
      * This field identifies which analysis prompt was executed.
      */
-    @JsonProperty("promptType")
+    @JsonProperty("prompt-type")
     private String promptType;
-
-    private AiAnalysisResult aiAnalysisResult;
 
     /**
      * Client/patient name identifier.
