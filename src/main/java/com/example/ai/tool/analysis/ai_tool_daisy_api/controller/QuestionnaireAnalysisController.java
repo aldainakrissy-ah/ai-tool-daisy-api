@@ -32,14 +32,13 @@ public class QuestionnaireAnalysisController {
      * results.
      *
      * @param file the uploaded PDF file containing healthcare questionnaire data
-     * @param promptType the type of prompt to use for analysis
      * @return {@link ResponseEntity} with {@link AiAnalysisResult} containing the AI
      *         analysis
      */
     @PostMapping("/analyze")
-    public ResponseEntity<AiAnalysisResult> analyzePdf(@RequestParam("file") MultipartFile file, @RequestParam("promptType") String promptType) {
+    public ResponseEntity<AiAnalysisResult> analyzePdf(@RequestParam("file") MultipartFile file) {
 
-        AiAnalysisResult result = questionnaireAnalysisService.generatePreIntakeAnalysis(file, promptType);
+        AiAnalysisResult result = questionnaireAnalysisService.generatePreIntakeAnalysis(file);
         log.info("Successfully analyzed PDF for professional: {}, client: {}",
                 result.getProfessionalName(), result.getClientName());
             return ResponseEntity.ok(result);
