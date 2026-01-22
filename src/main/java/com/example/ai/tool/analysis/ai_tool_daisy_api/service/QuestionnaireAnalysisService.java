@@ -38,7 +38,7 @@ public class QuestionnaireAnalysisService {
     private static final String PROMPT_VERSION = "65";
     private static final String VECTOR_STORE_ID = "vs_68ca996f20ec8191974741691b169cae";
 
-    @Transactional
+
     public AiAnalysisResult generatePreIntakeAnalysis(MultipartFile file, String promptType) {
         validateFile(file);
         log.info("Starting analysis for file: {}", file.getOriginalFilename());
@@ -124,13 +124,24 @@ public class QuestionnaireAnalysisService {
     }
 
     private AiAnalysisResult analyzeWithOpenAI(String content, String promptType) {
+        if (promptType == null || promptType.trim().isEmpty()) {
+            throw new IllegalArgumentException("Prompt type cannot be null or empty");
+        }
         ResponseCreateParams params = buildResponseParams(content,promptType);
         Response response = client.responses().create(params);
 
         log.debug("Received response from OpenAI API");
 
         String openAIResponse = extractResponseText(response);
+        if (openAIResponse.trim().isEmpty()) {
+            log.error("OpenAI returned empty response for promptType: {}", promptType);
+            throw new RuntimeException("OpenAI returned empty response");
+        }
         AiAnalysisResult result = AiAnalysisResult.fromJson(openAIResponse);
+
+        if (result.getClientName() == null) {
+            log.warn("Client name is null in parsed result. Check if OpenAI response contains patient/client information");
+        }
         result.setPromptType(promptType);
         return result;
     }
