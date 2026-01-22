@@ -124,9 +124,6 @@ public class QuestionnaireAnalysisService {
     }
 
     private AiAnalysisResult analyzeWithOpenAI(String content, String promptType) {
-        if (promptType == null || promptType.trim().isEmpty()) {
-            throw new IllegalArgumentException("Prompt type cannot be null or empty");
-        }
         ResponseCreateParams params = buildResponseParams(content,promptType);
         Response response = client.responses().create(params);
 
