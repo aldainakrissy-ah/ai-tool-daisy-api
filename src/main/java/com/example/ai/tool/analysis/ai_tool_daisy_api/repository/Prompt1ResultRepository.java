@@ -15,6 +15,7 @@ public interface Prompt1ResultRepository extends  JpaRepository<Prompt1ResultEnt
     List<Prompt1ResultEntity> findByProfessionalId(String professionalId);
     List<Prompt1ResultEntity> findByProfessionalIdAndPatientId(String professionalId, String patientId);
     List<Prompt1ResultEntity> findByPatientId(String patientId);
+    List<Prompt1ResultEntity> findByPatientIdAndPromptType(String patientId, String promptType);
 
     @Modifying
     @Transactional

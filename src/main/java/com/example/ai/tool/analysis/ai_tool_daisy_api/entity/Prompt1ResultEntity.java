@@ -29,6 +29,9 @@ public class Prompt1ResultEntity {
     @Column(name = "result_json", columnDefinition = "jsonb", nullable = false)
     private String resultJson;
 
+    @Column(name = "prompt_type", nullable = false)
+    private String promptType;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 

@@ -1,65 +1,157 @@
 package com.example.ai.tool.analysis.ai_tool_daisy_api.pojo;
 
+import com.example.ai.tool.analysis.ai_tool_daisy_api.exception.JsonSerializationException;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * POJO representing the AI analysis result for Phase 1 pre-intake questionnaire.
- * Contains teleonic analysis sections (A1-A3) and recommended questionnaires (B1-B3).
+ * Contains teleonic analysis sections (A1-A6) and recommended questionnaires (B1-B3).
+ * <p>
+ * This class supports JSON serialization/deserialization and follows the DAISY BiomatrixAI
+ * Framework schema for healthcare questionnaire analysis.
+ * </p>
+ *
+ * @author DAISY AI Analysis API
+ * @version 1.0
+ * @since 2026-01-22
  */
+@Slf4j
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Prompt1Result {
+public class AiAnalysisResult implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Type of prompt used for analysis (e.g., "PROMPT 1", "PROMPT 2", "PROMPT 3").
+     * This field identifies which analysis prompt was executed.
+     */
+    @JsonProperty("promptType")
+    private String promptType;
+
+    private AiAnalysisResult aiAnalysisResult;
+
+    /**
+     * Client/patient name identifier.
+     * Used to track analysis results for specific clients.
+     */
+    @NotBlank(message = "Client name is required")
     @JsonProperty("client-name")
     private String clientName;
 
+    /**
+     * Professional/practitioner name identifier.
+     * Used to track analysis results for specific healthcare professionals.
+     */
     @JsonProperty("professional-name")
     private String professionalName;
 
+    /**
+     * Section A1: Primary and secondary Integrative Endoteleons with teleonic pattern analysis.
+     */
+    @Valid
     @JsonProperty("A1")
     private A1 a1;
 
+    /**
+     * Section A2: Additional analysis markers or identifiers.
+     */
     @JsonProperty("A2")
     private List<String> a2;
 
+    /**
+     * Section A3: HETA (Health Endoteleon Tuning Agents) recommendations.
+     */
+    @Valid
     @JsonProperty("A3")
     private A3 a3;
 
+    /**
+     * Section A4a: Modular analysis component.
+     */
+    @Valid
     @JsonProperty("A4a")
     private A4a a4a;
 
+    /**
+     * Section A4b: Modular analysis component.
+     */
+    @Valid
     @JsonProperty("A4b")
     private A4b a4b;
 
+    /**
+     * Section A4c: Modular analysis component.
+     */
+    @Valid
     @JsonProperty("A4c")
     private A4c a4c;
 
+    /**
+     * Section A4d: Modular analysis component.
+     */
+    @Valid
     @JsonProperty("A4d")
     private A4d a4d;
 
+    /**
+     * Section A5: Missing data overview and analysis recommendations.
+     */
+    @Valid
     @JsonProperty("A5")
     private A5 a5;
 
+    /**
+     * Section A6: Advanced analysis and recommendations.
+     */
+    @Valid
     @JsonProperty("A6")
     private A6 a6;
 
+    /**
+     * Section B1: Recommended Ethos variant questionnaires (Adult, Child, or Hybrid).
+     */
+    @Valid
     @JsonProperty("B1")
     private List<B1> b1;
 
+    /**
+     * Section B2: Additional validated questionnaires.
+     */
+    @Valid
     @JsonProperty("B2")
     private List<B2> b2;
 
+    /**
+     * Section B3: HETA modular questionnaires.
+     */
+    @Valid
     @JsonProperty("B3")
     private List<B3> b3;
 
+    /**
+     * Thread-safe ObjectMapper configured for Prompt1Result serialization/deserialization.
+     * Configuration:
+     * - Ignores unknown properties to handle API evolution
+     * - Accepts single values as arrays for flexible input handling
+     */
     private static final ObjectMapper MAPPER = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
@@ -361,21 +453,42 @@ public class Prompt1Result {
      * Serializes Prompt1Result object to JSON string.
      *
      * @return JSON string representation
-     * @throws RuntimeException if JSON serialization fails
+     * @throws JsonSerializationException if JSON serialization fails
      */
     public String toJson() {
         try {
-            return MAPPER.writeValueAsString(this);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to serialize Prompt1Result to JSON: " + e.getMessage(), e);
+            String json = MAPPER.writeValueAsString(this);
+            log.debug("Successfully serialized Prompt1Result for client: {}, professional: {}",
+                     clientName, professionalName);
+            return json;
+        } catch (JsonProcessingException e) {
+            log.error("Failed to serialize Prompt1Result to JSON for client: {}, professional: {}",
+                     clientName, professionalName, e);
+            throw new JsonSerializationException("Failed to serialize Prompt1Result to JSON: " + e.getMessage(), e);
         }
     }
 
-    public static Prompt1Result fromJson(String json) {
+    /**
+     * Deserializes JSON string to Prompt1Result object.
+     *
+     * @param json JSON string to deserialize
+     * @return Prompt1Result object
+     * @throws JsonSerializationException if JSON deserialization fails
+     * @throws IllegalArgumentException if json parameter is null or empty
+     */
+    public static AiAnalysisResult fromJson(String json) {
+        if (json == null || json.trim().isEmpty()) {
+            throw new IllegalArgumentException("JSON string cannot be null or empty");
+        }
+
         try {
-            return MAPPER.readValue(json, Prompt1Result.class);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to deserialize JSON to Prompt1Result: " + e.getMessage(), e);
+            AiAnalysisResult result = MAPPER.readValue(json, AiAnalysisResult.class);
+            log.debug("Successfully deserialized Prompt1Result for client: {}, professional: {}",
+                     result.getClientName(), result.getProfessionalName());
+            return result;
+        } catch (JsonProcessingException e) {
+            log.error("Failed to deserialize JSON to Prompt1Result: {}", e.getMessage(), e);
+            throw new JsonSerializationException("Failed to deserialize JSON to Prompt1Result: " + e.getMessage(), e);
         }
     }
 }

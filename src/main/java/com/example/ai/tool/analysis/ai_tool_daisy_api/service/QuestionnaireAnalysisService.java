@@ -1,7 +1,7 @@
 package com.example.ai.tool.analysis.ai_tool_daisy_api.service;
 
 import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1ResultEntity;
-import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1Result;
+import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.AiAnalysisResult;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.Prompt1ResultRepository;
 import com.openai.client.OpenAIClient;
 import com.openai.errors.OpenAIException;
@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * Service for processing healthcare questionnaires using OpenAI's Response API.
- * Handles PDF extraction, teleonic AI analysis, and database persistence of results.
+ * Handles PDF extraction, AI analysis, and database persistence of results.
  */
 @Slf4j
 @Service
@@ -34,26 +34,18 @@ public class QuestionnaireAnalysisService {
     private static final String EMPTY_CONTENT_ERROR = "Extracted PDF content is empty";
     private static final String OPENAI_ERROR_MESSAGE = "OpenAI API analysis failed";
     private static final String NO_RESPONSE_ERROR = "No valid response received from OpenAI";
+    private static final String PROMPT_ID = "pmpt_69530227d8048195b28d15776355cad8048112a0d46452c6";
+    private static final String PROMPT_VERSION = "65";
+    private static final String VECTOR_STORE_ID = "vs_68ca996f20ec8191974741691b169cae";
 
 
-    /**
-     * Processes uploaded PDF file containing healthcare questionnaire data.
-     * Extracts text, analyzes with OpenAI, and persists results.
-     *
-     * @param file the uploaded PDF file
-     * @return analyzed questionnaire results
-     * @throws IllegalArgumentException if file is null or empty
-     * @throws RuntimeException if PDF processing or AI analysis fails
-     */
-    @Transactional
-    public Prompt1Result generatePreIntakeAnalysis(MultipartFile file) {
+    public AiAnalysisResult generatePreIntakeAnalysis(MultipartFile file, String promptType) {
         validateFile(file);
-
         log.info("Starting analysis for file: {}", file.getOriginalFilename());
 
         try {
             String content = extractPdfContent(file);
-            Prompt1Result result = analyzeWithOpenAI(content);
+            AiAnalysisResult result = analyzeWithOpenAI(content, promptType);
             persistResult(result);
 
             log.info("Analysis completed - Professional: {}, Patient: {}",
@@ -63,31 +55,15 @@ public class QuestionnaireAnalysisService {
         } catch (OpenAIException e) {
             log.error("OpenAI API error for file: {}", file.getOriginalFilename(), e);
             throw new RuntimeException(OPENAI_ERROR_MESSAGE + ": " + e.getMessage(), e);
-        } catch (RuntimeException e) {
-            log.error("Unexpected error processing file: {}", file.getOriginalFilename(), e);
-            throw e;
         }
     }
 
-    /**
-     * Retrieves all pre-intake analysis results for a specific professional.
-     *
-     * @param professionalId the professional's unique identifier
-     * @return list of analysis results
-     */
     @Transactional(readOnly = true)
     public List<Prompt1ResultEntity> getPreIntakeResult(String professionalId) {
         log.info("Fetching results for professional ID: {}", professionalId);
         return prompt1ResultRepository.findByProfessionalId(professionalId);
     }
 
-    /**
-     * Retrieves pre-intake analysis results for a specific professional and patient.
-     *
-     * @param professionalId the professional's unique identifier
-     * @param patientId the patient's unique identifier
-     * @return list of analysis results matching both IDs
-     */
     @Transactional(readOnly = true)
     public List<Prompt1ResultEntity> getPreIntakeResultByProfessionalIdAndPatientId(
             String professionalId, String patientId) {
@@ -95,11 +71,6 @@ public class QuestionnaireAnalysisService {
         return prompt1ResultRepository.findByProfessionalIdAndPatientId(professionalId, patientId);
     }
 
-    /**
-     * Retrieves all pre-intake analysis results.
-     *
-     * @return list of all analysis results
-     */
     @Transactional(readOnly = true)
     public List<Prompt1ResultEntity> getAllPreIntakeResults() {
         log.info("Fetching all pre-intake results");
@@ -112,25 +83,19 @@ public class QuestionnaireAnalysisService {
         return prompt1ResultRepository.findByPatientId(patientId);
     }
 
-    /**
-     * Persists a Prompt1Result to the database.
-     *
-     * @param prompt1Result the analysis result to save
-     */
-    @Transactional
-    public void savePrompt1Result(Prompt1Result prompt1Result) {
-        log.info("Saving result for professional: {}, patient: {}",
-                prompt1Result.getProfessionalName(), prompt1Result.getClientName());
-        persistResult(prompt1Result);
+    @Transactional(readOnly = true)
+    public List<Prompt1ResultEntity> getResultByPatientIdAndPromptType(String patientId, String promptType) {
+        log.info("Fetching result for patient: {} with prompt type: {}", patientId, promptType);
+        return prompt1ResultRepository.findByPatientIdAndPromptType(patientId, promptType);
     }
 
+    @Transactional
+    public void savePrompt1Result(AiAnalysisResult aiAnalysisResult) {
+        log.info("Saving result for professional: {}, patient: {}",
+                aiAnalysisResult.getProfessionalName(), aiAnalysisResult.getClientName());
+        persistResult(aiAnalysisResult);
+    }
 
-    /**
-     * Validates that the uploaded file is not null or empty.
-     *
-     * @param file the file to validate
-     * @throws IllegalArgumentException if file is invalid
-     */
     private void validateFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("PDF file must be provided and cannot be empty");
@@ -141,17 +106,9 @@ public class QuestionnaireAnalysisService {
         }
     }
 
-    /**
-     * Extracts text content from a PDF file.
-     *
-     * @param file the PDF file to extract text from
-     * @return extracted text content
-     * @throws RuntimeException if PDF extraction fails or content is empty
-     */
     private String extractPdfContent(MultipartFile file) {
         try (PDDocument document = PDDocument.load(file.getInputStream())) {
-            PDFTextStripper stripper = new PDFTextStripper();
-            String content = stripper.getText(document);
+            String content = new PDFTextStripper().getText(document);
 
             if (content == null || content.trim().isEmpty()) {
                 throw new RuntimeException(EMPTY_CONTENT_ERROR);
@@ -166,63 +123,64 @@ public class QuestionnaireAnalysisService {
         }
     }
 
-    /**
-     * Sends extracted content to OpenAI for teleonic analysis.
-     * Uses structured output with strict JSON schema to prevent hallucinations and ensure schema compliance.
-     * Configuration matches the DAISY BiomatrixAI Framework requirements.
-     *
-     * @param content the extracted PDF text content
-     * @return analyzed result as Prompt1Result
-     * @throws RuntimeException if OpenAI analysis fails or returns no response
-     */
-    private Prompt1Result analyzeWithOpenAI(String content) {
-
-        ResponsePrompt prompt = ResponsePrompt.builder().id("pmpt_69530227d8048195b28d15776355cad8048112a0d46452c6")
-                .version("65")
-                .build();
-
-        List<ResponseIncludable> includes = Collections.singletonList(ResponseIncludable.FILE_SEARCH_CALL_RESULTS);
-
-        FileSearchTool fileSearchTool = FileSearchTool.builder()
-                .addVectorStoreId("vs_68ca996f20ec8191974741691b169cae")
-                .build();
-
-        List<Tool> tools = Collections.singletonList(Tool.ofFileSearch(fileSearchTool));
-        ResponseCreateParams params = ResponseCreateParams
-                .builder()
-                .temperature(0.0)
-                .topP(1.0)
-                .prompt(prompt)
-                .tools(tools)
-                .store(true)
-                .maxOutputTokens(6000)
-                .include(includes)
-                .input("PROMPT 1: Pre-Intake " +
-                        "QUESTIONNAIRE DATA:\n" + content)
-                .build();
-
+    private AiAnalysisResult analyzeWithOpenAI(String content, String promptType) {
+        ResponseCreateParams params = buildResponseParams(content,promptType);
         Response response = client.responses().create(params);
 
         log.debug("Received response from OpenAI API");
 
-        String res =  response.output().stream()
-                .flatMap(item -> item.message().stream())
-                .flatMap(msg -> msg.content().stream()).findFirst()
-                .orElseThrow(() -> new RuntimeException(NO_RESPONSE_ERROR)).asOutputText().text();
-        return Prompt1Result.fromJson(res);
+        String openAIResponse = extractResponseText(response);
+        if (openAIResponse.trim().isEmpty()) {
+            log.error("OpenAI returned empty response for promptType: {}", promptType);
+            throw new RuntimeException("OpenAI returned empty response");
+        }
+        AiAnalysisResult result = AiAnalysisResult.fromJson(openAIResponse);
+
+        if (result.getClientName() == null) {
+            log.warn("Client name is null in parsed result. Check if OpenAI response contains patient/client information");
+        }
+        result.setPromptType(promptType);
+        return result;
     }
 
-    /**
-     * Persists analysis result to database.
-     *
-     * @param result the analysis result to persist
-     * @throws RuntimeException if persistence fails
-     */
-    private void persistResult(Prompt1Result result) {
+    private ResponseCreateParams buildResponseParams(String content, String promptType) {
+        ResponsePrompt prompt = ResponsePrompt.builder()
+                .id(PROMPT_ID)
+                .version(PROMPT_VERSION)
+                .build();
+
+        FileSearchTool fileSearchTool = FileSearchTool.builder()
+                .addVectorStoreId(VECTOR_STORE_ID)
+                .build();
+
+        return ResponseCreateParams.builder()
+                .temperature(0.0)
+                .topP(1.0)
+                .prompt(prompt)
+                .tools(Collections.singletonList(Tool.ofFileSearch(fileSearchTool)))
+                .store(true)
+                .maxOutputTokens(6000)
+                .include(Collections.singletonList(ResponseIncludable.FILE_SEARCH_CALL_RESULTS))
+                .input("Execute " + promptType + "analysis on the following content: " + content)
+                .build();
+    }
+
+    private String extractResponseText(Response response) {
+        return response.output().stream()
+                .flatMap(item -> item.message().stream())
+                .flatMap(msg -> msg.content().stream())
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException(NO_RESPONSE_ERROR))
+                .asOutputText()
+                .text();
+    }
+
+    private void persistResult(AiAnalysisResult result) {
         try {
             Prompt1ResultEntity entity = new Prompt1ResultEntity();
             entity.setProfessionalId(result.getProfessionalName());
             entity.setPatientId(result.getClientName());
+            entity.setPromptType(result.getPromptType());
             entity.setResultJson(result.toJson());
             prompt1ResultRepository.save(entity);
 

@@ -1,7 +1,7 @@
 package com.example.ai.tool.analysis.ai_tool_daisy_api.controller;
 
 import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1ResultEntity;
-import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1Result;
+import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.AiAnalysisResult;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.QuestionnaireAnalysisService;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.DatabaseHealthService;
 import lombok.AllArgsConstructor;
@@ -32,13 +32,14 @@ public class QuestionnaireAnalysisController {
      * results.
      *
      * @param file the uploaded PDF file containing healthcare questionnaire data
-     * @return {@link ResponseEntity} with {@link Prompt1Result} containing the AI
+     * @param promptType the type of prompt to use for analysis
+     * @return {@link ResponseEntity} with {@link AiAnalysisResult} containing the AI
      *         analysis
      */
     @PostMapping("/analyze")
-    public ResponseEntity<Prompt1Result> analyzePdf(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<AiAnalysisResult> analyzePdf(@RequestParam("file") MultipartFile file, @RequestParam("promptType") String promptType) {
 
-        Prompt1Result result = questionnaireAnalysisService.generatePreIntakeAnalysis(file);
+        AiAnalysisResult result = questionnaireAnalysisService.generatePreIntakeAnalysis(file, promptType);
         log.info("Successfully analyzed PDF for professional: {}, client: {}",
                 result.getProfessionalName(), result.getClientName());
             return ResponseEntity.ok(result);
@@ -62,6 +63,14 @@ public class QuestionnaireAnalysisController {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * Endpoint to retrieve aiAnalysisResults results by professional ID and patient ID.
+     *
+     * @param professionalId the professional ID to search for.
+     * @param patientId the patient ID to search for.
+     * @return a {@link ResponseEntity} containing a list of
+     *         {@link Prompt1ResultEntity}.
+     */
     @GetMapping("/analysis/professional/{professionalId}/client/{patientId}")
     public ResponseEntity<List<Prompt1ResultEntity>> getResultByProfessionalIdAndPatientId(
             @PathVariable("professionalId") String professionalId,
@@ -72,24 +81,64 @@ public class QuestionnaireAnalysisController {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * Endpoint to retrieve all aiAnalysisResults results.
+     *
+     * @return a {@link ResponseEntity} containing a list of
+     *         {@link Prompt1ResultEntity}.
+     */
     @GetMapping("/analysis/all")
     public ResponseEntity<List<Prompt1ResultEntity>> getAllResults() {
         List<Prompt1ResultEntity> result = questionnaireAnalysisService.getAllPreIntakeResults();
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * Endpoint to save aiAnalysisResults result.
+     *
+     * @param prompt1Result the {@link AiAnalysisResult} to be saved.
+     * @return a {@link ResponseEntity} indicating the result of the save operation.
+     */
     @PostMapping(value = "/analysis/save", consumes = "application/json")
-    public ResponseEntity<Void> savePreIntakeResult(@RequestBody Prompt1Result prompt1Result) {
+    public ResponseEntity<Void> savePreIntakeResult(@RequestBody AiAnalysisResult prompt1Result) {
         log.info("Saving Prompt1 result for professional id: {}", prompt1Result.getProfessionalName());
             questionnaireAnalysisService.savePrompt1Result(prompt1Result);
             return ResponseEntity.ok().build();
 
     }
+
+    /**
+     * Endpoint to retrieve aiAnalysisResults by patient ID.
+     *
+     * @param patientId the patient ID to search for.
+     * @return a {@link ResponseEntity} containing a list of
+     *         {@link Prompt1ResultEntity} or a not found status.
+     */
     @GetMapping("/analysis/patient/{patientId}")
     public ResponseEntity<List<Prompt1ResultEntity>> getResultByPatientId(
             @PathVariable("patientId") String patientId) {
         List<Prompt1ResultEntity> result = questionnaireAnalysisService
                 .getPreIntakeResultByPatientId(patientId);
+        if (result == null || result.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     * Endpoint to retrieve aiAnalysisResults by patient ID and prompt type.
+     *
+     * @param patientId the patient ID to search for.
+     * @param promptType the prompt type to filter results.
+     * @return a {@link ResponseEntity} containing a list of
+     *         {@link Prompt1ResultEntity} or a not found status.
+     */
+    @GetMapping("/analysis/patient/{patientId}/prompt-type/{promptType}")
+    public ResponseEntity<List<Prompt1ResultEntity>> getResultByPatientIdAndPromptType(
+            @PathVariable("patientId") String patientId,
+            @PathVariable("promptType") String promptType) {
+        List<Prompt1ResultEntity> result = questionnaireAnalysisService
+                .getResultByPatientIdAndPromptType(patientId, promptType);
         if (result == null || result.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
