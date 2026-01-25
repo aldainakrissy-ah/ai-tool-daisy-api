@@ -55,6 +55,22 @@ public class QuestionnaireResponseController {
         }
     }
 
+    @PostMapping("/save")
+    public ResponseEntity<?> saveQuestionnaireResponses(
+            @RequestBody SaveQuestionnaireResponseRequest request) {
+        try {
+            QuestionnaireResponseDto updatedResponse = responseService.saveQuestionResponse(
+                    request.getClientId(),
+                    request);
+            return ResponseEntity.ok(updatedResponse);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            log.error("Error saving question responses for session: {}", request.getClientId(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @PostMapping("/{sessionId}/complete")
     public ResponseEntity<?> completeQuestionnaire(@PathVariable String sessionId) {
         try {
@@ -81,6 +97,23 @@ public class QuestionnaireResponseController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<?> getQuestionnaireResponses(
+            @RequestParam(required = false) String sessionId,
+            @RequestParam(required = false) String clientId) {
+        try {
+            List<QuestionnaireResponseDto> responses = responseService.getQuestionnaireResponses(sessionId, clientId);
+            if (responses.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(responses);
+        } catch (Exception e) {
+            log.error("Error retrieving questionnaire responses", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    //Deprecated: use getQuestionnaireResponses with sessionId param instead
     @GetMapping("/{sessionId}")
     public ResponseEntity<?> getQuestionnaireResponse(@PathVariable String sessionId) {
         try {
@@ -89,6 +122,21 @@ public class QuestionnaireResponseController {
                     .orElse(ResponseEntity.notFound().build());
         } catch (Exception e) {
             log.error("Error retrieving questionnaire response for session: {}", sessionId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/{sessionId}/{questionnaireId}")
+    public ResponseEntity<?> getQuestionnaireResponseBySessionAndQuestionnaire(
+            @PathVariable String sessionId,
+            @PathVariable String questionnaireId) {
+        try {
+            return responseService.getQuestionnaireResponseBySessionIdAndQuestionnaireId(sessionId, questionnaireId)
+                    .map(response -> ResponseEntity.ok(response))
+                    .orElse(ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            log.error("Error retrieving questionnaire response for session: {} and questionnaire: {}", sessionId,
+                    questionnaireId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

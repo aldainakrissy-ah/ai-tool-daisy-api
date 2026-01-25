@@ -51,9 +51,8 @@ public class QuestionnaireResponseService {
     @Transactional
     public QuestionnaireResponseDto saveQuestionResponse(String sessionId, SaveQuestionnaireResponseRequest request) {
 
-        Optional<QuestionnaireResponse> optionalResponse = responseRepository.findBySessionId(sessionId)
-                .or(() -> responseRepository.findByUserIdAndQuestionnaireIdAndStatus(request.getClientId(), request.getQuestionnaireId(),
-                        QuestionnaireResponse.ResponseStatus.IN_PROGRESS));
+        Optional<QuestionnaireResponse> optionalResponse =  responseRepository.findByUserIdAndQuestionnaireIdAndStatus(request.getClientId(), request.getQuestionnaireId(),
+                        QuestionnaireResponse.ResponseStatus.IN_PROGRESS);
 
         QuestionnaireResponse questionnaireResponse;
         if (optionalResponse.isPresent()) {
@@ -64,7 +63,7 @@ public class QuestionnaireResponseService {
             questionnaireResponse.setSessionId(sessionId);
             questionnaireResponse.setClientId(request.getClientId());
             questionnaireResponse.setUserId(request.getClientId());
-            questionnaireResponse.setLanguageCode("en");
+            questionnaireResponse.setLanguageCode("nl");
             questionnaireResponse.setStatus(QuestionnaireResponse.ResponseStatus.IN_PROGRESS);
             questionnaireResponse.setStartedAt(LocalDateTime.now());
 
@@ -149,6 +148,12 @@ public class QuestionnaireResponseService {
     }
 
     @Transactional(readOnly = true)
+    public Optional<QuestionnaireResponseDto> getQuestionnaireResponseBySessionIdAndQuestionnaireId(String sessionId, String questionnaireId) {
+        return responseRepository.findBySessionIdAndQuestionnaireId(sessionId, questionnaireId)
+                .map(this::convertToDto);
+    }
+
+    @Transactional(readOnly = true)
     public List<QuestionnaireResponseDto> getUserResponses(String userId) {
         List<QuestionnaireResponse> responses = responseRepository.findByUserId(userId);
         return responses.stream()
@@ -177,6 +182,19 @@ public class QuestionnaireResponseService {
     @Transactional
     public void deleteQuestionnaireResponse(String clientId, String questionnaireId) {
         responseRepository.deleteByUserIdAndQuestionnaireId(clientId, questionnaireId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<QuestionnaireResponseDto> getQuestionnaireResponses(String sessionId, String clientId) {
+        List<QuestionnaireResponse> responses = new ArrayList<>();
+        if (sessionId != null && !sessionId.isEmpty()) {
+            responses = responseRepository.findAllBySessionId(sessionId);
+        } else if (clientId != null && !clientId.isEmpty()) {
+            responses = responseRepository.findAllByClientId(clientId);
+        }
+        return responses.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     private QuestionnaireResponseDto convertToDto(QuestionnaireResponse response) {
