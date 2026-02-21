@@ -40,11 +40,11 @@ public class AiAnalysisResult implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Type of prompt used for analysis (e.g., "PROMPT 1", "PROMPT 2", "PROMPT 3").
-     * This field identifies which analysis prompt was executed.
+     * Unique identifier for the prompt used in the analysis (e.g., "Prompt_1").
+     * This field identifies which specific prompt version was executed.
      */
-    @JsonProperty("prompt-type")
-    private String promptType;
+    @JsonProperty("prompt_id")
+    private String promptId;
 
     /**
      * Client/patient name identifier.
@@ -69,7 +69,7 @@ public class AiAnalysisResult implements Serializable {
     private A1 a1;
 
     /**
-     * Section A2: Additional analysis markers or identifiers.
+     * Section A2: List of Integrative Endoteleons identified in the analysis.
      */
     @JsonProperty("A2")
     private List<String> a2;
@@ -182,22 +182,35 @@ public class AiAnalysisResult implements Serializable {
 
     /**
      * Section A3: HETA (Health Endoteleon Tuning Agents) recommendations.
-     * Contains direct and indirect HETA arrays.
+     * Contains list of HETA identifiers.
+     * Supports both legacy format (heta) and new format (direct/indirect).
      */
     @Data
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class A3 {
+        /**
+         * Legacy format: Simple list of HETA identifiers (for backward compatibility).
+         */
+        @JsonProperty("heta")
+        private List<String> heta;
+
+        /**
+         * New format: Direct HETA interventions with immediate impact.
+         */
         @JsonProperty("direct")
         private List<String> direct;
 
+        /**
+         * New format: Indirect HETA interventions with secondary impact.
+         */
         @JsonProperty("indirect")
         private List<String> indirect;
     }
 
     /**
-     * Section A4a: Placeholder for future data structure.
-     * Currently empty object in JSON responses.
+     * Section A4a: QUEST module data.
+     * Contains questionnaire analysis status and items.
      */
     @Data
     @NoArgsConstructor
@@ -209,16 +222,54 @@ public class AiAnalysisResult implements Serializable {
         @JsonProperty("status")
         private String status;
 
-        @JsonProperty("narrative")
-        private String narrative;
+        @JsonProperty("items")
+        private List<A4aItem> items;
 
         @JsonProperty("uncertainty_label")
         private String uncertaintyLabel;
     }
 
     /**
-     * Section A4b: Placeholder for future data structure.
-     * Currently empty object in JSON responses.
+     * Item within A4a QUEST module.
+     */
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class A4aItem {
+        @JsonProperty("qest_json_identifier")
+        private String qestJsonIdentifier;
+
+        @JsonProperty("teleonic_field")
+        private String teleonicField;
+
+        @JsonProperty("heta_context")
+        private List<String> hetaContext;
+
+        @JsonProperty("direction")
+        private String direction;
+
+        @JsonProperty("direction_note")
+        private String directionNote;
+
+        @JsonProperty("amplitude")
+        private String amplitude;
+
+        @JsonProperty("amplitude_note")
+        private String amplitudeNote;
+
+        @JsonProperty("congruence")
+        private String congruence;
+
+        @JsonProperty("congruence_note")
+        private String congruenceNote;
+
+        @JsonProperty("narrative")
+        private List<String> narrative;
+    }
+
+    /**
+     * Section A4b: HMA (Hair Mineral Analysis) module data.
+     * Contains detailed sections and summary components for mineral analysis.
      */
     @Data
     @NoArgsConstructor
@@ -230,16 +281,86 @@ public class AiAnalysisResult implements Serializable {
         @JsonProperty("status")
         private String status;
 
-        @JsonProperty("narrative")
-        private String narrative;
+        @JsonProperty("sections")
+        private A4bSections sections;
+
+        @JsonProperty("summary_components")
+        private A4bSummaryComponents summaryComponents;
 
         @JsonProperty("uncertainty_label")
         private String uncertaintyLabel;
     }
 
     /**
-     * Section A4c: Placeholder for future data structure.
-     * Currently empty object in JSON responses.
+     * Sections within A4b HMA module.
+     */
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class A4bSections {
+        @JsonProperty("epistemic_positioning")
+        private String epistemicPositioning;
+
+        @JsonProperty("lab_report_context")
+        private String labReportContext;
+
+        @JsonProperty("overall_pattern")
+        private String overallPattern;
+
+        @JsonProperty("eap_profile_narrative")
+        private String eapProfileNarrative;
+
+        @JsonProperty("eap_index_client_explanation")
+        private String eapIndexClientExplanation;
+
+        @JsonProperty("pattern_minerals_ratios")
+        private String patternMineralsRatios;
+
+        @JsonProperty("stress_context")
+        private String stressContext;
+
+        @JsonProperty("followup_exploration")
+        private String followupExploration;
+
+        @JsonProperty("summary")
+        private String summary;
+
+        @JsonProperty("closing")
+        private String closing;
+    }
+
+    /**
+     * Summary components within A4b HMA module.
+     */
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class A4bSummaryComponents {
+        @JsonProperty("eap_profile")
+        private String eapProfile;
+
+        @JsonProperty("eap_index")
+        private String eapIndex;
+
+        @JsonProperty("intensity")
+        private Integer intensity;
+
+        @JsonProperty("direction")
+        private String direction;
+
+        @JsonProperty("buffer")
+        private String buffer;
+
+        @JsonProperty("pattern_markers")
+        private List<String> patternMarkers;
+
+        @JsonProperty("followup_flag")
+        private String followupFlag;
+    }
+
+    /**
+     * Section A4c: HRV (Heart Rate Variability) module data.
+     * Contains detailed sections for HRV analysis.
      */
     @Data
     @NoArgsConstructor
@@ -251,16 +372,48 @@ public class AiAnalysisResult implements Serializable {
         @JsonProperty("status")
         private String status;
 
-        @JsonProperty("narrative")
-        private String narrative;
+        @JsonProperty("sections")
+        private A4cSections sections;
 
         @JsonProperty("uncertainty_label")
         private String uncertaintyLabel;
     }
 
     /**
-     * Section A4d: Placeholder for future data structure.
-     * Currently empty object in JSON responses.
+     * Sections within A4c HRV module.
+     */
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class A4cSections {
+        @JsonProperty("epistemic_positioning")
+        private String epistemicPositioning;
+
+        @JsonProperty("measurement_context")
+        private String measurementContext;
+
+        @JsonProperty("global_load_recovery")
+        private String globalLoadRecovery;
+
+        @JsonProperty("night_recovery_sleep_rhythm")
+        private String nightRecoverySleepRhythm;
+
+        @JsonProperty("activity_day_distribution")
+        private String activityDayDistribution;
+
+        @JsonProperty("rap_profile")
+        private String rapProfile;
+
+        @JsonProperty("rap_index")
+        private Integer rapIndex;
+
+        @JsonProperty("summary")
+        private String summary;
+    }
+
+    /**
+     * Section A4d: LAB (Laboratory) module data.
+     * Contains detailed sections for laboratory analysis.
      */
     @Data
     @NoArgsConstructor
@@ -272,11 +425,31 @@ public class AiAnalysisResult implements Serializable {
         @JsonProperty("status")
         private String status;
 
-        @JsonProperty("narrative")
-        private String narrative;
+        @JsonProperty("sections")
+        private A4dSections sections;
 
         @JsonProperty("uncertainty_label")
         private String uncertaintyLabel;
+    }
+
+    /**
+     * Sections within A4d LAB module.
+     */
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class A4dSections {
+        @JsonProperty("epistemic_positioning")
+        private String epistemicPositioning;
+
+        @JsonProperty("lab_reports")
+        private List<Object> labReports;
+
+        @JsonProperty("integrated_interpretation")
+        private String integratedInterpretation;
+
+        @JsonProperty("overall_summary")
+        private String overallSummary;
     }
 
     /**
@@ -301,20 +474,6 @@ public class AiAnalysisResult implements Serializable {
         @JsonProperty("items")
         private List<A5Item> items;
 
-        @JsonProperty("primary_ie")
-        private String primaryIe;
-
-        @JsonProperty("secondary_ie")
-        private List<String> secondaryIe;
-
-        @JsonProperty("supporting_modules")
-        private List<String> supportingModules;
-
-        @JsonProperty("narrative_core")
-        private String narrativeCore;
-
-        @JsonProperty("narrative_full")
-        private String narrativeFull;
 
         @JsonProperty("uncertainty_label")
         private String uncertaintyLabel;
@@ -327,58 +486,124 @@ public class AiAnalysisResult implements Serializable {
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class A5Item {
+        @JsonProperty("item_type")
+        private String itemType;
+
+        @JsonProperty("lab_type")
+        private String labType;
+
+        @JsonProperty("text")
+        private String text;
+
         @JsonProperty("label")
         private String label;
     }
 
     /**
-     * Section A6: Placeholder for future data structure.
-     * Currently empty object in JSON responses.
+     * Section A6: Advanced analysis and recommendations.
      */
     @Data
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class A6 {
-        @JsonProperty("module_id")
-        private String moduleId;
+        @JsonProperty("status")
+        private String status;
 
-        @JsonProperty("ID")
-        private String id;
+        @JsonProperty("A6a")
+        private A6a a6a;
 
-        @JsonProperty("label")
-        private String label;
-
-        @JsonProperty("primary_ie")
-        private String primaryIe;
-
-        @JsonProperty("supporting_hetas")
-        private List<SupportingHeta> supportingHetas;
-
-        @JsonProperty("a4_references")
-        private List<String> a4References;
-
-        @JsonProperty("advice_core")
-        private String adviceCore;
-
-        @JsonProperty("advice_details")
-        private String adviceDetails;
+        @JsonProperty("A6b")
+        private A6b a6b;
 
         @JsonProperty("uncertainty_label")
         private String uncertaintyLabel;
     }
 
     /**
-     * Supporting HETA item for A6 section.
+     * Section A6a: Headings structure.
      */
     @Data
     @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class SupportingHeta {
-        @JsonProperty("heta_id")
-        private String hetaId;
+    public static class A6a {
+        @JsonProperty("H0")
+        private String h0;
 
-        @JsonProperty("heta_json")
-        private String hetaJson;
+        @JsonProperty("H1")
+        private String h1;
+
+        @JsonProperty("H2")
+        private String h2;
+
+        @JsonProperty("H3")
+        private String h3;
+
+        @JsonProperty("H4")
+        private String h4;
+
+        @JsonProperty("H5")
+        private String h5;
+
+        @JsonProperty("H6")
+        private String h6;
+
+        @JsonProperty("H7")
+        private String h7;
+
+        @JsonProperty("H8")
+        private String h8;
+    }
+
+    /**
+     * Section A6b: Analysis and recovery plan details.
+     */
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class A6b {
+        @JsonProperty("A6b0_epistemic_positioning")
+        private String a6b0EpistemicPositioning;
+
+        @JsonProperty("A6b1_problem_statement")
+        private String a6b1ProblemStatement;
+
+        @JsonProperty("A6b2_recovery_priorities")
+        private String a6b2RecoveryPriorities;
+
+        @JsonProperty("A6b3_heta_recovery_order")
+        private String a6b3HetaRecoveryOrder;
+
+        @JsonProperty("A6b4_conditions_uncertainties")
+        private String a6b4ConditionsUncertainties;
+
+        @JsonProperty("A6b5_discipline_translations")
+        private A6b5DisciplineTranslations a6b5DisciplineTranslations;
+
+        @JsonProperty("A6b6_out_of_scope")
+        private String a6b6OutOfScope;
+    }
+
+    /**
+     * Section A6b5: Discipline translations.
+     */
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class A6b5DisciplineTranslations {
+        @JsonProperty("bioregulatory")
+        private String bioregulatory;
+
+        @JsonProperty("nutritional")
+        private String nutritional;
+
+        @JsonProperty("homeopathic")
+        private String homeopathic;
+
+        @JsonProperty("acupuncture_energetic")
+        private String acupunctureEnergetic;
+
+        @JsonProperty("medical_avig")
+        private String medicalAvig;
     }
 
     /**
@@ -437,8 +662,6 @@ public class AiAnalysisResult implements Serializable {
         @JsonProperty("heta_json")
         private String hetaJson;
 
-        @JsonProperty("label")
-        private String label;
 
         @JsonProperty("tier")
         private String tier;

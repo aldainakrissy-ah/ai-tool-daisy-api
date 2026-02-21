@@ -27,22 +27,24 @@ public class QuestionnaireAnalysisController {
     private final DatabaseHealthService databaseHealthService;
 
     /**
-     * Analyzes an uploaded PDF questionnaire file using AI.
-     * Extracts text content, sends to OpenAI for teleonic analysis, and persists
-     * results.
+     * Analyzes uploaded PDF questionnaire files using AI.
+     * Combines multiple PDFs and makes a single API call to OpenAI for comprehensive analysis.
      *
-     * @param file the uploaded PDF file containing healthcare questionnaire data
-     * @return {@link ResponseEntity} with {@link AiAnalysisResult} containing the AI
-     *         analysis
+     * @param files the uploaded PDF files containing healthcare questionnaire data
+     * @return {@link ResponseEntity} with a single {@link AiAnalysisResult} containing the combined AI
+     *         analysis for all files
      */
     @PostMapping("/analyze")
-    public ResponseEntity<AiAnalysisResult> analyzePdf(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<AiAnalysisResult> analyzePdf(@RequestParam("files") List<MultipartFile> files, @RequestParam("promptType") String promptType) {
+        if (files == null || files.isEmpty()) {
+            log.warn("No files uploaded for analysis");
+            return ResponseEntity.badRequest().build();
+        }
 
-        AiAnalysisResult result = questionnaireAnalysisService.generatePreIntakeAnalysis(file);
-        log.info("Successfully analyzed PDF for professional: {}, client: {}",
-                result.getProfessionalName(), result.getClientName());
-            return ResponseEntity.ok(result);
-
+        AiAnalysisResult result = questionnaireAnalysisService.generateCombinedPreIntakeAnalysis(files,promptType);
+        log.info("Successfully analyzed {} PDF file(s) - Professional: {}, Client: {}",
+                files.size(), result.getProfessionalName(), result.getClientName());
+        return ResponseEntity.ok(result);
     }
 
     /**
