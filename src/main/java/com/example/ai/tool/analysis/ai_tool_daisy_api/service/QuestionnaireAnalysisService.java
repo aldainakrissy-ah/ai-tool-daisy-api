@@ -31,7 +31,7 @@ public class QuestionnaireAnalysisService {
     private static final String OPENAI_ERROR_MESSAGE = "OpenAI API analysis failed";
     private static final String NO_RESPONSE_ERROR = "No valid response received from OpenAI";
     private static final String PROMPT_ID = "pmpt_691db1ed039881908a001922e53791060b45ef8ce91f9109";
-    private static final String PROMPT_VERSION = "174";
+    private static final String PROMPT_VERSION = "168";
     private static final long MAX_TOTAL_SIZE = 10 * 1024 * 1024;
     private static final String VECTOR_STORE_ID = "vs_69796126184c819184a8093782ac87c7";
 
@@ -140,6 +140,8 @@ public class QuestionnaireAnalysisService {
             throw new RuntimeException("OpenAI returned empty response");
         }
 
+
+
         return AiAnalysisResult.fromJson(openAIResponse);
     }
 
@@ -147,7 +149,7 @@ public class QuestionnaireAnalysisService {
      * Builds ResponseCreateParams for OpenAI API call, passing PDFs directly as base64-encoded file data.
      * This avoids server-side text extraction and lets the model interpret the raw PDF layout.
      *
-     * @param files      The uploaded PDF files to include in the request
+     * @param files The uploaded PDF files to include in the request
      * @param promptType The type of prompt (e.g., "Prompt_1", "Prompt_2", "Prompt_3")
      * @return Configured ResponseCreateParams
      */
@@ -167,7 +169,7 @@ public class QuestionnaireAnalysisService {
                     return ResponseInputContent.ofInputFile(
                             ResponseInputFile.builder()
                                     .fileData("data:application/pdf;base64," + base64Data)
-                                    .filename(file.getOriginalFilename())
+                                    .filename(Objects.requireNonNull(file.getOriginalFilename()))
                                     .build()
                     );
                 })
@@ -175,7 +177,7 @@ public class QuestionnaireAnalysisService {
 
         contentItems.add(ResponseInputContent.ofInputText(
                 ResponseInputText.builder()
-                        .text(promptType)
+                        .text("Extract and analyze the following PDFs according to the prompt type: " + promptType)
                         .build()
         ));
 
