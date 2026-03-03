@@ -40,7 +40,6 @@ public class SummaryReportService {
      * @return a {@link SummaryReportResult} containing the generated summary report and associated metadata
      * @throws IllegalArgumentException if the input result is null or missing required fields
      */
-    @Transactional
     public SummaryReportResult generateSummaryReport(AiAnalysisResult result) throws JsonProcessingException {
         if(result == null) {
             throw new IllegalArgumentException("AiAnalysisResult cannot be null");
@@ -155,7 +154,7 @@ public class SummaryReportService {
      * @throws IllegalArgumentException if the document ID is null, empty, or no report is found
      * @throws JsonProcessingException if the JSON deserialization fails
      */
-    @Transactional(readOnly = true)
+    @Transactional
     public SummaryReportResult getSummaryReportByDocumentId(String documentId) throws JsonProcessingException {
         if (documentId == null || documentId.trim().isEmpty()) {
             throw new IllegalArgumentException("Document ID cannot be null or empty");
