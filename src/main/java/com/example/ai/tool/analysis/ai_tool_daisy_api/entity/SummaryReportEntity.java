@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 
@@ -23,6 +25,7 @@ public class SummaryReportEntity {
     @Column(name = "document_id", nullable = false)
     private String documentId;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "summary_report", columnDefinition = "jsonb", nullable = false)
     private String summaryReportJson;
 

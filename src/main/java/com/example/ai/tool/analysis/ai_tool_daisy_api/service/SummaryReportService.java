@@ -4,6 +4,7 @@ import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.SummaryReportEntity
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.AiAnalysisResult;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.SummaryReportResult;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.SummaryReportRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.openai.client.OpenAIClient;
 import com.openai.models.responses.*;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,6 @@ public class SummaryReportService {
     private static final String SUMMARY_REPORT_PROMPT_ID = "pmpt_69a1749bd50c819495ce2b629e5d98ab0d3efb8f8be9b2e0";
     private static final String SUMMARY_REPORT_PROMPT_VERSION = "9";
     private static final String VECTOR_STORE_ID = "vs_69796126184c819184a8093782ac87c7";
-    private static final String NO_RESPONSE_ERROR = "No valid response received from OpenAI";
 
     /**
      * Generates a summary report based on the provided AI analysis result.
@@ -37,12 +37,11 @@ public class SummaryReportService {
      * and processes the response to extract and return the summary report result.
      *
      * @param result the {@link AiAnalysisResult} containing the analysis data to be summarized
-     * @return a {@link SummaryReportResult} containing the generated summary report
+     * @return a {@link SummaryReportResult} containing the generated summary report and associated metadata
      * @throws IllegalArgumentException if the input result is null or missing required fields
-     * @throws RuntimeException if no valid response is received from OpenAI
      */
     @Transactional
-    public SummaryReportResult generateSummaryReport(AiAnalysisResult result) {
+    public SummaryReportResult generateSummaryReport(AiAnalysisResult result) throws JsonProcessingException {
         if(result == null) {
             throw new IllegalArgumentException("AiAnalysisResult cannot be null");
         }
@@ -50,7 +49,6 @@ public class SummaryReportService {
             throw new IllegalArgumentException("Professional name and client name cannot be null");
         }
 
-        try {
             String aiResultJson = result.toJson();
             //build parameters for OpenAI response creation
             ResponseCreateParams responseParams = buildResponseParams(aiResultJson);
@@ -59,7 +57,7 @@ public class SummaryReportService {
 
             if(response.output().isEmpty()) {
                 log.error("No output received from OpenAI for summary report generation");
-                return new SummaryReportResult();
+                throw new RuntimeException("No valid response received from OpenAI API");
             }
             String summaryReportText = extractResponseText(response);
 
@@ -75,12 +73,8 @@ public class SummaryReportService {
             summaryReportResult.setDocumentId(documentId);
 
             return summaryReportResult;
-
-        } catch (Exception e) {
-            log.error("Error generating summary report: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to generate summary report", e);
         }
-    }
+
 
     /**
      * Builds the parameters required to create a response using the OpenAI API.
@@ -116,14 +110,15 @@ public class SummaryReportService {
      * This method navigates through the response structure to find the first available output text.
      *
      * @param response the {@link Response} object returned by the OpenAI API after creating a response
-     * @return a string containing the extracted response text, or throws an exception if no valid response is found
+     * @return a string containing the extracted response text
+     * @throws RuntimeException if no valid response is found
      */
     private String extractResponseText(Response response) {
         return response.output().stream()
                 .flatMap(item -> item.message().stream())
                 .flatMap(msg -> msg.content().stream())
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException(NO_RESPONSE_ERROR))
+                .orElseThrow(() -> new RuntimeException("No valid response text found in OpenAI API response"))
                 .asOutputText()
                 .text();
     }
@@ -148,5 +143,32 @@ public class SummaryReportService {
         summaryReportRepository.save(summaryReportEntity);
 
         log.info("Successfully saved summary report to database with document ID: {}", documentId);
+    }
+
+    /**
+     * Retrieves a summary report from the database based on the provided document ID.
+     * This method queries the database for a {@link SummaryReportEntity} with the matching document ID,
+     * extracts the summary report JSON, and converts it into a {@link SummaryReportResult} object.
+     *
+     * @param documentId the unique identifier for the summary report document to be retrieved
+     * @return a {@link SummaryReportResult} containing the summary report data
+     * @throws IllegalArgumentException if the document ID is null, empty, or no report is found
+     * @throws JsonProcessingException if the JSON deserialization fails
+     */
+    @Transactional(readOnly = true)
+    public SummaryReportResult getSummaryReportByDocumentId(String documentId) throws JsonProcessingException {
+        if (documentId == null || documentId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Document ID cannot be null or empty");
+        }
+
+        SummaryReportEntity entity = summaryReportRepository.findByDocumentId(documentId);
+
+        if (entity == null) {
+            log.warn("Summary report not found for document ID: {}", documentId);
+            throw new IllegalArgumentException("Summary report with document ID '" + documentId + "' not found");
+        }
+
+        log.info("Successfully retrieved summary report for document ID: {}", documentId);
+        return SummaryReportResult.fromJson(entity.getSummaryReportJson());
     }
 }

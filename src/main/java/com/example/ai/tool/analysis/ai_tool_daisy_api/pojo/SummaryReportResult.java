@@ -1,6 +1,5 @@
 package com.example.ai.tool.analysis.ai_tool_daisy_api.pojo;
 
-import com.example.ai.tool.analysis.ai_tool_daisy_api.exception.JsonSerializationException;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -142,7 +141,7 @@ public class SummaryReportResult implements Serializable {
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
-    /**
+    /*
      * Represents an Integrative Field (Integrative Endoteleon) identified in the analysis.
      * Integrative fields coordinate systemic responses across multiple physiological systems.
      */
@@ -296,7 +295,7 @@ public class SummaryReportResult implements Serializable {
         private String labSummary;
     }
 
-    /**
+    /*
      * Serializes this SummaryReportResult object to JSON string.
      * Includes contextual logging for debugging and traceability.
      *
@@ -309,20 +308,15 @@ public class SummaryReportResult implements Serializable {
      * Includes contextual logging for debugging and traceability.
      *
      * @return JSON string representation of this object
-     * @throws JsonSerializationException if JSON serialization fails
+     *
      */
-    public String toJson() {
-        try {
+    public String toJson() throws JsonProcessingException {
+
             String json = MAPPER.writeValueAsString(this);
             log.debug("Successfully serialized SummaryReportResult for client: {}, professional: {}, prompt: {}",
                     clientName, professionalName, promptId);
             return json;
-        } catch (JsonProcessingException e) {
-            log.error("Failed to serialize SummaryReportResult to JSON for client: {}, professional: {}, prompt: {}",
-                    clientName, professionalName, promptId, e);
-            throw new JsonSerializationException("Failed to serialize SummaryReportResult to JSON: " + e.getMessage(), e);
         }
-    }
 
     /**
      * Deserializes JSON string to SummaryReportResult object.
@@ -330,22 +324,16 @@ public class SummaryReportResult implements Serializable {
      *
      * @param json JSON string to deserialize
      * @return SummaryReportResult object created from JSON
-     * @throws JsonSerializationException if JSON deserialization fails
      * @throws IllegalArgumentException if json parameter is null or empty
      */
-    public static SummaryReportResult fromJson(String json) {
+    public static SummaryReportResult fromJson(String json) throws JsonProcessingException {
         if (json == null || json.trim().isEmpty()) {
             throw new IllegalArgumentException("JSON string cannot be null or empty");
         }
 
-        try {
             SummaryReportResult result = MAPPER.readValue(json, SummaryReportResult.class);
             log.debug("Successfully deserialized SummaryReportResult for client: {}, professional: {}, prompt: {}",
                     result.getClientName(), result.getProfessionalName(), result.getPromptId());
             return result;
-        } catch (JsonProcessingException e) {
-            log.error("Failed to deserialize JSON to SummaryReportResult: {}", e.getMessage(), e);
-            throw new JsonSerializationException("Failed to deserialize JSON to SummaryReportResult: " + e.getMessage(), e);
-        }
     }
 }

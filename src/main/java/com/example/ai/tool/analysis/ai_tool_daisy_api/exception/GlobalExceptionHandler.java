@@ -6,12 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
 @Slf4j
-public class GlobalException {
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String,String>> handleIllegalArgumentException(IllegalArgumentException e) {
@@ -22,12 +23,12 @@ public class GlobalException {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
-    @ExceptionHandler(JsonSerializationException.class)
-    public ResponseEntity<Map<String,String>> handleJsonSerializationException(JsonSerializationException e) {
-        log.error("JSON serialization error: {}", e.getMessage(), e);
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<Map<String,String>> handleIOException(IOException e) {
+        log.error("IO exception occurred: {}", e.getMessage(), e);
         Map<String, String> error = new HashMap<>();
-        error.put("error", "Data Processing Error");
-        error.put("message", "Failed to process JSON data: " + e.getMessage());
+        error.put("error", "Internal Server Error");
+        error.put("message", "An unexpected error occurred");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 

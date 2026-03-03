@@ -1,6 +1,5 @@
 package com.example.ai.tool.analysis.ai_tool_daisy_api.pojo;
 
-import com.example.ai.tool.analysis.ai_tool_daisy_api.exception.JsonSerializationException;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -674,19 +673,15 @@ public class AiAnalysisResult implements Serializable {
      * Serializes Prompt1Result object to JSON string.
      *
      * @return JSON string representation
-     * @throws JsonSerializationException if JSON serialization fails
+     * @throws RuntimeException if JSON serialization fails
      */
-    public String toJson() {
-        try {
+    public String toJson() throws JsonProcessingException {
+
             String json = MAPPER.writeValueAsString(this);
             log.debug("Successfully serialized Prompt1Result for client: {}, professional: {}",
                      clientName, professionalName);
             return json;
-        } catch (JsonProcessingException e) {
-            log.error("Failed to serialize Prompt1Result to JSON for client: {}, professional: {}",
-                     clientName, professionalName, e);
-            throw new JsonSerializationException("Failed to serialize Prompt1Result to JSON: " + e.getMessage(), e);
-        }
+
     }
 
     /**
@@ -694,22 +689,17 @@ public class AiAnalysisResult implements Serializable {
      *
      * @param json JSON string to deserialize
      * @return Prompt1Result object
-     * @throws JsonSerializationException if JSON deserialization fails
+     * @throws RuntimeException if JSON deserialization fails
      * @throws IllegalArgumentException if json parameter is null or empty
      */
-    public static AiAnalysisResult fromJson(String json) {
+    public static AiAnalysisResult fromJson(String json) throws JsonProcessingException {
         if (json == null || json.trim().isEmpty()) {
             throw new IllegalArgumentException("JSON string cannot be null or empty");
         }
-
-        try {
             AiAnalysisResult result = MAPPER.readValue(json, AiAnalysisResult.class);
             log.debug("Successfully deserialized Prompt1Result for client: {}, professional: {}",
                      result.getClientName(), result.getProfessionalName());
             return result;
-        } catch (JsonProcessingException e) {
-            log.error("Failed to deserialize JSON to Prompt1Result: {}", e.getMessage(), e);
-            throw new JsonSerializationException("Failed to deserialize JSON to Prompt1Result: " + e.getMessage(), e);
-        }
+
     }
 }

@@ -3,8 +3,8 @@ package com.example.ai.tool.analysis.ai_tool_daisy_api.service;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1ResultEntity;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.AiAnalysisResult;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.Prompt1ResultRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.openai.client.OpenAIClient;
-import com.openai.errors.OpenAIException;
 import com.openai.models.responses.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +28,6 @@ public class QuestionnaireAnalysisService {
     private final OpenAIClient client;
     private final Prompt1ResultRepository prompt1ResultRepository;
 
-    private static final String OPENAI_ERROR_MESSAGE = "OpenAI API analysis failed";
-    private static final String NO_RESPONSE_ERROR = "No valid response received from OpenAI";
     private static final String PROMPT_ID = "pmpt_691db1ed039881908a001922e53791060b45ef8ce91f9109";
     private static final String PROMPT_VERSION = "168";
     private static final long MAX_TOTAL_SIZE = 10 * 1024 * 1024;
@@ -43,7 +41,7 @@ public class QuestionnaireAnalysisService {
      * @param promptType the type of prompt to use for analysis (e.g., "Prompt_1", "Prompt_2", "Prompt_3")
      * @return an {@link AiAnalysisResult} containing the combined analysis results for all files
      */
-    public AiAnalysisResult generateCombinedPreIntakeAnalysis(List<MultipartFile> files, String promptType) {
+    public AiAnalysisResult generateCombinedPreIntakeAnalysis(List<MultipartFile> files, String promptType) throws JsonProcessingException {
 
         if (files == null || files.isEmpty()) {
             throw new IllegalArgumentException("At least one PDF file must be provided");
@@ -60,7 +58,6 @@ public class QuestionnaireAnalysisService {
         }
         files.forEach(this::validateFile);
 
-        try {
             AiAnalysisResult result = analyzeWithOpenAI(files, promptType);
             persistResult(result);
 
@@ -68,13 +65,6 @@ public class QuestionnaireAnalysisService {
                     result.getProfessionalName(), result.getClientName());
             return result;
 
-        } catch (OpenAIException e) {
-            log.error("OpenAI API error during combined analysis", e);
-            throw new RuntimeException(OPENAI_ERROR_MESSAGE + ": " + e.getMessage(), e);
-        } catch (Exception e) {
-            log.error("Error during combined analysis", e);
-            throw new RuntimeException("Analysis failed: " + e.getMessage(), e);
-        }
     }
 
     @Transactional(readOnly = true)
@@ -128,7 +118,7 @@ public class QuestionnaireAnalysisService {
         }
     }
 
-    private AiAnalysisResult analyzeWithOpenAI(List<MultipartFile> files, String promptType) {
+    private AiAnalysisResult analyzeWithOpenAI(List<MultipartFile> files, String promptType) throws JsonProcessingException {
         ResponseCreateParams params = buildResponseParams(files, promptType);
         Response response = client.responses().create(params);
 
@@ -139,7 +129,6 @@ public class QuestionnaireAnalysisService {
             log.error("OpenAI returned empty response");
             throw new RuntimeException("OpenAI returned empty response");
         }
-
 
 
         return AiAnalysisResult.fromJson(openAIResponse);
@@ -165,7 +154,12 @@ public class QuestionnaireAnalysisService {
 
         List<ResponseInputContent> contentItems = files.stream()
                 .map(file -> {
-                    String base64Data = encodePdfToBase64(file);
+                    String base64Data;
+                    try {
+                        base64Data = encodePdfToBase64(file);
+                    } catch (IOException e) {
+                        throw new RuntimeException("Failed to encode PDF file: " + file.getOriginalFilename(), e);
+                    }
                     return ResponseInputContent.ofInputFile(
                             ResponseInputFile.builder()
                                     .fileData("data:application/pdf;base64," + base64Data)
@@ -205,29 +199,38 @@ public class QuestionnaireAnalysisService {
      *
      * @param file the PDF file to encode
      * @return Base64-encoded string of the PDF bytes
+     * @throws RuntimeException if encoding fails
      */
-    private String encodePdfToBase64(MultipartFile file) {
-        try {
+    private String encodePdfToBase64(MultipartFile file) throws IOException {
             byte[] bytes = file.getBytes();
             log.debug("Encoded '{}' to base64 ({} bytes)", file.getOriginalFilename(), bytes.length);
             return Base64.getEncoder().encodeToString(bytes);
-        } catch (IOException e) {
-            log.error("Failed to encode PDF to base64: {}", file.getOriginalFilename(), e);
-            throw new RuntimeException("PDF encoding failed: " + e.getMessage(), e);
-        }
+
     }
 
-
+    /**
+     * Extracts the response text from the OpenAI API response object.
+     *
+     * @param response the Response object from OpenAI
+     * @return the extracted response text
+     * @throws RuntimeException if no valid response is found
+     */
     private String extractResponseText(Response response) {
         return response.output().stream()
                 .flatMap(item -> item.message().stream())
                 .flatMap(msg -> msg.content().stream())
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException(NO_RESPONSE_ERROR))
+                .orElseThrow(() -> new RuntimeException("No valid response text found in OpenAI API response"))
                 .asOutputText()
                 .text();
     }
 
+    /**
+     * Persists the analysis result to the database.
+     *
+     * @param result the AiAnalysisResult to persist
+     * @throws RuntimeException if saving fails
+     */
     void persistResult(AiAnalysisResult result) {
         try {
             Prompt1ResultEntity entity = new Prompt1ResultEntity();

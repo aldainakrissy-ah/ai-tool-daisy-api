@@ -4,6 +4,7 @@ import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1ResultEntity
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.AiAnalysisResult;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.QuestionnaireAnalysisService;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.DatabaseHealthService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,7 @@ public class QuestionnaireAnalysisController {
      *         analysis for all files
      */
     @PostMapping("/analyze")
-    public ResponseEntity<AiAnalysisResult> analyzePdf(@RequestParam("files") List<MultipartFile> files, @RequestParam("promptType") String promptType) {
+    public ResponseEntity<AiAnalysisResult> analyzePdf(@RequestParam("files") List<MultipartFile> files, @RequestParam("promptType") String promptType) throws JsonProcessingException {
         if (files == null || files.isEmpty()) {
             log.warn("No files uploaded for analysis");
             return ResponseEntity.badRequest().build();
