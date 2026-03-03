@@ -1,6 +1,6 @@
 ARG REGISTRY=docker.io
 ARG REPO=eclipse-temurin
-ARG RUN_TAG=21-jre
+ARG RUN_TAG=21.0.2_13-jre
 
 FROM ${REGISTRY}/${REPO}:${RUN_TAG}
 
