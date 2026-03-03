@@ -1,6 +1,6 @@
 ARG REGISTRY=docker.io
 ARG REPO=eclipse-temurin
-ARG TAG=21-jre-jammy
+ARG TAG=21-jdk
 FROM ${REGISTRY}/${REPO}:${TAG} AS build
 
 WORKDIR /app
