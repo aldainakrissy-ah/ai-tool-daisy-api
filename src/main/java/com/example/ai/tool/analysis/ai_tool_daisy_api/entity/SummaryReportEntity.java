@@ -15,27 +15,24 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "prompt1_results")
-public class Prompt1ResultEntity {
+@Table(name = "summary_reports")
+public class SummaryReportEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "professional_id", nullable = false)
-    private String professionalId;
-
-    @Column(name = "patient_id", nullable = false)
-    private String patientId;
+    @Column(name = "document_id", nullable = false)
+    private String documentId;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "result_json", columnDefinition = "jsonb", nullable = false)
-    private String resultJson;
+    @Column(name = "summary_report", columnDefinition = "jsonb", nullable = false)
+    private String summaryReportJson;
 
     @Column(name = "prompt_type", nullable = false)
     private String promptType;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
