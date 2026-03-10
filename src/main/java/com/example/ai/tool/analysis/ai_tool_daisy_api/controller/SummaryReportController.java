@@ -50,6 +50,10 @@ public class SummaryReportController {
      */
     @GetMapping("/summary-report/{documentId}")
     public ResponseEntity<SummaryReportResult> getSummaryReportByDocumentId(@PathVariable("documentId") String documentId) throws JsonProcessingException {
+        if(documentId == null || documentId.isEmpty()) {
+            log.warn("Received invalid document ID for summary report retrieval");
+            return ResponseEntity.notFound().build();
+        }
         SummaryReportResult result = summaryReportService.getSummaryReportByDocumentId(documentId);
         return ResponseEntity.ok(result);
     }

@@ -1,5 +1,6 @@
 package com.example.ai.tool.analysis.ai_tool_daisy_api.exception;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,7 @@ import java.util.Map;
 
 @ControllerAdvice
 @Slf4j
-public class GlobalException {
+public class AiToolGlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String,String>> handleIllegalArgumentException(IllegalArgumentException e) {
@@ -47,6 +48,15 @@ public class GlobalException {
         Map<String, String> error = new HashMap<>();
         error.put("error", "Internal Server Error");
         error.put("message", "An unexpected error occurred");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+    @ExceptionHandler(JsonProcessingException.class)
+    public ResponseEntity<Map<String,String>> handleJsonProcessingException(JsonProcessingException e) {
+        log.error("JSON processing exception occurred: {}", e.getMessage(), e);
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Internal Server Error");
+        error.put("message", "An unexpected error occurred while processing JSON data");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }
