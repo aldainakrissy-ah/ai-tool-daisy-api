@@ -49,7 +49,7 @@ public class SummaryReportController {
      * @return a {@link ResponseEntity} containing the {@link SummaryReportResult} or a not found status
      */
     @GetMapping("/summary-report/{documentId}")
-    public ResponseEntity<SummaryReportResult> getSummaryReportByDocumentId(@PathVariable String documentId) throws JsonProcessingException {
+    public ResponseEntity<SummaryReportResult> getSummaryReportByDocumentId(@PathVariable("documentId") String documentId) throws JsonProcessingException {
         SummaryReportResult result = summaryReportService.getSummaryReportByDocumentId(documentId);
         return ResponseEntity.ok(result);
     }
