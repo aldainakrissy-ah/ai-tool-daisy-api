@@ -1,5 +1,5 @@
 {
-  "id": "cortisol",
+  "id": "HETA-5-COR",
   "title": {
     "en": "Cortisol",
     "nl": "Cortisol"
@@ -10,7 +10,7 @@
   },
   "sections": [
     {
-      "id": "cortisol",
+      "id": "HETA-5-COR",
       "title": {
         "en": "Cortisol",
         "nl": "Cortisol"

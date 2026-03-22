@@ -1,5 +1,5 @@
 {
-  "id": "estradiol",
+  "id": "HETA-7-EST",
   "title": {
     "en": "Estradiol",
     "nl": "Estradiol"
@@ -10,7 +10,7 @@
   },
   "sections": [
     {
-      "id": "estradiol",
+      "id": "HETA-7-EST",
       "title": {
         "en": "Estradiol",
         "nl": "Estradiol"
