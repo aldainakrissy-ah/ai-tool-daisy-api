@@ -1,0 +1,54 @@
+{
+  "id": "HETA-39-GHR",
+  "title": {
+    "en": "Ghrelin",
+    "nl": " Ghreline"
+  },
+  "description": {
+    "en": "The following questions concern your hunger pattern, appetite regulation, energy stability, and your body sensation around meals.",
+    "nl": "De volgende vragen gaan over hoe je lichaam reageert op plotselinge stress, spanning of onverwachte situaties."
+  },
+  "sections": [
+    {
+      "id": "HETA-39-GHR",
+      "title": {
+        "en": "Ghrelin",
+        "nl": "Ghreline"
+      },
+      "questions": [
+        {
+          "id": "ghr-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience a strong sense of hunger late in the evening or at night?",
+            "nl": "Ervaar je bij stress plotselinge hartkloppingen, trillen, zweten of een gevoel van ‘schieten in actie’?"
+          }
+        },
+        {
+          "id": "ghr-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you have moments when you want to eat impulsively, without real physical hunger?",
+            "nl": "Heb je het gevoel dat je bij onverwachte prikkels snel overspoeld raakt of in paniekstand schiet?"
+          }
+        },
+        {
+          "id": "ghr-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you have energy dips that are particularly noticeable between meals?",
+            "nl": "Merk je dat je na een stressmoment moeite hebt om weer tot rust te komen, ook als de situatie voorbij is?"
+          }
+        },
+        {
+          "id": "ghr-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel that your relationship with hunger and satiety is not well-aligned, as if your body is giving incorrect signals?",
+            "nl": "Heb je het gevoel dat je systeem te snel “vol gas” gaat, zonder voldoende rem of landing?"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,51 +1,51 @@
 {
   "id": "HETA-27-END",
   "title": {
-    "en": "Beta endorfinen",
-    "nl": "Beta endorfinen"
+    "en": "Beta-endorphin",
+    "nl": "Beta-endorfine"
   },
   "description": {
-    "en": "The following questions are about your sensitivity to pain, inner pleasure capacity, stress buffering, and your ability to experience contentment.",
-    "nl": "De volgende vragen gaan over je pijngevoeligheid, innerlijk genotsvermogen, stress-buffering en je vermogen om tevredenheid te ervaren."
+    "en": "The following questions concern your pain sensitivity, your ability to experience satisfaction after exertion or social interaction, and your recovery capacity after physical or mental strain.",
+    "nl": "De volgende vragen gaan over je pijngevoeligheid, je vermogen om voldoening te ervaren na inspanning of sociale interactie, en je herstellend vermogen na fysieke of mentale belasting."
   },
   "sections": [
     {
       "id": "HETA-27-END",
       "title": {
-        "en": "Beta endorfinen",
-        "nl": "Beta endorfinen"
+        "en": "Beta-endorphin",
+        "nl": "Beta-endorfine"
       },
       "questions": [
         {
-          "id": "beta-endorfinen-q1",
+          "id": "end-q1",
           "type": "text",
           "text": {
-            "en": "Do you suffer from persistent pain or increased sensitivity to pain, even from mild physical stimuli?",
-            "nl": "Heb je last van aanhoudende pijnklachten of verhoogde gevoeligheid voor pijn, ook bij milde fysieke prikkels?"
+            "en": "Do you suffer from increased pain sensitivity or difficulty tolerating physical exertion without prolonged after-pain?",
+            "nl": "Heb je last van verhoogde pijngevoeligheid of moeite om fysieke inspanning zonder langdurige napijn te verdragen?"
           }
         },
         {
-          "id": "beta-endorfinen-q2",
+          "id": "end-q2",
           "type": "text",
           "text": {
-            "en": "Do you struggle to experience moments of happiness or satisfaction, or do you often experience a flat, subdued mood?",
-            "nl": "Heb je moeite om momenten van geluk of voldoening te ervaren, of voel je vaker een vlakke, gedempte stemming?"
+            "en": "Do you feel that you experience less satisfaction or ‘good fatigue’ after exertion or social activities, but rather drain yourself more quickly?",
+            "nl": "Heb je het gevoel dat je na inspanning of sociale activiteiten minder voldoening of ‘goede moeheid’ ervaart, maar juist eerder leegloopt?"
           }
         },
         {
-          "id": "beta-endorfinen-q3",
+          "id": "end-q3",
           "type": "text",
           "text": {
-            "en": "Do you notice that during periods of stress or overload, you more quickly resort to pleasurable behaviors like eating, screen time, or other short-term pleasures?",
-            "nl": "Merk je dat je in periodes van stress of overbelasting sneller teruggrijpt naar genotsgedrag zoals eten, schermgebruik of andere korte-termijnpleziertjes?"
+            "en": "Do you notice that you recover less well after physical or mental strain, for example, experiencing more muscle pain, slow recovery, or emotional exhaustion?",
+            "nl": "Merk je dat je minder goed herstelt na fysieke of mentale belasting, bijvoorbeeld meer last hebt van spierpijn, traag herstel of emotionele uitputting?"
           }
         },
         {
-          "id": "beta-endorfinen-q4",
+          "id": "end-q4",
           "type": "text",
           "text": {
-            "en": "Do you feel like your body struggles to generate natural contentment or well-being, as if there's an internal shortage of soothing or happiness-producing impulses?",
-            "nl": "Heb je het gevoel dat je lichaam moeite heeft om natuurlijke tevredenheid of welzijn te genereren, alsof er een intern tekort is aan rustgevende of geluk-gevende impulsen?"
+            "en": "Do you feel that your natural ‘feel-good’ feeling after healthy exertion or social contact has disappeared, as if reward and recovery are lacking?",
+            "nl": "Heb je het gevoel dat je natuurlijke ‘feelgood’ na gezonde inspanning of sociaal contact verdwenen is, alsof beloning en herstel uitblijven?"
           }
         }
       ]

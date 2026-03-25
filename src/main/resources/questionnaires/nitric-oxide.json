@@ -1,0 +1,54 @@
+{
+  "id": "HETA-43-NO",
+  "title": {
+    "en": "Nitric Oxide",
+    "nl": "Nitric Oxide"
+  },
+  "description": {
+    "en": "The following questions concern circulation, physical response, and how smoothly your system responds.",
+    "nl": "De volgende vragen gaan over doorbloeding, lichamelijke respons en hoe soepel je systeem reageert."
+  },
+  "sections": [
+    {
+      "id": "HETA-43-NO",
+      "title": {
+        "en": "Nitric Oxide",
+        "nl": "Nitric Oxide"
+      },
+      "questions": [
+        {
+          "id": "no-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer from cold hands/feet, headaches, or a feeling of ‘poor circulation’?",
+            "nl": "Heb je last van koude handen/voeten, hoofdpijn of een gevoel van ‘slechte doorstroming’?"
+          }
+        },
+        {
+          "id": "no-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that tension quickly becomes trapped in your body?",
+            "nl": "Merk je dat spanning zich snel vastzet in je lichaam?"
+          }
+        },
+        {
+          "id": "no-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you experience your body responding slowly during exertion or recovery?",
+            "nl": "Ervaar je dat je lichaam traag reageert bij inspanning of herstel?"
+          }
+        },
+        {
+          "id": "no-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel that energy or relaxation cannot flow properly?",
+            "nl": "Heb je het gevoel dat energie of ontspanning niet goed kan doorstromen?"
+          }
+        }
+      ]
+    }
+  ]
+}

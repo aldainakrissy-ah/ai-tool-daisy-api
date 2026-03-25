@@ -1,0 +1,54 @@
+{
+  "id": "HETA-35-OPI",
+  "title": {
+    "en": "Opioid receptors",
+    "nl": "Opioïde receptoren"
+  },
+  "description": {
+    "en": "The following questions concern your pain sensitivity, inner capacity for pleasure, stress buffering, and your ability to experience satisfaction.",
+    "nl": "De volgende vragen gaan over je pijngevoeligheid, innerlijk genotsvermogen, stressbuffering en jevermogen om tevredenheid te ervaren."
+  },
+  "sections": [
+    {
+      "id": "HETA-35-OPI",
+      "title": {
+        "en": "Opioid receptors",
+        "nl": "Opioïde receptoren"
+      },
+      "questions": [
+        {
+          "id": "opi-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you suffer from persistent pain complaints or increased sensitivity to pain, even with mild physical stimuli?",
+            "nl": "Heb je last van aanhoudende pijnklachten of verhoogde gevoeligheid voor pijn, ook bij milde fysieke prikkels?"
+          }
+        },
+        {
+          "id": "opi-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you have difficulty experiencing moments of happiness or satisfaction, or do you more often feel a flat, subdued mood?",
+            "nl": "Heb je moeite om momenten van geluk of voldoening te ervaren, of voel je vaker een vlakke, gedempte stemming?"
+          }
+        },
+        {
+          "id": "opi-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that during periods of stress or overload you are quicker to resort to pleasure behaviors such as eating, screen use, or other short-term pleasures?",
+            "nl": "Merk je dat je in periodes van stress of overbelasting sneller teruggrijpt naar genotsgedrag zoals eten, schermgebruik of andere korte-termijnpleziertjes?"
+          }
+        },
+        {
+          "id": "opi-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel that your body struggles to generate natural satisfaction or well-being, as if there is an internal deficit of soothing or happiness-giving impulses?",
+            "nl": "Heb je het gevoel dat je lichaam moeite heeft om natuurlijke tevredenheid of welzijn te genereren, alsof er een intern tekort is aan rustgevende of geluk-gevende impulsen?"
+          }
+        }
+      ]
+    }
+  ]
+}

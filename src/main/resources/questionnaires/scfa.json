@@ -1,0 +1,54 @@
+{
+  "id": "HETA-40-SCF",
+  "title": {
+    "en": "SCFA",
+    "nl": "SCFA"
+  },
+  "description": {
+    "en": "The following questions concern your digestion, food tolerance, and how stable you feel physically and mentally.",
+    "nl": "De volgende vragen gaan over je spijsvertering, voedingstolerantie en hoe stabiel je je fysiek en mentaal voelt."
+  },
+  "sections": [
+    {
+      "id": "HETA-40-SCF",
+      "title": {
+        "en": "SCFA",
+        "nl": "SCFA"
+      },
+      "questions": [
+        {
+          "id": "scf-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you regularly suffer from bloating, irregular stool, or abdominal complaints without a clear cause?",
+            "nl": "Heb je regelmatig last van een opgeblazen gevoel, wisselende ontlasting of buikklachten zonder duidelijke oorzaak?"
+          }
+        },
+        {
+          "id": "scf-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that your mood or mental clarity is strongly linked to what you eat?",
+            "nl": "Merk je dat je stemming of mentale helderheid sterk samenhangt met wat je eet?"
+          }
+        },
+        {
+          "id": "scf-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you experience fluctuations in energy or well-being throughout the day, especially after meals?",
+            "nl": "Ervaar je schommelingen in energie of welzijn gedurende de dag, vooral na maaltijden?"
+          }
+        },
+        {
+          "id": "scf-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel that your system struggles to truly “anchor” or utilize food?",
+            "nl": "Heb je het gevoel dat je systeem moeite heeft om voeding echt te “verankeren” of te benutten?"
+          }
+        }
+      ]
+    }
+  ]
+}
