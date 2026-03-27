@@ -1,0 +1,54 @@
+{
+  "id": "HETA-25-ADR",
+  "title": {
+    "en": "Adrenaline",
+    "nl": "Adrenaline"
+  },
+  "description": {
+    "en": "The following questions concern how your body reacts to sudden stress, tension, or unexpected situations.",
+    "nl": "De volgende vragen gaan over hoe je lichaam reageert op plotselinge stress, spanning of onverwachte situaties."
+  },
+  "sections": [
+    {
+      "id": "HETA-25-ADR",
+      "title": {
+        "en": "Adrenaline",
+        "nl": "Adrenaline"
+      },
+      "questions": [
+        {
+          "id": "adr-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you experience sudden palpitations, trembling, sweating, or a sense of ‘jumping into action’ when under stress?",
+            "nl": "Ervaar je bij stress plotselinge hartkloppingen, trillen, zweten of een gevoel van ‘schieten in actie’?"
+          }
+        },
+        {
+          "id": "adr-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you feel that you are quickly overwhelmed or go into panic mode in response to unexpected stimuli?",
+            "nl": "Heb je het gevoel dat je bij onverwachte prikkels snel overspoeld raakt of in paniekstand schiet?"
+          }
+        },
+        {
+          "id": "adr-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that you have difficulty calming down after a stressful moment, even when the situation has passed?",
+            "nl": "Merk je dat je na een stressmoment moeite hebt om weer tot rust te komen, ook als de situatie voorbij is?"
+          }
+        },
+        {
+          "id": "adr-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel that your system goes “full throttle” too quickly, without sufficient braking or landing?",
+            "nl": "Heb je het gevoel dat je systeem te snel “vol gas” gaat, zonder voldoende rem of landing?"
+          }
+        }
+      ]
+    }
+  ]
+}

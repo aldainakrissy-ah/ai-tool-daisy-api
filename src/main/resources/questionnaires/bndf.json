@@ -1,0 +1,54 @@
+{
+  "id": "HETA-42-BDNF",
+  "title": {
+    "en": "BDNF",
+    "nl": "BDNF"
+  },
+  "description": {
+    "en": "The following questions concern your learning ability, mental flexibility, and emotional resilience.",
+    "nl": "De volgende vragen gaan over je leervermogen, mentale flexibiliteit en emotionele veerkracht."
+  },
+  "sections": [
+    {
+      "id": "HETA-42-BDNF",
+      "title": {
+        "en": "BDNF",
+        "nl": "BDNF"
+      },
+      "questions": [
+        {
+          "id": "bndf-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you feel that you become mentally exhausted quickly or have difficulty concentrating for extended periods?",
+            "nl": "Heb je het gevoel dat je mentaal snel uitgeput raakt of moeite hebt met langdurige concentratie?"
+          }
+        },
+        {
+          "id": "bndf-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that you are less flexible in your thinking or have difficulty breaking out of negative patterns?",
+            "nl": "Merk je dat je minder flexibel bent in denken of moeilijk uit negatieve patronen komt?"
+          }
+        },
+        {
+          "id": "bndf-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you experience that recovery after mental or emotional strain is slow?",
+            "nl": "Ervaar je dat herstel na mentale of emotionele belasting traag verloopt?"
+          }
+        },
+        {
+          "id": "bndf-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel that your system struggles to adapt or renew itself?",
+            "nl": "Heb je het gevoel dat je systeem moeite heeft om zich aan te passen of te vernieuwen?"
+          }
+        }
+      ]
+    }
+  ]
+}

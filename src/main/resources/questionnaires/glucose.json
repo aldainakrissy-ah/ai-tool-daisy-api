@@ -1,5 +1,5 @@
 {
-  "id": "glucose",
+  "id": "HETA-10-GLUC",
   "title": {
     "en": "Glucose",
     "nl": "Glucose"
@@ -10,7 +10,7 @@
   },
   "sections": [
     {
-      "id": "glucose",
+      "id": "HETA-10-GLUC",
       "title": {
         "en": "Glucose",
         "nl": "Glucose"

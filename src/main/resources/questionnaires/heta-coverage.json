@@ -10,7 +10,7 @@
   },
   "sections": [
     {
-      "id": "acth",
+      "id": "HETA-1-ACT",
       "title": { "en": "ACTH", "nl": "ACTH" },
       "description": {
         "en": "The following questions are about your energy levels when you wake up, your response to stress, and how your system switches between action and recovery.",
@@ -24,7 +24,7 @@
       ]
     },
     {
-      "id": "9cra",
+      "id": "HETA-28-9CIS",
       "title": { 
         "en": "9-cis-retinolzuur", 
         "nl": "9-cis-retinolzuur" 
@@ -69,7 +69,7 @@
       ]
     },
     {
-      "id": "noradrenaline",
+      "id": "HETA-15-NOR",
       "title": { 
         "en": "Noradrenaline", 
         "nl": "Noradrenaline" 
@@ -114,7 +114,7 @@
       ]
     },
     {
-      "id": "acetylcholine",
+      "id": "HETA-31-ACE",
       "title": {
         "en": "Acetylcholine",
         "nl": "Acetylcholine"
@@ -159,7 +159,7 @@
       ]
     },
     {
-      "id": "crh",
+      "id": "HETA-6-CRH",
       "title": {
         "en": "CRH",
         "nl": "CRH"
@@ -204,7 +204,7 @@
       ]
     },
     {
-      "id": "vasopressine",
+      "id": "HETA-23-VASO",
       "title": {
         "en": "Vasopressine",
         "nl": "Vasopressine"
@@ -249,7 +249,7 @@
       ]
     },
     {
-      "id": "dopamine",
+      "id": "HETA-26-DOP",
       "title": {
         "en": "Dopamine",
         "nl": "Dopamine"
@@ -294,7 +294,7 @@
       ]
     },
     {
-      "id": "estradiol",
+      "id": "HETA-7-EST",
       "title": {
         "en": "Estradiol",
         "nl": "Estradiol"
@@ -339,7 +339,7 @@
       ]
     },
     {
-      "id": "histamine",
+      "id": "HETA-11-HIS",
       "title": {
         "en": "Histamine",
         "nl": "Histamine"
@@ -384,7 +384,7 @@
       ]
     },
     {
-      "id": "bradykinine",
+      "id": "HETA-36-BRA",
       "title": {
         "en": "Bradykinine",
         "nl": "Bradykinine"
@@ -429,7 +429,7 @@
       ]
     },
     {
-      "id": "glycine",
+      "id": "HETA-37-GLY",
       "title": {
         "en": "Glycine",
         "nl": "Glycine"
@@ -474,7 +474,7 @@
       ]
     },
     {
-      "id": "galanine",
+      "id": "HETA-30-GAL",
       "title": {
         "en": "Galanine",
         "nl": "Galanine"
@@ -519,7 +519,7 @@
       ]
     },
     {
-      "id": "serotonine",
+      "id": "HETA-18-SER",
       "title": {
         "en": "Serotonine",
         "nl": "Serotonine"
@@ -564,7 +564,7 @@
       ]
     },
     {
-      "id": "melatonine",
+      "id": "HETA-14-MEL",
       "title": {
         "en": "Melatonine",
         "nl": "Melatonine"
@@ -609,7 +609,7 @@
       ]
     },
     {
-      "id": "igf1",
+      "id": "HETA-12-IGF",
       "title": {
         "en": "IGF-1",
         "nl": "IGF-1"
@@ -654,7 +654,7 @@
       ]
     },
     {
-      "id": "substancep",
+      "id": "HETA-19-SUBP",
       "title": {
         "en": "Substance P",
         "nl": "Substance P"
@@ -699,7 +699,7 @@
       ]
     },
     {
-      "id": "glucose",
+      "id": "HETA-10-GLUC",
       "title": {
         "en": "Glucose",
         "nl": "Glucose"
@@ -744,7 +744,7 @@
       ]
     },
     {
-      "id": "glp1",
+      "id": "HETA-33-GLP",
       "title": {
         "en": "GLP-1",
         "nl": "GLP-1"
@@ -789,7 +789,7 @@
       ]
     },
     {
-      "id": "t3",
+      "id": "HETA-21-T3",
       "title": {
         "en": "T3",
         "nl": "T3"
@@ -834,7 +834,7 @@
       ]
     },
     {
-      "id": "adenosine",
+      "id": "HETA-3-ADE",
       "title": {
         "en": "Adenosine",
         "nl": "Adenosine"
@@ -879,7 +879,7 @@
       ]
     },
     {
-      "id": "testosteron",
+      "id": "HETA-20-TEST",
       "title": {
         "en": "Testosteron",
         "nl": "Testosteron"
@@ -924,7 +924,7 @@
       ]
     },
     {
-      "id": "glutamate",
+      "id": "HETA-9-GLUT",
       "title": {
         "en": "Glutamate",
         "nl": "Glutamaat"
@@ -969,7 +969,7 @@
       ]
     },
     {
-      "id": "vip",
+      "id": "HETA-22-VIP",
       "title": {
         "en": "VIP",
         "nl": "VIP"
@@ -1014,7 +1014,7 @@
       ]
     },
     {
-      "id": "bh4",
+      "id": "HETA-32-BH4",
       "title": {
         "en": "BH4",
         "nl": "BH4"
@@ -1059,7 +1059,7 @@
       ]
     },
     {
-      "id": "prolactine",
+      "id": "HETA-17-PROL",
       "title": {
         "en": "Prolactine",
         "nl": "Prolactine"
@@ -1104,7 +1104,7 @@
       ]
     },
     {
-      "id": "gaba",
+      "id": "HETA-8-GAB",
       "title": {
         "en": "GABA",
         "nl": "GABA"
@@ -1149,7 +1149,7 @@
       ]
     },
     {
-      "id": "progesteron",
+      "id": "HETA-16-PROG",
       "title": {
         "en": "Progesteron",
         "nl": "Progesteron"
@@ -1194,7 +1194,7 @@
       ]
     },
     {
-      "id": "somatropine",
+      "id": "HETA-34-SOMA",
       "title": {
         "en": "Somatropine",
         "nl": "Somatropine"
@@ -1239,7 +1239,7 @@
       ]
     },
     {
-      "id": "calcitriol",
+      "id": "HETA-4-CAL",
       "title": {
         "en": "Calcitriol",
         "nl": "Calcitriol"
@@ -1284,7 +1284,7 @@
       ]
     },
     {
-      "id": "cortisol",
+      "id": "HETA-5-COR",
       "title": {
         "en": "Cortisol",
         "nl": "Cortisol"
@@ -1329,7 +1329,7 @@
       ]
     },
     {
-      "id": "beta-endorfinen",
+      "id": "HETA-27-END",
       "title": {
         "en": "Beta endorfinen",
         "nl": "Beta endorfinen"
@@ -1419,7 +1419,7 @@
       ]
     },
     {
-      "id": "2ag",
+      "id": "HETA-29-2AG",
       "title": {
         "en": "2-Arachidonoylglycerol (2-AG)",
         "nl": "2-Arachidonoylglycerol (2-AG)"
@@ -1464,7 +1464,7 @@
       ]
     },
     {
-      "id": "anandaminde",
+      "id": "HETA-2-ANA",
       "title": {
         "en": "Anandaminde",
         "nl": "Anandaminde"
@@ -1509,7 +1509,7 @@
       ]
     },
     {
-      "id": "leptine",
+      "id": "HETA-13-LEP",
       "title": {
         "en": "Leptine",
         "nl": "Leptine"
@@ -1554,7 +1554,7 @@
       ]
     },
     {
-      "id": "oxytocine",
+      "id": "HETA-24-OXY",
       "title": {
         "en": "Oxytocine",
         "nl": "Oxytocine"
@@ -1599,7 +1599,7 @@
       ]
     },
     {
-      "id": "npy",
+      "id": "HETA-38-NPY",
       "title": {
         "en": "NPY",
         "nl": "NPY"

@@ -1,5 +1,5 @@
 {
-  "id": "acth",
+  "id": "HETA-1-ACT",
   "title": {
     "en": "ACTH",
     "nl": "ACTH"
@@ -10,7 +10,7 @@
   },
   "sections": [
     {
-      "id": "acth",
+      "id": "HETA-1-ACT",
       "title": {
         "en": "ACTH",
         "nl": "ACTH"

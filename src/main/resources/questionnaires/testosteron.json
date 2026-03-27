@@ -1,5 +1,5 @@
 {
-  "id": "testosteron",
+  "id": "HETA-20-TEST",
   "title": {
     "en": "Testosteron",
     "nl": "Testosteron"
@@ -10,7 +10,7 @@
   },
   "sections": [
     {
-      "id": "testosteron",
+      "id": "HETA-20-TEST",
       "title": {
         "en": "Testosteron",
         "nl": "Testosteron"

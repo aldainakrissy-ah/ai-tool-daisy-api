@@ -1,5 +1,5 @@
 {
-  "id": "vasopressine",
+  "id": "HETA-23-VASO",
   "title": {
     "en": "Vasopressine",
     "nl": "Vasopressine"
@@ -10,7 +10,7 @@
   },
   "sections": [
     {
-      "id": "vasopressine",
+      "id": "HETA-23-VASO",
       "title": {
         "en": "Vasopressine",
         "nl": "Vasopressine"

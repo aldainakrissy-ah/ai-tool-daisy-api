@@ -1,0 +1,54 @@
+{
+  "id": "HETA-41-PROS",
+  "title": {
+    "en": "Prostaglandins",
+    "nl": "Prostaglandins"
+  },
+  "description": {
+    "en": "The following questions concern pain, inflammatory responses, and how your body reacts during exertion or recovery.",
+    "nl": "De volgende vragen gaan over pijn, ontstekingsreacties en hoe je lichaam reageert bij belasting of herstel."
+  },
+  "sections": [
+    {
+      "id": "HETA-41-PROS",
+      "title": {
+        "en": "Prostaglandins",
+        "nl": "Prostaglandins"
+      },
+      "questions": [
+        {
+          "id": "pros-q1",
+          "type": "text",
+          "text": {
+            "en": "Do you regularly experience pain, stiffness, swelling, or inflammatory symptoms?",
+            "nl": "Heb je regelmatig pijn, stijfheid, zwelling of ontstekingsachtige klachten?"
+          }
+        },
+        {
+          "id": "pros-q2",
+          "type": "text",
+          "text": {
+            "en": "Do you notice that pain or physical discomfort strongly influences your mood or physical capacity?",
+            "nl": "Merk je dat pijn of lichamelijk ongemak je stemming of belastbaarheid sterk beïnvloedt?"
+          }
+        },
+        {
+          "id": "pros-q3",
+          "type": "text",
+          "text": {
+            "en": "Do you experience symptoms returning cyclically, for example around exertion, menstruation, or recovery periods?",
+            "nl": "Ervaar je dat klachten cyclisch terugkomen, bijvoorbeeld rond inspanning, menstruatie of herstelmomenten?"
+          }
+        },
+        {
+          "id": "pros-q4",
+          "type": "text",
+          "text": {
+            "en": "Do you feel that your system switches into an ‘alarm or pain mode’ too quickly?",
+            "nl": "Heb je het gevoel dat je systeem te snel in een ‘alarm- of pijnmodus’ schiet?"
+          }
+        }
+      ]
+    }
+  ]
+}
