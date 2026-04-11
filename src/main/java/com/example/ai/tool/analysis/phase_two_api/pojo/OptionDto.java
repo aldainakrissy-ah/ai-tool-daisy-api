@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class OptionDto {
     private String value;
+    private String group;
     private LocalizedTextDto label;
     private Integer sortOrder;
 }
