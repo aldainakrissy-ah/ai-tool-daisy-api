@@ -20,6 +20,9 @@ public class Option {
     @Column(name = "sort_order")
     private Integer sortOrder;
 
+    @Column(name = "group")
+    private String group;
+
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "en", column = @Column(name = "label_en", columnDefinition = "text")),

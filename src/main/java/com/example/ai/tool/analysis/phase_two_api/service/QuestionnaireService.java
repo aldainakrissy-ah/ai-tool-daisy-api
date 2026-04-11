@@ -113,6 +113,9 @@ public class QuestionnaireService {
         OptionDto dto = new OptionDto();
         dto.setValue(option.getValue());
         dto.setLabel(toLocalizedTextDto(option.getLabel()));
+        if(dto.getGroup() != null) {
+            dto.setGroup(option.getGroup());
+        }
         return dto;
     }
 
@@ -270,6 +273,9 @@ public class QuestionnaireService {
         Option option = new Option();
         option.setValue(dto.getValue());
         option.setLabel(toLocalizedText(dto.getLabel()));
+        if(dto.getGroup() != null) {
+            option.setGroup(dto.getGroup());
+        }
         return option;
     }
 
@@ -357,6 +363,9 @@ public class QuestionnaireService {
                                         Option option = new Option();
                                         option.setValue(optionDto.getValue());
                                         option.setLabel(toLocalizedText(optionDto.getLabel()));
+                                        if(optionDto.getGroup() != null) {
+                                            option.setGroup(optionDto.getGroup());
+                                        }
                                         option.setSortOrder(optionOrder.getAndIncrement());
                                         return option;
                                     })
