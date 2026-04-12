@@ -1,11 +1,8 @@
 package com.example.ai.tool.analysis.phase_two_api.service;
 
-import com.example.ai.tool.analysis.phase_two_api.entity.Question;
-import com.example.ai.tool.analysis.phase_two_api.entity.QuestionColumn;
 import com.example.ai.tool.analysis.phase_two_api.pojo.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.NullNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -17,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -170,6 +166,10 @@ public class QuestionnaireLoaderService {
                 JsonNode labelNode = optionNode.get("label");
                 if (labelNode != null) {
                     optionDto.setLabel(parseLocalizedTextDto(labelNode));
+                }
+                JsonNode groupNode = optionNode.get("group");
+                if (groupNode != null && !groupNode.isNull()) {
+                    optionDto.setGroup(groupNode.asText());
                 }
                 options.add(optionDto);
             }
