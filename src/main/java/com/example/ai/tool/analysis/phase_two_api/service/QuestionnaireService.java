@@ -79,6 +79,7 @@ public class QuestionnaireService {
         SectionDto dto = new SectionDto();
         dto.setId(section.getId());
         dto.setTitle(toLocalizedTextDto(section.getTitle()));
+        dto.setDescription(toLocalizedTextDto(section.getDescription()));
         if (section.getQuestions() != null) {
             dto.setQuestions(section.getQuestions().stream()
                     .map(this::convertQuestionToDto)
@@ -113,7 +114,7 @@ public class QuestionnaireService {
         OptionDto dto = new OptionDto();
         dto.setValue(option.getValue());
         dto.setLabel(toLocalizedTextDto(option.getLabel()));
-        if(dto.getGroup() != null) {
+        if(option.getGroup() != null) {
             dto.setGroup(option.getGroup());
         }
         return dto;
@@ -181,6 +182,7 @@ public class QuestionnaireService {
         // Ensure ID is set - generate a UUID if not provided
         section.setId(dto.getId() != null ? dto.getId() : UUID.randomUUID().toString());
         section.setTitle(toLocalizedText(dto.getTitle()));
+        section.setDescription(toLocalizedText(dto.getDescription()));
 
         if (dto.getQuestions() != null) {
             AtomicInteger questionOrder = new AtomicInteger(0);

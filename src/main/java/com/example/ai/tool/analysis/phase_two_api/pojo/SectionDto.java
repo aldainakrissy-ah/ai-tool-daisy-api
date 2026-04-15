@@ -13,6 +13,7 @@ import java.util.List;
 public class SectionDto {
     private String id;
     private LocalizedTextDto title;
+    private LocalizedTextDto description;
     private List<QuestionDto> questions = new ArrayList<>();
     private Integer sortOrder;
 }

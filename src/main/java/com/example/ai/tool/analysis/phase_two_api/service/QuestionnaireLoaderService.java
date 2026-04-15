@@ -106,6 +106,12 @@ public class QuestionnaireLoaderService {
             dto.setTitle(parseLocalizedTextDto(titleNode));
         }
 
+        // Parse description if it exists
+        JsonNode descriptionNode = sectionNode.get("description");
+        if (descriptionNode != null) {
+            dto.setDescription(parseLocalizedTextDto(descriptionNode));
+        }
+
         // Parse questions array
         JsonNode questionsNode = sectionNode.get("questions");
         if (questionsNode != null && questionsNode.isArray()) {
