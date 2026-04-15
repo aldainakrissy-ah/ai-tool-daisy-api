@@ -20,7 +20,7 @@ public class Option {
     @Column(name = "sort_order")
     private Integer sortOrder;
 
-    @Column(name = "`group`")
+    @Column(name = "option_group")
     private String group;
 
     @Embedded

@@ -31,6 +31,13 @@ public class Section {
     })
     private LocalizedText title;
 
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "en", column = @Column(name = "description_en", columnDefinition = "text")),
+            @AttributeOverride(name = "nl", column = @Column(name = "description_nl", columnDefinition = "text"))
+    })
+    private LocalizedText description;
+
     @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @OrderBy("sortOrder ASC")
     @BatchSize(size = 100)
