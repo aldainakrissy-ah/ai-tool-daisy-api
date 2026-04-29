@@ -6,7 +6,10 @@ import com.example.ai.tool.analysis.ai_tool_daisy_api.service.SummaryReportServi
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,17 +32,26 @@ public class SummaryReportController {
      * @param analysisResult the AI analysis result containing information about the professional, client, and document
      * @return a {@link ResponseEntity} containing the generated {@link SummaryReportResult} or a bad request status
      */
-    @PostMapping("/summary-report")
-    public ResponseEntity<SummaryReportResult> generateSummaryReport(@RequestBody AiAnalysisResult analysisResult) throws JsonProcessingException {
+    @PostMapping(value = "/summary-report", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> generateSummaryReport(@RequestBody AiAnalysisResult analysisResult) throws JsonProcessingException {
         if (analysisResult == null) {
             log.warn("Received null analysis result for summary report generation");
             return ResponseEntity.badRequest().build();
         }
+
         SummaryReportResult result = summaryReportService.generateSummaryReport(analysisResult);
-        log.info("Successfully generated summary report for Professional: {}, Client: {}",
+        
+        log.info("Successfully generated summary report data for Professional: {}, Client: {}",
                 result.getProfessionalName(), result.getClientName());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+        byte[] pdfBytes = summaryReportService.generatePdfReport(result);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", "summary-report-" + result.getDocumentId() + ".pdf");
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.CREATED);
     }
 
     /**
