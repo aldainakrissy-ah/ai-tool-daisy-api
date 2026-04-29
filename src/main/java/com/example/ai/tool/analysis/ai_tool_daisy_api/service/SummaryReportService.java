@@ -5,6 +5,12 @@ import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.AiAnalysisResult;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.SummaryReportResult;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.SummaryReportRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.PdfWriter;
 import com.openai.client.OpenAIClient;
 import com.openai.models.responses.*;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -169,5 +176,125 @@ public class SummaryReportService {
 
         log.info("Successfully retrieved summary report for document ID: {}", documentId);
         return SummaryReportResult.fromJson(entity.getSummaryReportJson());
+    }
+
+    public byte[] generatePdfReport(SummaryReportResult result) {
+        Document document = new Document();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+    
+        try {
+            PdfWriter.getInstance(document, out);
+            document.open();
+    
+            // Define Fonts
+            Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
+            Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14);
+            Font subHeaderFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12);
+            Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+    
+            // Title
+            document.add(new Paragraph("AI Summary Report", titleFont));
+            document.add(new Paragraph(" "));
+    
+            // Client & Professional Info
+            document.add(new Paragraph("Client: " + (result.getClientName() != null ? result.getClientName() : "(not provided)"), bodyFont));
+            document.add(new Paragraph("Professional: " + (result.getProfessionalName() != null ? result.getProfessionalName() : "(not provided)"), bodyFont));
+            document.add(new Paragraph("Document ID: " + result.getDocumentId(), bodyFont));
+            document.add(new Paragraph(" "));
+    
+            // Executive Summary
+            if (result.getExecutiveSummary() != null && !result.getExecutiveSummary().isEmpty()) {
+                document.add(new Paragraph("Executive Summary", headerFont));
+                document.add(new Paragraph(result.getExecutiveSummary(), bodyFont));
+                document.add(new Paragraph(" "));
+            }
+    
+            // Integrative Fields
+            if (result.getIntegrativeFields() != null && !result.getIntegrativeFields().isEmpty()) {
+                document.add(new Paragraph("Integrative Fields", headerFont));
+                for (var field : result.getIntegrativeFields()) {
+                    document.add(new Paragraph(field.getIeTitle(), subHeaderFont));
+                    document.add(new Paragraph("Description: " + field.getDescription(), bodyFont));
+                    document.add(new Paragraph("Role in Analysis: " + field.getRoleInAnalysis(), bodyFont));
+                    document.add(new Paragraph(" "));
+                }
+            }
+
+            // HETA Analysis
+            if (result.getHetaAnalysis() != null && !result.getHetaAnalysis().isEmpty()) {
+                document.add(new Paragraph("HETA Analysis", headerFont));
+                for (var heta : result.getHetaAnalysis()) {
+                    document.add(new Paragraph(heta.getHetaId() + " - " + heta.getName(), subHeaderFont));
+                    document.add(new Paragraph("Functional Context: " + heta.getFunctionalContext(), bodyFont));
+                    document.add(new Paragraph("Observed Role: " + heta.getObservedRole(), bodyFont));
+                    document.add(new Paragraph(" "));
+                }
+            }
+
+            // Questionnaire Findings
+            if (result.getQuestionnaireFindings() != null && !result.getQuestionnaireFindings().isEmpty()) {
+                document.add(new Paragraph("Questionnaire Findings", headerFont));
+                for (var finding : result.getQuestionnaireFindings()) {
+                    document.add(new Paragraph(finding.getQuestionnaire(), subHeaderFont));
+                    document.add(new Paragraph("Interpretation: " + finding.getInterpretation(), bodyFont));
+                    document.add(new Paragraph(" "));
+                }
+            }
+
+            // Key Findings
+            if (result.getKeyFindings() != null && !result.getKeyFindings().isEmpty()) {
+                document.add(new Paragraph("Key Findings", headerFont));
+                for (String finding : result.getKeyFindings()) {
+                    document.add(new Paragraph("• " + finding, bodyFont));
+                }
+                document.add(new Paragraph(" "));
+            }
+
+            // Intake Focus Points
+            if (result.getIntakeFocusPoints() != null && !result.getIntakeFocusPoints().isEmpty()) {
+                document.add(new Paragraph("Intake Focus Points", headerFont));
+                for (String focusPoint : result.getIntakeFocusPoints()) {
+                    document.add(new Paragraph("• " + focusPoint, bodyFont));
+                }
+                document.add(new Paragraph(" "));
+            }
+
+            // Analysis Modules
+            if (result.getAnalysisModules() != null) {
+                boolean hasModules = false;
+                if (result.getAnalysisModules().getHmaSummary() != null && !result.getAnalysisModules().getHmaSummary().isEmpty()) {
+                    if (!hasModules) { document.add(new Paragraph("Analysis Modules", headerFont)); hasModules = true; }
+                    document.add(new Paragraph("HMA Summary", subHeaderFont));
+                    document.add(new Paragraph(result.getAnalysisModules().getHmaSummary(), bodyFont));
+                }
+                if (result.getAnalysisModules().getHrvSummary() != null && !result.getAnalysisModules().getHrvSummary().isEmpty()) {
+                    if (!hasModules) { document.add(new Paragraph("Analysis Modules", headerFont)); hasModules = true; }
+                    document.add(new Paragraph("HRV Summary", subHeaderFont));
+                    document.add(new Paragraph(result.getAnalysisModules().getHrvSummary(), bodyFont));
+                }
+                if (result.getAnalysisModules().getLabSummary() != null && !result.getAnalysisModules().getLabSummary().isEmpty()) {
+                    if (!hasModules) { document.add(new Paragraph("Analysis Modules", headerFont)); hasModules = true; }
+                    document.add(new Paragraph("Lab Summary", subHeaderFont));
+                    document.add(new Paragraph(result.getAnalysisModules().getLabSummary(), bodyFont));
+                }
+                if (hasModules) document.add(new Paragraph(" "));
+            }
+
+            // Limitations
+            if (result.getLimitations() != null && !result.getLimitations().isEmpty()) {
+                document.add(new Paragraph("Limitations", headerFont));
+                for (String limitation : result.getLimitations()) {
+                    document.add(new Paragraph("• " + limitation, bodyFont));
+                }
+                document.add(new Paragraph(" "));
+            }
+    
+            document.close();
+        } catch (DocumentException e) {
+            log.error("Error generating PDF: ", e);
+            throw new RuntimeException("Failed to generate PDF document", e);
+        }
+    
+        return out.toByteArray();
     }
 }
