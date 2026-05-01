@@ -30,7 +30,6 @@ public class QuestionnaireAnalysisService {
 
     private static final String PROMPT_ID = "pmpt_691db1ed039881908a001922e53791060b45ef8ce91f9109";
     private static final String PROMPT_VERSION = "168";
-    private static final long MAX_TOTAL_SIZE = 10 * 1024 * 1024;
     private static final String VECTOR_STORE_ID = "vs_69796126184c819184a8093782ac87c7";
 
     /**
@@ -52,10 +51,6 @@ public class QuestionnaireAnalysisService {
 
         log.info("Starting combined analysis for {} file(s) with prompt type: {}", files.size(), promptType);
 
-        long totalSize = files.stream().mapToLong(MultipartFile::getSize).sum();
-        if (totalSize > MAX_TOTAL_SIZE) {
-            throw new IllegalArgumentException("Total size of uploaded files exceeds the maximum allowed limit of 10 MB");
-        }
         files.forEach(this::validateFile);
 
             AiAnalysisResult result = analyzeWithOpenAI(files, promptType);
@@ -112,9 +107,6 @@ public class QuestionnaireAnalysisService {
 
         if (file.getOriginalFilename() == null || !file.getOriginalFilename().toLowerCase().endsWith(".pdf")) {
             throw new IllegalArgumentException("File must be a PDF document");
-        }
-        if (file.getSize() > MAX_TOTAL_SIZE) {
-            throw new IllegalArgumentException("Individual file size cannot exceed 10 MB");
         }
     }
 
