@@ -15,6 +15,7 @@ import com.openai.client.OpenAIClient;
 import com.openai.models.responses.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,9 +35,15 @@ public class SummaryReportService {
 
     private final OpenAIClient client;
     private final SummaryReportRepository summaryReportRepository;
-    private static final String SUMMARY_REPORT_PROMPT_ID = "pmpt_69a1749bd50c819495ce2b629e5d98ab0d3efb8f8be9b2e0";
-    private static final String SUMMARY_REPORT_PROMPT_VERSION = "9";
-    private static final String VECTOR_STORE_ID = "vs_69796126184c819184a8093782ac87c7";
+
+    @Value("${openai.summary-report.prompt-id}")
+    private String summaryReportPromptId;
+
+    @Value("${openai.summary-report.prompt-version}")
+    private String summaryReportPromptVersion;
+
+    @Value("${openai.vector-store-id}")
+    private String vectorStoreId;
 
     /**
      * Generates a summary report based on the provided AI analysis result.
@@ -91,12 +98,12 @@ public class SummaryReportService {
      */
     private ResponseCreateParams buildResponseParams(String aiResultJson) {
         ResponsePrompt prompt = ResponsePrompt.builder()
-                .id(SUMMARY_REPORT_PROMPT_ID)
-                .version(SUMMARY_REPORT_PROMPT_VERSION)
+                .id(summaryReportPromptId)
+                .version(summaryReportPromptVersion)
                 .build();
 
         FileSearchTool fileSearchTool = FileSearchTool.builder()
-                .addVectorStoreId(VECTOR_STORE_ID)
+                .addVectorStoreId(vectorStoreId)
                 .build();
 
         return ResponseCreateParams.builder()
