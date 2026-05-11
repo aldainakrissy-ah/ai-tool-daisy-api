@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -689,10 +690,12 @@ public class AiAnalysisResult implements Serializable {
      *
      * @param json JSON string to deserialize
      * @return Prompt1Result object
+     * @throws JsonProcessingException 
+     * @throws JsonMappingException 
      * @throws RuntimeException if JSON deserialization fails
      * @throws IllegalArgumentException if json parameter is null or empty
      */
-    public static AiAnalysisResult fromJson(String json) throws JsonProcessingException {
+    public static AiAnalysisResult fromJson(String json) throws JsonMappingException, JsonProcessingException {
         if (json == null || json.trim().isEmpty()) {
             throw new IllegalArgumentException("JSON string cannot be null or empty");
         }

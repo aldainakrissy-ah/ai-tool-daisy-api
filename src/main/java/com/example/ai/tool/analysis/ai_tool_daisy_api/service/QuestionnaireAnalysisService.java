@@ -8,6 +8,7 @@ import com.openai.client.OpenAIClient;
 import com.openai.models.responses.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,15 +29,20 @@ public class QuestionnaireAnalysisService {
     private final OpenAIClient client;
     private final Prompt1ResultRepository prompt1ResultRepository;
 
-    private static final String PROMPT_ID = "pmpt_691db1ed039881908a001922e53791060b45ef8ce91f9109";
-    private static final String PROMPT_VERSION = "168";
-    private static final String VECTOR_STORE_ID = "vs_69796126184c819184a8093782ac87c7";
+    @Value("${openai.questionnaire-analysis.prompt-id}")
+    private String promptId;
+
+    @Value("${openai.questionnaire-analysis.prompt-version}")
+    private String promptVersion;
+
+    @Value("${openai.vector-store-id}")
+    private String vectorStoreId;
 
     /**
-     * Analyzes multiple PDF files containing healthcare questionnaire data using OpenAI's Response API.
-     * Combines the content of all PDFs into a single input for a comprehensive analysis in one API call.
+     * Analyzes multiple files (PDF or Word documents) containing healthcare questionnaire data using OpenAI's Response API.
+     * Combines the content of all files into a single input for a comprehensive analysis in one API call.
      *
-     * @param files the uploaded PDF files to analyze
+     * @param files the uploaded PDF or Word document files to analyze
      * @param promptType the type of prompt to use for analysis (e.g., "Prompt_1", "Prompt_2", "Prompt_3")
      * @return an {@link AiAnalysisResult} containing the combined analysis results for all files
      */
@@ -94,7 +100,7 @@ public class QuestionnaireAnalysisService {
     }
 
     @Transactional
-    public void savePrompt1Result(AiAnalysisResult aiAnalysisResult) {
+    public void savePrompt1Result(AiAnalysisResult aiAnalysisResult) throws JsonProcessingException {
         log.info("Saving result for professional: {}, patient: {}",
                 aiAnalysisResult.getProfessionalName(), aiAnalysisResult.getClientName());
         persistResult(aiAnalysisResult);
@@ -102,11 +108,21 @@ public class QuestionnaireAnalysisService {
 
     private void validateFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("PDF file must be provided and cannot be empty");
+            throw new IllegalArgumentException("File must be provided and cannot be empty");
         }
 
-        if (file.getOriginalFilename() == null || !file.getOriginalFilename().toLowerCase().endsWith(".pdf")) {
-            throw new IllegalArgumentException("File must be a PDF document");
+        String filename = file.getOriginalFilename();
+        if (filename == null) {
+            throw new IllegalArgumentException("File must have a valid filename");
+        }
+        
+        String lowerFilename = filename.toLowerCase();
+        boolean isValidFormat = lowerFilename.endsWith(".pdf") || 
+                                lowerFilename.endsWith(".doc") || 
+                                lowerFilename.endsWith(".docx");
+        
+        if (!isValidFormat) {
+            throw new IllegalArgumentException("File must be a PDF or Word document (.pdf, .doc, .docx)");
         }
     }
 
@@ -127,21 +143,21 @@ public class QuestionnaireAnalysisService {
     }
 
     /**
-     * Builds ResponseCreateParams for OpenAI API call, passing PDFs directly as base64-encoded file data.
-     * This avoids server-side text extraction and lets the model interpret the raw PDF layout.
+     * Builds ResponseCreateParams for OpenAI API call, passing files directly as base64-encoded file data.
+     * This avoids server-side text extraction and lets the model interpret the raw file layout.
      *
-     * @param files The uploaded PDF files to include in the request
+     * @param files The uploaded PDF or Word document files to include in the request
      * @param promptType The type of prompt (e.g., "Prompt_1", "Prompt_2", "Prompt_3")
      * @return Configured ResponseCreateParams
      */
     private ResponseCreateParams buildResponseParams(List<MultipartFile> files, String promptType) {
         ResponsePrompt prompt = ResponsePrompt.builder()
-                .id(PROMPT_ID)
-                .version(PROMPT_VERSION)
+                .id(promptId)
+                .version(promptVersion)
                 .build();
 
         FileSearchTool fileSearchTool = FileSearchTool.builder()
-                .addVectorStoreId(VECTOR_STORE_ID)
+                .addVectorStoreId(vectorStoreId)
                 .build();
 
         List<ResponseInputContent> contentItems = files.stream()
@@ -187,11 +203,11 @@ public class QuestionnaireAnalysisService {
     }
 
     /**
-     * Encodes a PDF MultipartFile to a Base64 string for direct inclusion in the OpenAI API request.
+     * Encodes a file (PDF or Word document) to a Base64 string for direct inclusion in the OpenAI API request.
      *
-     * @param file the PDF file to encode
-     * @return Base64-encoded string of the PDF bytes
-     * @throws RuntimeException if encoding fails
+     * @param file the file to encode (PDF, .doc, or .docx)
+     * @return Base64-encoded string of the file bytes
+     * @throws IOException if encoding fails
      */
     private String encodePdfToBase64(MultipartFile file) throws IOException {
             byte[] bytes = file.getBytes();
@@ -221,24 +237,17 @@ public class QuestionnaireAnalysisService {
      * Persists the analysis result to the database.
      *
      * @param result the AiAnalysisResult to persist
-     * @throws RuntimeException if saving fails
+     * @throws JsonProcessingException 
      */
-    void persistResult(AiAnalysisResult result) {
-        try {
-            Prompt1ResultEntity entity = new Prompt1ResultEntity();
-            entity.setProfessionalId(result.getProfessionalName());
-            entity.setPatientId(result.getClientName());
-            entity.setPromptType(result.getPromptId());
-            entity.setResultJson(result.toJson());
-            prompt1ResultRepository.save(entity);
+    void persistResult(AiAnalysisResult result) throws JsonProcessingException {
+        Prompt1ResultEntity entity = new Prompt1ResultEntity();
+        entity.setProfessionalId(result.getProfessionalName());
+        entity.setPatientId(result.getClientName());
+        entity.setPromptType(result.getPromptId());
+        entity.setResultJson(result.toJson());
+        prompt1ResultRepository.save(entity);
 
-            log.debug("Persisted result to database for professional: {}, patient: {}",
-                    result.getProfessionalName(), result.getClientName());
-
-        } catch (Exception e) {
-            log.error("Failed to persist result for professional: {}, patient: {}",
-                    result.getProfessionalName(), result.getClientName(), e);
-            throw new RuntimeException("Database persistence failed", e);
-        }
+        log.debug("Persisted result to database for professional: {}, patient: {}",
+                result.getProfessionalName(), result.getClientName());
     }
 }

@@ -28,10 +28,10 @@ public class QuestionnaireAnalysisController {
     private final DatabaseHealthService databaseHealthService;
 
     /**
-     * Analyzes uploaded PDF questionnaire files using AI.
-     * Combines multiple PDFs and makes a single API call to OpenAI for comprehensive analysis.
+     * Analyzes uploaded document files (PDF or Word) using AI.
+     * Combines multiple documents and makes a single API call to OpenAI for comprehensive analysis.
      *
-     * @param files the uploaded PDF files containing healthcare questionnaire data
+     * @param files the uploaded document files (PDF, .doc, .docx) containing healthcare questionnaire data
      * @return {@link ResponseEntity} with a single {@link AiAnalysisResult} containing the combined AI
      *         analysis for all files
      */
@@ -43,7 +43,7 @@ public class QuestionnaireAnalysisController {
         }
 
         AiAnalysisResult result = questionnaireAnalysisService.generateCombinedPreIntakeAnalysis(files,promptType);
-        log.info("Successfully analyzed {} PDF file(s) - Professional: {}, Client: {}",
+        log.info("Successfully analyzed {} file(s) - Professional: {}, Client: {}",
                 files.size(), result.getProfessionalName(), result.getClientName());
         return ResponseEntity.ok(result);
     }
@@ -100,9 +100,10 @@ public class QuestionnaireAnalysisController {
      *
      * @param prompt1Result the {@link AiAnalysisResult} to be saved.
      * @return a {@link ResponseEntity} indicating the result of the save operation.
+     * @throws JsonProcessingException 
      */
     @PostMapping(value = "/analysis/save", consumes = "application/json")
-    public ResponseEntity<Void> savePreIntakeResult(@RequestBody AiAnalysisResult prompt1Result) {
+    public ResponseEntity<Void> savePreIntakeResult(@RequestBody AiAnalysisResult prompt1Result) throws JsonProcessingException {
         log.info("Saving Prompt1 result for professional id: {}", prompt1Result.getProfessionalName());
             questionnaireAnalysisService.savePrompt1Result(prompt1Result);
             return ResponseEntity.ok().build();
