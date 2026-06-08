@@ -28,7 +28,6 @@ public class Prompt1ResultEntity {
     @Column(name = "patient_id", nullable = false)
     private String patientId;
 
-    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "result_json", columnDefinition = "jsonb", nullable = false)
     private String resultJson;
 
