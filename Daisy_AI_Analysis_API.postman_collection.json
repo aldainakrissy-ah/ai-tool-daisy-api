@@ -174,6 +174,128 @@
 					]
 				},
 				{
+					"name": "Analyze Prompt 2 (Dedicated)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has prompt_id Prompt_2\", function () {",
+									"    var json = pm.response.json();",
+									"    pm.expect(json.prompt_id).to.eql(\"Prompt_2\");",
+									"});",
+									"",
+									"pm.test(\"Response has client-name\", function () {",
+									"    var json = pm.response.json();",
+									"    pm.expect(json[\"client-name\"]).to.be.a(\"string\").and.not.empty;",
+									"});",
+									"",
+									"pm.test(\"Response has A1 with primary_ie_ref\", function () {",
+									"    var json = pm.response.json();",
+									"    pm.expect(json.A1).to.have.property(\"primary_ie_ref\");",
+									"});",
+									"",
+									"pm.test(\"Response has A2 with ie_clusters\", function () {",
+									"    var json = pm.response.json();",
+									"    pm.expect(json.A2).to.have.property(\"ie_clusters\");",
+									"});",
+									"",
+									"pm.test(\"Response has A4a with nested ethos/qest/heta modules\", function () {",
+									"    var json = pm.response.json();",
+									"    pm.expect(json.A4a).to.have.property(\"A4a1_ethos\");",
+									"    pm.expect(json.A4a).to.have.property(\"A4a2_qest\");",
+									"    pm.expect(json.A4a).to.have.property(\"A4a3_heta\");",
+									"});",
+									"",
+									"pm.test(\"Response has A4e dominant observation patterns\", function () {",
+									"    var json = pm.response.json();",
+									"    pm.expect(json.A4e).to.have.property(\"dominant_observation_patterns\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{API_KEY}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "X-API-KEY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "files",
+									"type": "file",
+									"src": [],
+									"description": "PDF or Word documents containing healthcare questionnaire data (supports multiple files)"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/ai-tool-daisy/analyze/prompt2",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ai-tool-daisy",
+								"analyze",
+								"prompt2"
+							]
+						},
+						"description": "Dedicated Prompt 2 analysis endpoint. Accepts only files (PDF, .doc, .docx) — prompt type is fixed to Prompt_2 and does not need to be passed as a parameter.\n\n**Request:**\n- Method: POST\n- Body: multipart/form-data\n  - `files` (required): one or more PDF / Word documents\n\n**Response:** `Prompt2Result` JSON — sections A1, A2, A3, A4a (with nested A4a1_ethos/A4a2_qest/A4a3_heta), A4b, A4c, A4d, A4e, A5.\n\n**Authentication:** Requires X-API-Key header."
+					},
+					"response": [
+						{
+							"name": "Successful Prompt 2 Analysis",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "files",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/ai-tool-daisy/analyze/prompt2",
+									"host": ["{{BASE_URL}}"],
+									"path": ["api","v1","ai-tool-daisy","analyze","prompt2"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [{"key": "Content-Type","value": "application/json"}],
+							"cookie": [],
+							"body": "{\n  \"prompt_id\": \"Prompt_2\",\n  \"current_date\": \"2025-02-02\",\n  \"client-name\": \"Thorwald Veneberg\",\n  \"professional-name\": \"Wim Gelderblom\",\n  \"A1\": {\n    \"primary_ie_ref\": \"22.3\",\n    \"primary_ie_title\": \"Stress Adaptation Integrative Field Endoteleon of the Individual\",\n    \"secondary_ie\": [\n      {\n        \"ie_ref\": \"22.4\",\n        \"ie_title\": \"Circadian Integrative Field Endoteleon of the Individual\"\n      },\n      {\n        \"ie_ref\": \"22.7\",\n        \"ie_title\": \"Activity Field Integrative Endoteleon of the Individual\"\n      }\n    ],\n    \"teleonic_pattern\": \"Herstel- en activatievermogen tonen een spanningsveld tussen inspanning, slaapkwaliteit en energiebalans. Het patroon wijst op een adaptatiemechanisme waarin stressrespons en dag-nachtritme elkaar beïnvloeden.\",\n    \"secondary_dynamics\": [\n      \"Onvoldoende herstelmomenten tijdens de nacht\",\n      \"Verhoogde activatie op stressmomenten\",\n      \"Afwisseling tussen goede en matige slaaprestitutie\"\n    ],\n    \"uncertainty_level\": 0.3,\n    \"uncertainty_label\": \"Gemiddeld\"\n  },\n  \"A2\": {\n    \"ie_clusters\": [\n      {\n        \"source_ie_ref\": \"22.3\",\n        \"source_ie_title\": \"Stress Adaptation Integrative Field Endoteleon of the Individual\",\n        \"priority\": \"HIGH\",\n        \"cluster_description\": \"Balans tussen spanningsregulatie en herstel via neuro-endocriene en energetische adaptatie.\"\n      },\n      {\n        \"source_ie_ref\": \"22.4\",\n        \"source_ie_title\": \"Circadian Integrative Field Endoteleon of the Individual\",\n        \"priority\": \"MEDIUM\",\n        \"cluster_description\": \"Dag-nachtritme en slaapkwaliteit ondersteunen of beperken stressherstel.\"\n      }\n    ],\n    \"fields\": [\n      {\n        \"field_id\": \"A2F1\",\n        \"field_label\": \"Herstelcapaciteit\",\n        \"source_ie_ref\": \"22.3\",\n        \"source_ie_title\": \"Stress Adaptation Integrative Field Endoteleon of the Individual\",\n        \"field_role\": \"primary\",\n        \"field_description\": \"Herstelmomenten verspreid over dag en nacht compenseren deels stressbelasting.\"\n      },\n      {\n        \"field_id\": \"A2F2\",\n        \"field_label\": \"Slaapkwaliteit\",\n        \"source_ie_ref\": \"22.4\",\n        \"source_ie_title\": \"Circadian Integrative Field Endoteleon of the Individual\",\n        \"field_role\": \"secondary\",\n        \"field_description\": \"De kwaliteit van de nachtelijke rust varieert, vooral beïnvloed door stressgradatie.\"\n      },\n      {\n        \"field_id\": \"A2F3\",\n        \"field_label\": \"Fysieke activiteit\",\n        \"source_ie_ref\": \"22.7\",\n        \"source_ie_title\": \"Activity Field Integrative Endoteleon of the Individual\",\n        \"field_role\": \"supporting\",\n        \"field_description\": \"Beweging draagt positief bij aan herstel, maar onregelmatige intensiteit beperkt consistentie.\"\n      }\n    ],\n    \"domains\": [\n      {\n        \"domain_id\": \"DM1\",\n        \"source_field_id\": \"A2F1\",\n        \"source_ie_ref\": \"22.3\",\n        \"source_ie_title\": \"Stress Adaptation Integrative Field Endoteleon of the Individual\",\n        \"domain_label\": \"Neuro-endocriene balans\",\n        \"domain_description\": \"Evenwicht tussen activerende en herstellende responsen blijft meestal behouden maar heeft wisselingen.\"\n      }\n    ]\n  },\n  \"A3\": {\n    \"direct\": [\n      \"HETA-5-COR\",\n      \"HETA-14-MEL\",\n      \"HETA-15-NOR\"\n    ],\n    \"indirect\": [\n      \"HETA-18-SER\",\n      \"HETA-8-GAB\"\n    ]\n  },\n  \"A4a\": {\n    \"module_id\": \"A4a_QUEST\",\n    \"status\": \"present\",\n    \"A4a1_ethos\": {\n      \"module_id\": \"A4a1_ETHOS\",\n      \"status\": \"present\",\n      \"items\": [\n        {\n          \"qest_json_identifier\": \"ethos-scan-adult\",\n          \"teleonic_field\": \"Waarden-gedrag congruentie toont harmonie, geringe discrepanties bij groei- en rustkeuzes.\",\n          \"heta_context\": [],\n          \"direction\": \"cohererend\",\n          \"direction_note\": \"Kernwaarden ondersteunen gelijkmatige gedragsoriëntatie.\",\n          \"amplitude\": \"laag\",\n          \"amplitude_note\": \"Lichte innerlijke spanning bij evenwicht tussen ontwikkeling en rust.\",\n          \"congruence\": \"congruent\",\n          \"congruence_note\": \"Kiesgedrag is grotendeels afgestemd op waarden.\",\n          \"narrative\": [\n            \"Hoofdfocus op groei, integriteit en verbinding.\",\n            \"Reflectieve aanpassing zichtbaar in keuzes voor rust en herstel.\"\n          ]\n        }\n      ],\n      \"uncertainty_label\": \"Laag\"\n    },\n    \"A4a2_qest\": {\n      \"module_id\": \"A4a2_QEST\",\n      \"status\": \"present\",\n      \"items\": [\n        {\n          \"qest_json_identifier\": \"pss-10\",\n          \"teleonic_field\": \"Perceived stressniveau binnen normale grenzen.\",\n          \"heta_context\": [\n            \"HETA-5-COR\"\n          ],\n          \"direction\": \"spanningsverhogend\",\n          \"direction_note\": \"Enkele stressmomenten geven lichte verhoging in alertheidsveld.\",\n          \"amplitude\": \"middel\",\n          \"amplitude_note\": \"Matige spanning zonder overshoot.\",\n          \"congruence\": \"congruent\",\n          \"congruence_note\": \"Stressreacties zijn passend bij contextuele belasting.\",\n          \"narrative\": [\n            \"Voelt zich soms onrustig maar behoudt controle.\"\n          ]\n        },\n        {\n          \"qest_json_identifier\": \"fss\",\n          \"teleonic_field\": \"Lichte vermoeidheidsimpact zonder structurele ontregeling.\",\n          \"heta_context\": [\n            \"HETA-18-SER\"\n          ],\n          \"direction\": \"spanningsverhogend\",\n          \"direction_note\": \"Vermoeidheid heeft wisselende invloed op functioneren.\",\n          \"amplitude\": \"laag\",\n          \"amplitude_note\": \"Score onder klinische drempel.\",\n          \"congruence\": \"partieel_congruent\",\n          \"congruence_note\": \"Vermoeidheid wordt als tijdelijk ervaren.\",\n          \"narrative\": [\n            \"Energie stabiel overdag, incidentele daling.\"\n          ]\n        },\n        {\n          \"qest_json_identifier\": \"psqi\",\n          \"teleonic_field\": \"Slaapkwaliteit wisselend, aanwezigheid van supplementair melatoninegebruik.\",\n          \"heta_context\": [\n            \"HETA-14-MEL\"\n          ],\n          \"direction\": \"spanningsverhogend\",\n          \"direction_note\": \"Onregelmässige onderbrekingen van slaapcyclus.\",\n          \"amplitude\": \"middel\",\n          \"amplitude_note\": \"Matig herstellende nachten.\",\n          \"congruence\": \"partieel_congruent\",\n          \"congruence_note\": \"Suboptimaal herstelcompensatie.\",\n          \"narrative\": [\n            \"Melatonine ondersteunt inslapen.\",\n            \"Minder recuperatie ondanks voldoende duur.\"\n          ]\n        }\n      ],\n      \"uncertainty_label\": \"Gemiddeld\"\n    },\n    \"A4a3_heta\": {\n      \"module_id\": \"A4a3_HETA\",\n      \"status\": \"present\",\n      \"items\": [\n        {\n          \"heta_json_identifier\": \"HETA-1-ACT\",\n          \"teleonic_field\": \"Opstartenergie en stressregulatie.\",\n          \"heta_context\": [\n            \"HETA-5-COR\"\n          ],\n          \"direction\": \"spanningsverhogend\",\n          \"direction_note\": \"Moeite met starten in de ochtend wijst op onderdrukte activatie.\",\n          \"amplitude\": \"middel\",\n          \"amplitude_note\": \"Regulatoir hersteltraag.\",\n          \"congruence\": \"congruent\",\n          \"congruence_note\": \"Consistent met waargenomen ochtendtraagheid.\",\n          \"narrative\": [\n            \"Rapporteert moeizame start maar herwint energie later.\"\n          ]\n        },\n        {\n          \"heta_json_identifier\": \"HETA-9-GLUT\",\n          \"teleonic_field\": \"Herstelmechanismen en immuunrespons.\",\n          \"heta_context\": [\n            \"HETA-5-COR\"\n          ],\n          \"direction\": \"spanningsverhogend\",\n          \"direction_note\": \"Frequent verkouden suggereert hersteldisbalans.\",\n          \"amplitude\": \"middel\",\n          \"amplitude_note\": \"Lichte ontregeling bij herstel.\",\n          \"congruence\": \"partieel_congruent\",\n          \"congruence_note\": \"Aanpassingsvermogen aanwezig maar niet stabiel.\",\n          \"narrative\": [\n            \"Besproken huid- en slijmvliesdroogte.\"\n          ]\n        },\n        {\n          \"heta_json_identifier\": \"HETA-15-NOR\",\n          \"teleonic_field\": \"Waakzaamheid en prikkelregulatie.\",\n          \"heta_context\": [\n            \"HETA-5-COR\"\n          ],\n          \"direction\": \"spanningsverhogend\",\n          \"direction_note\": \"Altijd-actief reactiepatroon.\",\n          \"amplitude\": \"hoog\",\n          \"amplitude_note\": \"Sterke overactivatie ’s avonds.\",\n          \"congruence\": \"partieel_congruent\",\n          \"congruence_note\": \"Stressrespons overschrijdt rustcapaciteit.\",\n          \"narrative\": [\n            \"Vermoeid maar mentaal actief in avond.\"\n          ]\n        },\n        {\n          \"heta_json_identifier\": \"HETA-31-ACE\",\n          \"teleonic_field\": \"Mentale helderheid en alertheid.\",\n          \"heta_context\": [\n            \"HETA-15-NOR\"\n          ],\n          \"direction\": \"cohererend\",\n          \"direction_note\": \"Herstel van aandacht mogelijk na rust.\",\n          \"amplitude\": \"laag\",\n          \"amplitude_note\": \"Beperkte traagheid in middag.\",\n          \"congruence\": \"congruent\",\n          \"congruence_note\": \"Passend bij lichte middagdip.\",\n          \"narrative\": [\n            \"Kortdurende loomheid begin middag.\"\n          ]\n        },\n        {\n          \"heta_json_identifier\": \"HETA-14-MEL\",\n          \"teleonic_field\": \"Slaapinitiatie en dag-nachtritme.\",\n          \"heta_context\": [\n            \"HETA-18-SER\"\n          ],\n          \"direction\": \"dempend\",\n          \"direction_note\": \"Ondersteuning door melatonine.\",\n          \"amplitude\": \"middel\",\n          \"amplitude_note\": \"Structurele hulp bij inslapen.\",\n          \"congruence\": \"congruent\",\n          \"congruence_note\": \"Slaapondersteuning volgens verwachting.\",\n          \"narrative\": [\n            \"Melatoninegebruik vijf nachten per week.\"\n          ]\n        }\n      ],\n      \"uncertainty_label\": \"Gemiddeld\"\n    },\n    \"uncertainty_label\": \"Gemiddeld\"\n  },\n  \"A4b\": {\n    \"module_id\": \"A4b_HMA\",\n    \"status\": \"present\",\n    \"sections\": {\n      \"epistemic_positioning\": \"Analyse gebaseerd op Hair Mineral Analysis volgens normatieve HMA-interpretatie.\",\n      \"lab_report_context\": \"Analyse van hoofdhaar, uitgevoerd juli 2025.\",\n      \"overall_pattern\": \"Evenwichtig patroon met lichte verschuivingen in macro-mineralenratio’s.\",\n      \"eap_profile_narrative\": \"Profiel toont een mild geremde adaptatiestijl met behoud van veerkracht.\",\n      \"eap_index_client_explanation\": \"Gemiddelde EAP-index, adequate herstelfase.\",\n      \"pattern_minerals_ratios\": \"Calcium licht verhoogd, magnesium laag, kalium-natrium-balans stabiel.\",\n      \"stress_context\": \"Stressaanpassingsproces consistent met beperkte overdrive.\",\n      \"followup_exploration\": \"Aanvullende observatie van neuro-endocriene markers aanbevolen bij blijvende vermoeidheid.\",\n      \"summary\": \"Milde geremde EAP, geen toxische belastingverstoringen.\",\n      \"closing\": \"Interpretatie conform HMA v3.5 kader.\"\n    },\n    \"summary_components\": {\n      \"eap_profile\": \"GEREMD\",\n      \"eap_index\": \"EAP 1.3\",\n      \"intensity\": 1,\n      \"direction\": \"GEREMD\",\n      \"buffer\": \"B\",\n      \"pattern_markers\": [\n        \"Ca/Mg ratio verhoogd\",\n        \"Mn laag\",\n        \"Zn adequaat\"\n      ],\n      \"followup_flag\": \"HRV_mogelijk\"\n    },\n    \"uncertainty_label\": \"Laag\"\n  },\n  \"A4c\": {\n    \"module_id\": \"A4c_HRV\",\n    \"status\": \"present\",\n    \"sections\": {\n      \"epistemic_positioning\": \"HRV-analyse uitgevoerd via draagbare sensor, 4 dagen meting in november 2025.\",\n      \"measurement_context\": \"Metingen consistent en valide.\",\n      \"global_load_recovery\": \"Totale balans goed met licht hersteltekort aan einde meetreeks.\",\n      \"night_recovery_sleep_rhythm\": \"Slaapkwaliteit voldoende, enkele dagen matige recuperatie.\",\n      \"activity_day_distribution\": \"Goede spreiding activiteit, lichte piekbelasting op weekhelft.\",\n      \"rap_profile\": \"Stressherstel dynamiek goed, beperkte daling bij langdurige belasting.\",\n      \"rap_index\": \"gematigd\",\n      \"summary\": \"Algemeen goed herstel, maar lichte compensatoire vermoeidheid zichtbaar.\"\n    },\n    \"uncertainty_label\": \"Laag\"\n  },\n  \"A4d\": {\n    \"module_id\": \"A4d_LAB\",\n    \"status\": \"not_present\",\n    \"sections\": {\n      \"epistemic_positioning\": \"\",\n      \"lab_reports\": [],\n      \"integrated_interpretation\": \"\",\n      \"overall_summary\": \"\"\n    },\n    \"uncertainty_label\": \"Laag\"\n  },\n  \"A4e\": {\n    \"module_id\": \"A4e_observation_patterns\",\n    \"status\": \"present\",\n    \"dominant_observation_patterns\": [\n      {\n        \"pattern_label\": \"Circadiane onbalans met compenserende dagactivatie\",\n        \"supporting_sources\": [\n          \"A4a\",\n          \"A4c\"\n        ],\n        \"description\": \"Slaapkwaliteit wisselvallig, gecompenseerd door activiteit en serotoninegedreven dagfocus.\"\n      },\n      {\n        \"pattern_label\": \"Stressadaptatie met stabiele veerkracht\",\n        \"supporting_sources\": [\n          \"A4a\",\n          \"A4b\",\n          \"A4c\"\n        ],\n        \"description\": \"Zelfregulerend herstel ondanks licht verminderde nachtelijke recuperatie.\"\n      }\n    ],\n    \"uncertainty_label\": \"Gemiddeld\"\n  },\n  \"A5\": {\n    \"module_id\": \"A5_pre_intake_analysis\",\n    \"ID\": \"pre_intake_analysis\",\n    \"label\": \"Pre-intake analyse\",\n    \"mode\": \"pre_intake_analysis\",\n    \"items\": [\n      {\n        \"item_type\": \"red_flag\",\n        \"attention_category\": \"observation_consistency\",\n        \"lab_type\": \"\",\n        \"text\": \"Geen red flags voor het intake gesprek geïdentificeerd.\"\n      },\n      {\n        \"item_type\": \"intake_attention_point\",\n        \"attention_category\": \"patterning_diachronic_reconstruction_process_clarification\",\n        \"lab_type\": \"\",\n        \"text\": \"Verken samen de factoren die avondlijke overactivatie in stand houden ondanks ervaren rust en voldoende fysieke belasting.\"\n      },\n      {\n        \"item_type\": \"intake_attention_point\",\n        \"attention_category\": \"observation_pattern_clarification\",\n        \"lab_type\": \"\",\n        \"text\": \"Bespreek slaapgewoonten en timing van melatonine in relatie tot circadiane stabiliteit.\"\n      }\n    ],\n    \"uncertainty_label\": \"Gemiddeld\"\n  }\n}"
+						}
+					]
+				},
+				{
 					"name": "Save Analysis Result",
 					"event": [
 						{

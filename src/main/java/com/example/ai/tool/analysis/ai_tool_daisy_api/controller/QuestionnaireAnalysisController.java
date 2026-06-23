@@ -3,6 +3,7 @@ package com.example.ai.tool.analysis.ai_tool_daisy_api.controller;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1ResultEntity;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.AiAnalysisResult;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1Result;
+import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt2Result;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.QuestionnaireAnalysisService;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.DatabaseHealthService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -65,6 +66,26 @@ public class QuestionnaireAnalysisController {
 
         Prompt1Result result = questionnaireAnalysisService.generatePrompt1Analysis(files);
         log.info("Prompt1 analysis completed - Professional: {}, Client: {}",
+                result.getProfessionalName(), result.getClientName());
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     * Dedicated Prompt 2 analysis endpoint. Accepts only files; prompt type is fixed to Prompt_2.
+     *
+     * @param files the uploaded document files (PDF, .doc, .docx)
+     * @return {@link Prompt2Result} for Prompt_2
+     */
+    @PostMapping("/analyze/prompt2")
+    public ResponseEntity<Prompt2Result> analyzePrompt2(
+            @RequestParam("files") List<MultipartFile> files) throws JsonProcessingException {
+        if (files == null || files.isEmpty()) {
+            log.warn("No files uploaded for Prompt2 analysis");
+            return ResponseEntity.badRequest().build();
+        }
+
+        Prompt2Result result = questionnaireAnalysisService.generatePrompt2Analysis(files);
+        log.info("Prompt2 analysis completed - Professional: {}, Client: {}",
                 result.getProfessionalName(), result.getClientName());
         return ResponseEntity.ok(result);
     }

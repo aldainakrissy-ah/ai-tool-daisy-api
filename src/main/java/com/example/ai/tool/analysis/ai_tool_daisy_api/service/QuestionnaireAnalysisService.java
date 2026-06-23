@@ -3,12 +3,19 @@ package com.example.ai.tool.analysis.ai_tool_daisy_api.service;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1ResultEntity;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.AiAnalysisResult;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1Result;
+import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt2Result;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.Prompt1ResultRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.openai.client.OpenAIClient;
 import com.openai.models.responses.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.pdfbox.cos.COSName;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDResources;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +51,12 @@ public class QuestionnaireAnalysisService {
     private String prompt1Id;
     @Value("${openai.prompt1.prompt-version}")
     private String prompt1Version;
+
+    // Dedicated credentials for Prompt 2 analysis
+    @Value("${openai.prompt2.prompt-id}")
+    private String prompt2Id;
+    @Value("${openai.prompt2.prompt-version}")
+    private String prompt2Version;
 
     /**
      * Analyzes multiple files (PDF or Word documents) containing healthcare questionnaire data using OpenAI's Response API.
@@ -117,50 +130,54 @@ public class QuestionnaireAnalysisService {
                 .version(prompt1Version)
                 .build();
 
-        FileSearchTool fileSearchTool = FileSearchTool.builder()
-                .addVectorStoreId(vectorStoreId)
+        return buildAnalysisResponseParams(files, prompt,
+                "Extract and analyze the following PDFs according to the prompt type: Prompt_1");
+    }
+
+    /**
+     * Analyzes files using the dedicated Prompt 2 credentials.
+     *
+     * @param files the uploaded PDF or Word document files to analyze
+     * @return prompt 2 analysis result
+     * @throws JsonProcessingException if JSON processing fails
+     */
+    public Prompt2Result generatePrompt2Analysis(List<MultipartFile> files) throws JsonProcessingException {
+        if (files == null || files.isEmpty()) {
+            throw new IllegalArgumentException("At least one file must be provided");
+        }
+
+        log.info("Starting Prompt2 analysis for {} file(s)", files.size());
+        files.forEach(this::validateFile);
+
+        Prompt2Result result = analyzeWithPrompt2(files);
+        if (result.getPromptId() == null) {
+            result.setPromptId("Prompt_2");
+        }
+        persistPrompt2Result(result);
+        log.info("Prompt2 analysis completed - Professional: {}, Patient: {}",
+                result.getProfessionalName(), result.getClientName());
+        return result;
+    }
+
+    private Prompt2Result analyzeWithPrompt2(List<MultipartFile> files) throws JsonProcessingException {
+        ResponseCreateParams params = buildPrompt2ResponseParams(files);
+        Response response = client.responses().create(params);
+
+        String openAIResponse = extractResponseText(response);
+        if (openAIResponse.trim().isEmpty()) {
+            throw new RuntimeException("OpenAI returned empty response for Prompt2");
+        }
+        return Prompt2Result.fromJson(openAIResponse);
+    }
+
+    private ResponseCreateParams buildPrompt2ResponseParams(List<MultipartFile> files) {
+        ResponsePrompt prompt = ResponsePrompt.builder()
+                .id(prompt2Id)
+                .version(prompt2Version)
                 .build();
 
-        List<ResponseInputContent> contentItems = files.stream()
-                .map(file -> {
-                    String base64Data;
-                    try {
-                        base64Data = encodePdfToBase64(file);
-                    } catch (IOException e) {
-                        throw new RuntimeException("Failed to encode file: " + file.getOriginalFilename(), e);
-                    }
-                    return ResponseInputContent.ofInputFile(
-                            ResponseInputFile.builder()
-                                    .fileData("data:application/pdf;base64," + base64Data)
-                                    .filename(Objects.requireNonNull(file.getOriginalFilename()))
-                                    .build()
-                    );
-                })
-                .collect(Collectors.toList());
-
-        contentItems.add(ResponseInputContent.ofInputText(
-                ResponseInputText.builder()
-                        .text("Extract and analyze the following PDFs according to the prompt type: Prompt_1")
-                        .build()
-        ));
-
-        ResponseInputItem inputItem = ResponseInputItem.ofMessage(
-                ResponseInputItem.Message.builder()
-                        .role(ResponseInputItem.Message.Role.USER)
-                        .content(contentItems)
-                        .build()
-        );
-
-        return ResponseCreateParams.builder()
-                .temperature(0.0)
-                .topP(1.0)
-                .prompt(prompt)
-                .tools(Collections.singletonList(Tool.ofFileSearch(fileSearchTool)))
-                .store(true)
-                .maxOutputTokens(6000)
-                .include(Collections.singletonList(ResponseIncludable.FILE_SEARCH_CALL_RESULTS))
-                .input(ResponseCreateParams.Input.ofResponse(Collections.singletonList(inputItem)))
-                .build();
+        return buildAnalysisResponseParams(files, prompt,
+                "Extract and analyze the following PDFs according to the prompt type: Prompt_2");
     }
 
     @Transactional(readOnly = true)
@@ -238,8 +255,8 @@ public class QuestionnaireAnalysisService {
     }
 
     /**
-     * Builds ResponseCreateParams for OpenAI API call, passing files directly as base64-encoded file data.
-     * This avoids server-side text extraction and lets the model interpret the raw file layout.
+     * Builds ResponseCreateParams for OpenAI API call. See {@link #buildAnalysisResponseParams}
+     * for how each file is converted to input content.
      *
      * @param files The uploaded PDF or Word document files to include in the request
      * @param promptType The type of prompt (e.g., "Prompt_1", "Prompt_2", "Prompt_3")
@@ -251,30 +268,35 @@ public class QuestionnaireAnalysisService {
                 .version(promptVersion)
                 .build();
 
+        return buildAnalysisResponseParams(files, prompt,
+                "Extract and analyze the following PDFs according to the prompt type: " + promptType);
+    }
+
+    /**
+     * Builds ResponseCreateParams shared across all prompt types. Differs only by which
+     * {@link ResponsePrompt} (id/version) and instruction text the caller supplies.
+     * <p>
+     * Each file is sent the cheapest way that preserves analysis quality: text-only PDFs are
+     * extracted to plain text (a fraction of the tokens of vision parsing), while PDFs containing
+     * charts/graphs and Word documents are sent as base64 file data for the model to interpret visually.
+     *
+     * @param files the uploaded PDF or Word document files to include in the request
+     * @param prompt the resolved prompt id/version to call
+     * @param instructionText instruction appended after the file content items
+     * @return Configured ResponseCreateParams
+     */
+    private ResponseCreateParams buildAnalysisResponseParams(List<MultipartFile> files, ResponsePrompt prompt, String instructionText) {
         FileSearchTool fileSearchTool = FileSearchTool.builder()
                 .addVectorStoreId(vectorStoreId)
                 .build();
 
         List<ResponseInputContent> contentItems = files.stream()
-                .map(file -> {
-                    String base64Data;
-                    try {
-                        base64Data = encodePdfToBase64(file);
-                    } catch (IOException e) {
-                        throw new RuntimeException("Failed to encode PDF file: " + file.getOriginalFilename(), e);
-                    }
-                    return ResponseInputContent.ofInputFile(
-                            ResponseInputFile.builder()
-                                    .fileData("data:application/pdf;base64," + base64Data)
-                                    .filename(Objects.requireNonNull(file.getOriginalFilename()))
-                                    .build()
-                    );
-                })
+                .map(this::toResponseInputContent)
                 .collect(Collectors.toList());
 
         contentItems.add(ResponseInputContent.ofInputText(
                 ResponseInputText.builder()
-                        .text("Extract and analyze the following PDFs according to the prompt type: " + promptType)
+                        .text(instructionText)
                         .build()
         ));
 
@@ -292,23 +314,121 @@ public class QuestionnaireAnalysisService {
                 .tools(Collections.singletonList(Tool.ofFileSearch(fileSearchTool)))
                 .store(true)
                 .maxOutputTokens(6000)
-                .include(Collections.singletonList(ResponseIncludable.FILE_SEARCH_CALL_RESULTS))
                 .input(ResponseCreateParams.Input.ofResponse(Collections.singletonList(inputItem)))
                 .build();
     }
 
     /**
-     * Encodes a file (PDF or Word document) to a Base64 string for direct inclusion in the OpenAI API request.
+     * Converts a file to the cheapest input content item that preserves analysis quality.
+     * Text-only PDFs are sent as extracted plain text; PDFs containing raster images
+     * (charts/graphs) and non-PDF files are sent as base64 file data for vision parsing.
+     *
+     * @param file the uploaded PDF or Word document file
+     * @return the resolved {@link ResponseInputContent} for this file
+     */
+    private ResponseInputContent toResponseInputContent(MultipartFile file) {
+        String filename = Objects.requireNonNull(file.getOriginalFilename());
+
+        if (isPdf(filename)) {
+            String extractedText = tryExtractPlainText(file);
+            if (extractedText != null) {
+                return ResponseInputContent.ofInputText(
+                        ResponseInputText.builder()
+                                .text("=== " + filename + " ===\n" + extractedText)
+                                .build()
+                );
+            }
+        }
+        return toFileInputContent(file, filename);
+    }
+
+    private boolean isPdf(String filename) {
+        return filename.toLowerCase().endsWith(".pdf");
+    }
+
+    /**
+     * Extracts plain text from a PDF, but only when the PDF contains no raster images.
+     * A PDF with embedded images (charts, graphs, scanned pages) needs vision parsing to be
+     * interpreted correctly, so this returns null to signal the caller to fall back to
+     * sending the raw file instead.
+     *
+     * @param file the PDF file to inspect
+     * @return the extracted text, or null if the PDF is image/chart-heavy or extraction fails
+     */
+    private String tryExtractPlainText(MultipartFile file) {
+        try (PDDocument document = PDDocument.load(file.getInputStream())) {
+            if (containsRasterImage(document)) {
+                log.debug("'{}' contains chart/graph images; sending as file for vision parsing", file.getOriginalFilename());
+                return null;
+            }
+
+            String text = new PDFTextStripper().getText(document).trim();
+            if (text.isEmpty()) {
+                return null;
+            }
+
+            log.debug("Using extracted text for '{}' ({} chars)", file.getOriginalFilename(), text.length());
+            return text;
+        } catch (IOException e) {
+            log.warn("Failed to inspect '{}' for text extraction, falling back to file input: {}",
+                    file.getOriginalFilename(), e.getMessage());
+            return null;
+        }
+    }
+
+    private boolean containsRasterImage(PDDocument document) throws IOException {
+        for (PDPage page : document.getPages()) {
+            PDResources resources = page.getResources();
+            if (resources == null) {
+                continue;
+            }
+            for (COSName xObjectName : resources.getXObjectNames()) {
+                if (resources.getXObject(xObjectName) instanceof PDImageXObject) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Encodes a file to a Base64 data URI for direct inclusion in the OpenAI API request.
      *
      * @param file the file to encode (PDF, .doc, or .docx)
-     * @return Base64-encoded string of the file bytes
-     * @throws IOException if encoding fails
+     * @param filename the file's original filename, used to resolve its MIME type
+     * @return the resolved {@link ResponseInputContent} carrying the base64 file data
      */
-    private String encodePdfToBase64(MultipartFile file) throws IOException {
-            byte[] bytes = file.getBytes();
-            log.debug("Encoded '{}' to base64 ({} bytes)", file.getOriginalFilename(), bytes.length);
-            return Base64.getEncoder().encodeToString(bytes);
+    private ResponseInputContent toFileInputContent(MultipartFile file, String filename) {
+        String base64Data;
+        try {
+            base64Data = Base64.getEncoder().encodeToString(file.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to encode file: " + filename, e);
+        }
+        log.debug("Encoded '{}' to base64 for vision parsing", filename);
 
+        return ResponseInputContent.ofInputFile(
+                ResponseInputFile.builder()
+                        .fileData("data:" + resolveMimeType(filename) + ";base64," + base64Data)
+                        .filename(filename)
+                        .build()
+        );
+    }
+
+    /**
+     * Resolves the MIME type from a filename's extension. The OpenAI API needs the correct
+     * MIME type in the data URI to parse Word documents - PDFs were previously sent with the
+     * same hardcoded "application/pdf" type regardless of actual file type.
+     */
+    private String resolveMimeType(String filename) {
+        String lower = filename.toLowerCase();
+        if (lower.endsWith(".docx")) {
+            return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        }
+        if (lower.endsWith(".doc")) {
+            return "application/msword";
+        }
+        return "application/pdf";
     }
 
     /**
@@ -332,29 +452,28 @@ public class QuestionnaireAnalysisService {
      * Persists the analysis result to the database.
      *
      * @param result the AiAnalysisResult to persist
-     * @throws JsonProcessingException 
+     * @throws JsonProcessingException
      */
     void persistResult(AiAnalysisResult result) throws JsonProcessingException {
-        Prompt1ResultEntity entity = new Prompt1ResultEntity();
-        entity.setProfessionalId(result.getProfessionalName());
-        entity.setPatientId(result.getClientName());
-        entity.setPromptType(result.getPromptId());
-        entity.setResultJson(result.toJson());
-        prompt1ResultRepository.save(entity);
-
-        log.debug("Persisted result to database for professional: {}, patient: {}",
-                result.getProfessionalName(), result.getClientName());
+        persistEntity(result.getProfessionalName(), result.getClientName(), result.getPromptId(), result.toJson());
     }
 
     void persistPrompt1Result(Prompt1Result result) throws JsonProcessingException {
+        persistEntity(result.getProfessionalName(), result.getClientName(), result.getPromptId(), result.toJson());
+    }
+
+    void persistPrompt2Result(Prompt2Result result) throws JsonProcessingException {
+        persistEntity(result.getProfessionalName(), result.getClientName(), result.getPromptId(), result.toJson());
+    }
+
+    private void persistEntity(String professionalName, String clientName, String promptType, String resultJson) {
         Prompt1ResultEntity entity = new Prompt1ResultEntity();
-        entity.setProfessionalId(result.getProfessionalName());
-        entity.setPatientId(result.getClientName());
-        entity.setPromptType(result.getPromptId());
-        entity.setResultJson(result.toJson());
+        entity.setProfessionalId(professionalName);
+        entity.setPatientId(clientName);
+        entity.setPromptType(promptType);
+        entity.setResultJson(resultJson);
         prompt1ResultRepository.save(entity);
 
-        log.debug("Persisted Prompt1Result to database for professional: {}, patient: {}",
-                result.getProfessionalName(), result.getClientName());
+        log.debug("Persisted result to database for professional: {}, patient: {}", professionalName, clientName);
     }
 }
