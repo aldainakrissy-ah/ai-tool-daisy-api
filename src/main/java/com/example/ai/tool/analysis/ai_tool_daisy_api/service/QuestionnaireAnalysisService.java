@@ -288,6 +288,7 @@ public class QuestionnaireAnalysisService {
     private ResponseCreateParams buildAnalysisResponseParams(List<MultipartFile> files, ResponsePrompt prompt, String instructionText) {
         FileSearchTool fileSearchTool = FileSearchTool.builder()
                 .addVectorStoreId(vectorStoreId)
+                .maxNumResults(10)
                 .build();
 
         List<ResponseInputContent> contentItems = files.stream()
