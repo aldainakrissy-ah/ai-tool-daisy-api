@@ -13,8 +13,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.zaxxer.hikari.HikariDataSource;
-
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
@@ -31,16 +29,7 @@ public class PrimaryDBConfig {
     @Bean(name = "dataSource")
     @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource dataSource() {
-        // @ConfigurationProperties(prefix = "spring.datasource") only binds flat properties
-        // (url/username/password) onto this bean - it does not reach the nested
-        // "spring.datasource.hikari.*" keys, so pool sizing must be set explicitly here.
-        HikariDataSource dataSource = DataSourceBuilder.create()
-                .type(HikariDataSource.class)
-                .build();
-        dataSource.setMaximumPoolSize(5);
-        dataSource.setMinimumIdle(1);
-        dataSource.setIdleTimeout(30000);
-        return dataSource;
+        return DataSourceBuilder.create().build();
     }
 
     @Primary
