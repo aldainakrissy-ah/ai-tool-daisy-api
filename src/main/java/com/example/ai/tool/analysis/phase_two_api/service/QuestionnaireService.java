@@ -2,6 +2,7 @@ package com.example.ai.tool.analysis.phase_two_api.service;
 
 import com.example.ai.tool.analysis.phase_two_api.entity.*;
 import com.example.ai.tool.analysis.phase_two_api.pojo.*;
+import com.example.ai.tool.analysis.phase_two_api.repository.QuestionRepository;
 import com.example.ai.tool.analysis.phase_two_api.repository.QuestionnaireRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class QuestionnaireService {
 
     private final QuestionnaireRepository questionnaireRepository;
+    private final QuestionRepository questionRepository;
 
     @Transactional(readOnly = true)
     public List<QuestionnaireDto> getAllActiveQuestionnaires() {
@@ -290,6 +292,21 @@ public class QuestionnaireService {
         return text;
     }
 
+    /**
+     * The ID of a question added by an update: the ID from the questionnaire file, so a question has the same
+     * ID in every environment (as on create). If that ID already belongs to another question (question IDs are
+     * unique across questionnaires), a random ID is used instead, so no other questionnaire's question is taken.
+     */
+    String newQuestionId(String requestedId) {
+        if (requestedId == null || requestedId.isBlank() || questionRepository.existsById(requestedId)) {
+            if (requestedId != null && !requestedId.isBlank()) {
+                log.warn("Question ID {} is already used by another question; the new question gets a random ID", requestedId);
+            }
+            return UUID.randomUUID().toString();
+        }
+        return requestedId;
+    }
+
     private void updateQuestionnaireFields(Questionnaire existing, QuestionnaireDto dto) {
         existing.setTitle(toLocalizedText(dto.getTitle()));
         existing.setDescription(toLocalizedText(dto.getDescription()));
@@ -335,13 +352,13 @@ public class QuestionnaireService {
                     sectionDto.getQuestions().forEach(questionDto -> {
                         final Question question;
                         if (questionDto.getId() != null) {
-                            // Try to find existing question
+                            // Try to find existing question; a new one keeps the ID from the file
                             question = currentQuestions.stream()
                                     .filter(q -> q.getId().equals(questionDto.getId()))
                                     .findFirst()
                                     .orElseGet(() -> {
                                         Question q = new Question();
-                                        q.setId(UUID.randomUUID().toString());
+                                        q.setId(newQuestionId(questionDto.getId()));
                                         return q;
                                     });
                         } else {
