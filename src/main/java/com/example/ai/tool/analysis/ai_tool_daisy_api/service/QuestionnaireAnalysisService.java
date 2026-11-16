@@ -7,6 +7,8 @@ import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt2Result;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.Prompt1ResultRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.openai.client.OpenAIClient;
+import com.openai.core.JsonMissing;
+import com.openai.errors.NotFoundException;
 import com.openai.models.responses.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +47,11 @@ public class QuestionnaireAnalysisService {
 
     @Value("${openai.vector-store-id}")
     private String vectorStoreId;
-    
+
+    // Used only when the model configured on the stored prompt returns 404 (retired / no access)
+    @Value("${openai.fallback-model:gpt-5}")
+    private String fallbackModel;
+
     // Dedicated credentials for Prompt 1 analysis
     @Value("${openai.prompt1.prompt-id}")
     private String prompt1Id;
@@ -115,7 +121,7 @@ public class QuestionnaireAnalysisService {
 
     private Prompt1Result analyzeWithPrompt1(List<MultipartFile> files) throws JsonProcessingException {
         ResponseCreateParams params = buildPrompt1ResponseParams(files);
-        Response response = client.responses().create(params);
+        Response response = createResponse(params);
 
         String openAIResponse = extractResponseText(response);
         if (openAIResponse.trim().isEmpty()) {
@@ -161,7 +167,7 @@ public class QuestionnaireAnalysisService {
 
     private Prompt2Result analyzeWithPrompt2(List<MultipartFile> files) throws JsonProcessingException {
         ResponseCreateParams params = buildPrompt2ResponseParams(files);
-        Response response = client.responses().create(params);
+        Response response = createResponse(params);
 
         String openAIResponse = extractResponseText(response);
         if (openAIResponse.trim().isEmpty()) {
@@ -240,7 +246,7 @@ public class QuestionnaireAnalysisService {
 
     private AiAnalysisResult analyzeWithOpenAI(List<MultipartFile> files, String promptType) throws JsonProcessingException {
         ResponseCreateParams params = buildResponseParams(files, promptType);
-        Response response = client.responses().create(params);
+        Response response = createResponse(params);
 
         log.debug("Received response from OpenAI API");
 
@@ -270,6 +276,38 @@ public class QuestionnaireAnalysisService {
 
         return buildAnalysisResponseParams(files, prompt,
                 "Extract and analyze the following PDFs according to the prompt type: " + promptType);
+    }
+
+    /**
+     * Calls the Responses API. The model is normally defined by the stored prompt (id/version) in the
+     * OpenAI dashboard, so if that model is retired or the project loses access to it the call fails with
+     * a 404. In that case retry once with an explicit fallback model, which overrides the prompt's model
+     * while keeping the prompt's instructions.
+     */
+    private Response createResponse(ResponseCreateParams params) {
+        try {
+            return client.responses().create(params);
+        } catch (NotFoundException e) {
+            if (fallbackModel == null || fallbackModel.isBlank()) {
+                throw e;
+            }
+            log.error("OpenAI prompt model unavailable ({}). Retrying with fallback model '{}'. "
+                    + "Update the model on the stored prompt in the OpenAI dashboard.", e.getMessage(), fallbackModel);
+            return client.responses().create(fallbackParams(params, fallbackModel));
+        }
+    }
+
+    /**
+     * The request for the fallback retry: the same request with the fallback model and without temperature
+     * and top_p, which reasoning models (e.g. the default gpt-5) reject. Without them the model uses its own
+     * defaults. JsonMissing leaves the fields out of the request; Optional.empty() would send them as null.
+     */
+    static ResponseCreateParams fallbackParams(ResponseCreateParams params, String model) {
+        return params.toBuilder()
+                .model(model)
+                .temperature(JsonMissing.of())
+                .topP(JsonMissing.of())
+                .build();
     }
 
     /**
