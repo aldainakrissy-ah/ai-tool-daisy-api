@@ -53,6 +53,14 @@ public class Prompt1RunEntity {
     @Column(name = "package_profile")
     private String packageProfile;
 
+    /** The release of the release store the run used; null when it ran on local files. */
+    @Column(name = "release_id", length = 36)
+    private String releaseId;
+
+    /** The release name, e.g. P1-v0.136. */
+    @Column(name = "release_name", length = 64)
+    private String releaseName;
+
     @Column(name = "system_message_file")
     private String systemMessageFile;
 

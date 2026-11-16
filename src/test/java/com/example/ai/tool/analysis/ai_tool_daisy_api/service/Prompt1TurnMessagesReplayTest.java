@@ -25,7 +25,7 @@ class Prompt1TurnMessagesReplayTest {
     void a1EqualsJansPromptApartFromRepeatedHeadingLines() throws Exception {
         Path sources = dir("KNOWLEDGE_MARKDOWN_DIR");
         Path replay = dir("PROMPT1_REPLAY_DIR");
-        Prompt1TurnConfig config = Prompt1TurnConfig.load(null);
+        Prompt1TurnConfig config = Prompt1TestFiles.turnConfig();
         Map<String, DocumentSections> documents = Prompt1SourcePackageService.selectVersions(
                 Prompt1SourcePackageServiceTest.readLikeTheLoader(sources), Map.of());
         String jan = Files.readString(replay.resolve("prompts/A1.txt"));
@@ -76,7 +76,7 @@ class Prompt1TurnMessagesReplayTest {
     void laterTurnsEqualJansPromptsApartFromRepeatedHeadingLines() throws Exception {
         Path sources = dir("KNOWLEDGE_MARKDOWN_DIR");
         Path replay = dir("PROMPT1_REPLAY_DIR");
-        Prompt1TurnConfig config = Prompt1TurnConfig.load(null);
+        Prompt1TurnConfig config = Prompt1TestFiles.turnConfig();
         Map<String, DocumentSections> documents = Prompt1SourcePackageService.selectVersions(
                 Prompt1SourcePackageServiceTest.readLikeTheLoader(sources), Map.of());
         String doc18 = Files.readString(sources.resolve("18_werkbestanden_format.md"));

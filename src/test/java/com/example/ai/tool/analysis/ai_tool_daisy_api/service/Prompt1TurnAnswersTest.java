@@ -15,7 +15,7 @@ class Prompt1TurnAnswersTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        config = Prompt1TurnConfig.load(null);
+        config = Prompt1TestFiles.turnConfig();
     }
 
     private static String c(String canon, String cells, String decisions) {

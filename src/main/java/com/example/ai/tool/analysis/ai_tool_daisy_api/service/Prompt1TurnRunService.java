@@ -12,10 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.*;
@@ -63,18 +59,6 @@ public class Prompt1TurnRunService {
     private final Prompt1RunFiles runFiles;
     private final ObjectMapper objectMapper;
 
-    @Value("${experiment.prompt1.turns.config:prompt1/turns-v0136.json}")
-    private String turnConfig;
-
-    @Value("${experiment.prompt1.turns.system-message-file:}")
-    private String systemMessageFile;
-
-    @Value("${experiment.prompt1.turns.doc18-file:}")
-    private String doc18File;
-
-    @Value("${experiment.prompt1.turns.schema-file:}")
-    private String schemaFile;
-
     @Value("${experiment.prompt1.turns.effort:A1=high,A2=high,rest=medium}")
     private String effort;
 
@@ -83,10 +67,6 @@ public class Prompt1TurnRunService {
 
     @Value("${experiment.prompt1.turns.max-tries:3}")
     private int maxTries;
-
-    /** Jan's B2 mapping matrix of doc 07 v9 (07_B2_matrix.tsv): canonical_key → 0–2 questionnaires (turn D, v06). */
-    @Value("${experiment.prompt1.turns.b2-matrix-file:}")
-    private String b2MatrixFile;
 
     @Value("${experiment.prompt1.model:gpt-5.6-luna}")
     private String model;
@@ -128,31 +108,24 @@ public class Prompt1TurnRunService {
     }
 
     /**
-     * Checks at submit time what a run needs, so a bad request is refused at once instead of failing later
-     * in the background: the intake files parse into the Step 0 inventory with an intake questionnaire and at
-     * least one filled answer (IllegalArgumentException when not, so no paid call is made for an empty intake),
-     * and the turn configuration, SM, doc 18, schema and B2 matrix can be read (IllegalStateException when not).
+     * Checks the intake at submit time, so a bad request is refused at once instead of failing later in the
+     * background: the files parse into the Step 0 inventory with an intake questionnaire and at least one
+     * filled answer (IllegalArgumentException when not, so no paid call is made for an empty intake). The
+     * release files are checked when the release is read ({@link Prompt1ReleaseService}).
      */
     public void checkReady(List<IntakeFile> files) {
         Prompt1TurnInventory.requireClientData(Prompt1TurnInventory.build(files));
-        try {
-            Prompt1TurnConfig config = Prompt1TurnConfig.load(turnConfig);
-            read(systemMessageFile, "turn system message (experiment.prompt1.turns.system-message-file)");
-            read(doc18File, "doc 18 (experiment.prompt1.turns.doc18-file)");
-            objectMapper.readTree(read(schemaFile, "output schema (experiment.prompt1.turns.schema-file)"));
-            Prompt1TurnOutput.b2Matrix(read(b2MatrixFile, "B2 matrix (experiment.prompt1.turns.b2-matrix-file)"),
-                    config.b2Order());
-        } catch (IOException | RuntimeException e) {
-            throw new IllegalStateException("Prompt 1 is not ready to run: " + e.getMessage(), e);
-        }
     }
 
-    /** @param requestedPreset a preset for this run (quality, standard, economy), or null for the configured plan */
-    public TurnSettings currentSettings(String requestedPreset) throws IOException {
+    /**
+     * @param requestedPreset a preset for this run (quality, standard, economy), or null for the configured plan
+     * @param release         the release the run uses
+     */
+    public TurnSettings settings(String requestedPreset, Prompt1Release release) {
         Plan plan = plan(requestedPreset);
-        String release = Prompt1TurnConfig.load(turnConfig).release();
         return new TurnSettings(plan.modelSpec(), plan.effortSpec(),
-                plan.name() == null ? release : release + ", preset " + plan.name(), fileName(systemMessageFile));
+                plan.name() == null ? release.name() : release.name() + ", preset " + plan.name(),
+                release.systemMessageFile());
     }
 
     /** The plan of a run: the requested preset, otherwise the configured preset, otherwise the model and effort settings. */
@@ -178,12 +151,13 @@ public class Prompt1TurnRunService {
     /**
      * Runs every turn for the client files on OpenAI; a failed turn ends the run with the error in the result.
      *
+     * @param release         the release of the run (its files and document versions)
      * @param requestedPreset a preset for this run, or null for the configured plan
      */
-    public Prompt1ExperimentResult run(String runId, List<IntakeFile> files, Map<String, String> documentVersions,
-                                       String requestedPreset) throws IOException {
+    public Prompt1ExperimentResult run(String runId, List<IntakeFile> files, Prompt1Release release,
+                                       String requestedPreset) {
         Plan plan = plan(requestedPreset);
-        return run(runId, files, documentVersions, (turn, label, instructions, input, previous) -> {
+        return run(runId, files, release, (turn, label, instructions, input, previous) -> {
             String key = Prompt1TurnConfig.tableKey(turn);
             String turnModel = plan.models().get(key);
             return openAiCaller.ask(turn, label, instructions, input, previous,
@@ -191,32 +165,25 @@ public class Prompt1TurnRunService {
         }, plan);
     }
 
-    Prompt1ExperimentResult run(String runId, List<IntakeFile> files, Map<String, String> documentVersions, Model ask)
-            throws IOException {
-        return run(runId, files, documentVersions, ask, plan(null));
+    Prompt1ExperimentResult run(String runId, List<IntakeFile> files, Prompt1Release release, Model ask) {
+        return run(runId, files, release, ask, plan(null));
     }
 
-    Prompt1ExperimentResult run(String runId, List<IntakeFile> files, Map<String, String> documentVersions, Model ask,
-                                Plan plan) throws IOException {
-        Prompt1TurnConfig config = Prompt1TurnConfig.load(turnConfig);
-        String systemMessage = read(systemMessageFile, "turn system message (experiment.prompt1.turns.system-message-file)");
-        String doc18 = read(doc18File, "doc 18 (experiment.prompt1.turns.doc18-file)");
-        String schemaText = read(schemaFile, "output schema (experiment.prompt1.turns.schema-file)");
-        objectMapper.readTree(schemaText);
-        Map<String, List<String>> matrix = Prompt1TurnOutput.b2Matrix(
-                read(b2MatrixFile, "B2 matrix (experiment.prompt1.turns.b2-matrix-file)"), config.b2Order());
-
+    Prompt1ExperimentResult run(String runId, List<IntakeFile> files, Prompt1Release release, Model ask, Plan plan) {
+        Prompt1TurnConfig config = release.config();
+        Map<String, String> documentVersions = release.documentVersions();
         Prompt1ExperimentResult result = Prompt1ExperimentResult.builder()
                 .model(plan.modelSpec())
                 .reasoningEffort(plan.effortSpec())
-                .packageProfile("TURNS " + config.release() + (plan.name() == null ? "" : ", preset " + plan.name()))
-                .systemMessageFile(fileName(systemMessageFile))
-                .systemMessageHash(Hashes.sha256(systemMessage))
+                .packageProfile("TURNS " + release.name() + (plan.name() == null ? "" : ", preset " + plan.name()))
+                .systemMessageFile(release.systemMessageFile())
+                .systemMessageHash(Hashes.sha256(release.systemMessage()))
                 .schemaName(config.schemaLabel())
-                .schemaHash(Hashes.sha256(schemaText))
+                .schemaHash(Hashes.sha256(release.schemaText()))
                 .documentVersions(documentVersions)
                 .build();
-        Run run = new Run(runId, config, systemMessage, doc18, ask, documentVersions, result);
+        Map<String, List<String>> matrix = release.b2Matrix();
+        Run run = new Run(runId, config, release.systemMessage(), release.doc18(), ask, documentVersions, result);
         runFiles.open(runId);  // the working files are read many times per turn: keep them in memory during the run
         try {
             run.execute(files, matrix);
@@ -729,15 +696,4 @@ public class Prompt1TurnRunService {
         return count;
     }
 
-
-    private static String read(String file, String what) throws IOException {
-        if (file == null || file.isBlank()) {
-            throw new IllegalStateException("No " + what + " configured");
-        }
-        return Files.readString(Path.of(file.trim()), StandardCharsets.UTF_8);
-    }
-
-    private static String fileName(String file) {
-        return file == null || file.isBlank() ? null : Path.of(file.trim()).getFileName().toString();
-    }
 }

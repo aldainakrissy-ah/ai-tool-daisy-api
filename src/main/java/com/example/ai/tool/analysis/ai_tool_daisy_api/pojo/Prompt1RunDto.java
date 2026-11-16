@@ -33,6 +33,8 @@ public class Prompt1RunDto {
     private String model;
     private String reasoningEffort;
     private String packageProfile;
+    /** The release of the release store the run used, e.g. P1-v0.136; null when it ran on local files. */
+    private String releaseName;
     private String systemMessageFile;
     private String systemMessageHash;
     private String schemaName;

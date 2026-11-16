@@ -36,6 +36,7 @@ class Prompt1TurnRunServiceReplayTest {
     private Path intake;
     private Prompt1RunFiles runFiles;
     private Prompt1TurnRunService service;
+    private Prompt1Release release;
     private final Map<String, Prompt1RunFileEntity> stored = new ConcurrentHashMap<>();
 
     @BeforeEach
@@ -70,12 +71,11 @@ class Prompt1TurnRunServiceReplayTest {
         runFiles = new Prompt1RunFiles(repository);
 
         service = new Prompt1TurnRunService(null, packages, runFiles, new ObjectMapper());
-        ReflectionTestUtils.setField(service, "turnConfig", Prompt1TurnConfig.DEFAULT_RESOURCE);
-        ReflectionTestUtils.setField(service, "systemMessageFile", sources.resolve("DAISY_Prompt_1_v0.136_compact.md").toString());
-        ReflectionTestUtils.setField(service, "doc18File", sources.resolve("18_werkbestanden_format.md").toString());
-        ReflectionTestUtils.setField(service, "schemaFile",
-                sources.resolve("Structured_JSON_Prompt_1_v0.46d-lean (used by claude).json").toString());
-        ReflectionTestUtils.setField(service, "b2MatrixFile", sources.resolve("07_B2_matrix.tsv").toString());
+        release = Prompt1Release.of(null, "P1-v0.136", Files.readAllBytes(Prompt1TestFiles.turnConfigFile()),
+                Files.readString(sources.resolve("DAISY_Prompt_1_v0.136_compact.md")), "DAISY_Prompt_1_v0.136_compact.md",
+                Files.readString(sources.resolve("18_werkbestanden_format.md")),
+                Files.readString(sources.resolve("Structured_JSON_Prompt_1_v0.46d-lean (used by claude).json")),
+                Files.readString(sources.resolve("07_B2_matrix.tsv")), Map.of());
         String runDate = new ObjectMapper().readTree(Files.readString(replay.resolve("output.json"))).path("current_run_date").asText();
         ReflectionTestUtils.setField(service, "clock", java.time.Clock.fixed(
                 java.time.LocalDate.parse(runDate).atStartOfDay(java.time.ZoneOffset.UTC).toInstant(), java.time.ZoneOffset.UTC));
@@ -111,7 +111,7 @@ class Prompt1TurnRunServiceReplayTest {
     void theWholeRunReproducesJansRun() throws Exception {
         String run = replay.getFileName().toString();
         List<String> labels = new CopyOnWriteArrayList<>();
-        Prompt1ExperimentResult result = service.run(run, klaas(), Map.of(), recorded(labels, Map.of()));
+        Prompt1ExperimentResult result = service.run(run, klaas(), release, recorded(labels, Map.of()));
 
         assertNull(result.getError(), result.getError());
         assertEquals("valid", result.getResult().path("run_status").asText());
@@ -151,7 +151,7 @@ class Prompt1TurnRunServiceReplayTest {
         List<String> labels = new CopyOnWriteArrayList<>();
         Map<String, String> correctionInstructions = new ConcurrentHashMap<>();
         Prompt1TurnRunService.Model recorded = recorded(labels, Map.of("A3", broken));
-        Prompt1ExperimentResult result = service.run("run2", klaas(), Map.of(), (turn, label, instructions, input, previous) -> {
+        Prompt1ExperimentResult result = service.run("run2", klaas(), release, (turn, label, instructions, input, previous) -> {
             if (previous != null && instructions != null) {
                 correctionInstructions.put(label, instructions);
             }
@@ -187,7 +187,7 @@ class Prompt1TurnRunServiceReplayTest {
             return recorded(labels, Map.of("A2", broken)).ask(turn, label, instructions, input, previous);
         };
 
-        Prompt1ExperimentResult result = service.run("run5", klaas(), Map.of(), model);
+        Prompt1ExperimentResult result = service.run("run5", klaas(), release, model);
 
         assertNull(result.getError(), result.getError());
         assertEquals("valid", result.getResult().path("run_status").asText());
@@ -220,7 +220,7 @@ class Prompt1TurnRunServiceReplayTest {
             return recorded(labels, Map.of("A2", a2.replace(removed + "\n", ""))).ask(turn, label, instructions, input, previous);
         };
 
-        Prompt1ExperimentResult result = service.run("run7", klaas(), Map.of(), model);
+        Prompt1ExperimentResult result = service.run("run7", klaas(), release, model);
 
         assertEquals("valid", result.getResult().path("run_status").asText());
         assertTrue(repairPrompts.get(0).contains("=== WORKING-FILE FORMAT"), "the repair prompt is built from the sent A2 prompt");
@@ -255,7 +255,7 @@ class Prompt1TurnRunServiceReplayTest {
             return recorded(labels, Map.of("A1", broken)).ask(turn, label, instructions, input, previous);
         };
 
-        Prompt1ExperimentResult result = service.run("run6", klaas(), Map.of(), model);
+        Prompt1ExperimentResult result = service.run("run6", klaas(), release, model);
 
         assertNull(result.getError(), result.getError());
         assertTrue(labels.contains("A1 repair 1"));
@@ -276,7 +276,7 @@ class Prompt1TurnRunServiceReplayTest {
             return recorded(labels, Map.of()).ask(turn, label, instructions, input, previous);
         };
 
-        Prompt1ExperimentResult result = service.run("run3", klaas(), Map.of(), alwaysBroken);
+        Prompt1ExperimentResult result = service.run("run3", klaas(), release, alwaysBroken);
 
         assertNotNull(result.getError());
         assertTrue(result.getError().startsWith("Turn A3: answer refused after 3 tries: a1_selection.tsv: header differs"),

@@ -63,7 +63,7 @@ public class KnowledgeLoaderService {
         if (!Files.isRegularFile(path)) {
             throw new IllegalArgumentException("Knowledge chunks file not found: " + path);
         }
-        return loadDocuments(path, chunkReader.read(path), force);
+        return loadDocuments(path.toString(), chunkReader.read(path), force);
     }
 
     /** Loads every reference document (.md) in {@code knowledge.source.markdown-dir}. */
@@ -76,14 +76,37 @@ public class KnowledgeLoaderService {
         if (!Files.isDirectory(path)) {
             throw new IllegalArgumentException("Knowledge markdown directory not found: " + path);
         }
-        return loadDocuments(path, markdownReader.read(path), force);
+        return loadDocuments(path.toString(), markdownReader.read(path), force);
     }
 
-    private KnowledgeLoadReport loadDocuments(Path source, List<DoclingChunkReader.SourceDocument> documents,
+    /**
+     * Loads the reference documents of an uploaded release (read from the zip, never from disk). A version
+     * already loaded with the same content is left as it is; check {@link #conflicts} first.
+     */
+    @Transactional
+    public KnowledgeLoadReport loadReleaseDocuments(String releaseName, List<DoclingChunkReader.SourceDocument> documents) {
+        return loadDocuments("release " + releaseName, documents, false);
+    }
+
+    /**
+     * The documents whose code and version are already loaded with different content: loading them would be
+     * refused (a changed document needs a new version).
+     */
+    public List<String> conflicts(List<DoclingChunkReader.SourceDocument> documents) {
+        List<String> conflicts = new ArrayList<>();
+        for (DoclingChunkReader.SourceDocument document : documents) {
+            documentRepository.findByDocumentCodeAndVersion(document.documentCode(), document.version())
+                    .filter(loaded -> !loaded.getSourceHash().equals(document.sourceHash()))
+                    .ifPresent(loaded -> conflicts.add(document.documentCode() + " " + document.version()));
+        }
+        return conflicts;
+    }
+
+    private KnowledgeLoadReport loadDocuments(String source, List<DoclingChunkReader.SourceDocument> documents,
                                               boolean force) {
         log.info("Loading {} knowledge document(s) from {}", documents.size(), source);
         KnowledgeLoadReport report = KnowledgeLoadReport.builder()
-                .sourceFile(source.toString())
+                .sourceFile(source)
                 .sourceBuild(documents.isEmpty() ? null : documents.get(0).sourceBuild())
                 .build();
         Set<String> codes = new LinkedHashSet<>();

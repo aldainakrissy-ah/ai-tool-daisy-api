@@ -38,28 +38,32 @@ public class Prompt1ExperimentController {
      * Free preview of the turn-based route (Jan's PRELOAD design): the Step 0 inventory of the
      * files, the system message size per turn, and turn A1 as it would be sent. No OpenAI call.
      *
-     * @param withText also return the A1 system message and message (they hold client data)
+     * @param withText  also return the A1 system message and message (they hold client data)
+     * @param releaseId optional release of the release store to preview (e.g. a DRAFT); default the active one
      */
     @PostMapping("/prompt1/turns/preview")
     public ResponseEntity<Prompt1TurnPreviewService.Preview> previewTurns(
             @RequestParam("files") List<MultipartFile> files,
-            @RequestParam(defaultValue = "false") boolean withText) throws IOException {
-        log.info("Prompt 1 turn preview requested: {} file(s), withText={}", files.size(), withText);
-        return ResponseEntity.ok(prompt1TurnPreviewService.previewA1(intakeFiles(files), withText));
+            @RequestParam(defaultValue = "false") boolean withText,
+            @RequestParam(required = false) String releaseId) throws IOException {
+        log.info("Prompt 1 turn preview requested: {} file(s), withText={}, releaseId={}", files.size(), withText, releaseId);
+        return ResponseEntity.ok(prompt1TurnPreviewService.previewA1(intakeFiles(files), withText, releaseId));
     }
 
     /**
      * Queues a background run and returns it at once as QUEUED (HTTP 202).
      *
-     * @param files  client intake files (personal data first, then the intake questionnaire)
-     * @param preset optional model-and-effort plan: quality, standard or economy
+     * @param files     client intake files (personal data first, then the intake questionnaire)
+     * @param preset    optional model-and-effort plan: quality, standard or economy
+     * @param releaseId optional release of the release store to run with (e.g. a DRAFT); default the active one
      */
     @PostMapping("/prompt1/runs")
     public ResponseEntity<?> submitRun(@RequestParam("files") List<MultipartFile> files,
-                                       @RequestParam(required = false) String preset) throws IOException {
-        log.info("Prompt 1 background run requested: {} file(s), preset={}", files.size(), preset);
+                                       @RequestParam(required = false) String preset,
+                                       @RequestParam(required = false) String releaseId) throws IOException {
+        log.info("Prompt 1 background run requested: {} file(s), preset={}, releaseId={}", files.size(), preset, releaseId);
         try {
-            return ResponseEntity.accepted().body(prompt1RunService.submit(intakeFiles(files), preset));
+            return ResponseEntity.accepted().body(prompt1RunService.submit(intakeFiles(files), preset, releaseId));
         } catch (Prompt1RunService.QueueFullException e) {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
                     .body(Map.of("error", "Service Unavailable", "message", e.getMessage()));

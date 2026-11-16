@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -13,8 +12,8 @@ import java.util.Set;
 
 /**
  * The fixed tables and texts of Jan's turn-based Prompt 1 route for one release, kept as data
- * (resource {@code prompt1/turns-v0136.json}) so that most of his weekly updates are edits to a
- * file, not to code. Ported from {@code daisy_preload.py}: {@code SM_SECTIONS}, {@code S0_DROP},
+ * (e.g. {@code turns-v0136.json}, a file of the release, never in the repository) so that most of
+ * his weekly updates are edits to a file, not to code. Ported from {@code daisy_preload.py}: {@code SM_SECTIONS}, {@code S0_DROP},
  * {@code S0_D_ONLY}, {@code HEADERS}, {@code TURNS}, the doc 18 parts per turn and the turn texts.
  *
  * @param smSections   top-level SM sections each turn receives (§0 always; turn "C" covers every C_&lt;heta&gt;)
@@ -46,24 +45,27 @@ public record Prompt1TurnConfig(String release, List<String> ies, Set<String> si
     public record Turn(String steps, List<String> files, String closeSteps) {
     }
 
-    public static final String DEFAULT_RESOURCE = "prompt1/turns-v0136.json";
-
     private static final ObjectMapper MAPPER = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
 
-    /** Reads a turn configuration from a file path, or from the classpath when the value has no file behind it. */
-    public static Prompt1TurnConfig load(String location) throws IOException {
-        String value = location == null || location.isBlank() ? DEFAULT_RESOURCE : location.trim();
-        Path path = Path.of(value);
-        if (Files.isRegularFile(path)) {
-            return validate(MAPPER.readValue(path.toFile(), Prompt1TurnConfig.class));
+    /**
+     * Reads a turn configuration from a file path. The configuration holds Jan's turn texts, so it is never
+     * part of the code: it comes from a release in the release store, or locally from this path.
+     */
+    public static Prompt1TurnConfig load(String path) throws IOException {
+        if (path == null || path.isBlank()) {
+            throw new IOException("No turn configuration configured (experiment.prompt1.turns.config)");
         }
-        try (InputStream in = Prompt1TurnConfig.class.getClassLoader().getResourceAsStream(value)) {
-            if (in == null) {
-                throw new IOException("Turn configuration not found as file or classpath resource: " + value);
-            }
-            return validate(MAPPER.readValue(in, Prompt1TurnConfig.class));
+        Path file = Path.of(path.trim());
+        if (!Files.isRegularFile(file)) {
+            throw new IOException("Turn configuration not found: " + file.getFileName());
         }
+        return parse(Files.readAllBytes(file));
+    }
+
+    /** Reads a turn configuration from its JSON (e.g. a release file) and checks it. */
+    public static Prompt1TurnConfig parse(byte[] json) throws IOException {
+        return validate(MAPPER.readValue(json, Prompt1TurnConfig.class));
     }
 
     /** Every file a turn returns has a header, and every turn has its SM sections. */

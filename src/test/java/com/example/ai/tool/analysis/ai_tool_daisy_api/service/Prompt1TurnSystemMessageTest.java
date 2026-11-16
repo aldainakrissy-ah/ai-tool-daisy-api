@@ -16,7 +16,7 @@ class Prompt1TurnSystemMessageTest {
 
     @Test
     void turnConfigurationLoadsFromTheClasspath() throws Exception {
-        Prompt1TurnConfig config = Prompt1TurnConfig.load(null);
+        Prompt1TurnConfig config = Prompt1TestFiles.turnConfig();
         assertEquals(19, config.ies().size());
         assertEquals(List.of(), config.turns().get("B").files(), "turn B has no model call (v04z)");
         assertEquals(List.of("b2_needs.tsv", "b2_coverage.tsv"), config.turns().get("D").files());
@@ -31,7 +31,7 @@ class Prompt1TurnSystemMessageTest {
 
     @Test
     void section0LinesThatNoLongerMatchStopTheCut() throws Exception {
-        Prompt1TurnConfig config = Prompt1TurnConfig.load(null);
+        Prompt1TurnConfig config = Prompt1TestFiles.turnConfig();
         String sm = "HEADER\n====\n0. GLOBAL\n====\n- something else\n====\n1. CLIENT\n====\ntext\n";
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
                 () -> Prompt1TurnSystemMessage.forTurn(sm, "A1", config));
@@ -47,7 +47,7 @@ class Prompt1TurnSystemMessageTest {
     void cutMatchesJansRun() throws Exception {
         Path sources = dir("KNOWLEDGE_MARKDOWN_DIR");
         Path replay = dir("PROMPT1_REPLAY_DIR");
-        Prompt1TurnConfig config = Prompt1TurnConfig.load(null);
+        Prompt1TurnConfig config = Prompt1TestFiles.turnConfig();
         String sm = Files.readString(sources.resolve(SM_FILE));
         String doc18 = Files.readString(sources.resolve(DOC18_FILE));
 

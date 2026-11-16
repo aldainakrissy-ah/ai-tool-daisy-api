@@ -106,3 +106,6 @@ pids/
 ### Temporary files ###
 tmp/
 temp/
+### Prompt release files (confidential: they come from the release store, never from git) ###
+src/main/resources/prompt1/
+*.release.zip

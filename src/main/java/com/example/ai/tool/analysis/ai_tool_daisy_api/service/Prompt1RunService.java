@@ -59,7 +59,7 @@ public class Prompt1RunService {
         }
     }
 
-    private final Prompt1SourcePackageService sourcePackageService;
+    private final Prompt1ReleaseService releaseService;
     private final Prompt1RunRepository runRepository;
     private final ObjectMapper objectMapper;
     private final Executor executor;
@@ -70,18 +70,18 @@ public class Prompt1RunService {
     private final Prompt1TurnRunService turnRunService;
 
     @Autowired
-    public Prompt1RunService(Prompt1SourcePackageService sourcePackageService,
+    public Prompt1RunService(Prompt1ReleaseService releaseService,
                              Prompt1RunRepository runRepository,
                              ObjectMapper objectMapper,
                              Prompt1TurnRunService turnRunService,
                              @Value("${experiment.prompt1.runs.concurrency:2}") int concurrency,
                              @Value("${experiment.prompt1.runs.queue-capacity:50}") int queueCapacity) {
-        this(sourcePackageService, runRepository, objectMapper, turnRunService, newExecutor(concurrency, queueCapacity));
+        this(releaseService, runRepository, objectMapper, turnRunService, newExecutor(concurrency, queueCapacity));
     }
 
-    Prompt1RunService(Prompt1SourcePackageService sourcePackageService, Prompt1RunRepository runRepository,
+    Prompt1RunService(Prompt1ReleaseService releaseService, Prompt1RunRepository runRepository,
                       ObjectMapper objectMapper, Prompt1TurnRunService turnRunService, Executor executor) {
-        this.sourcePackageService = sourcePackageService;
+        this.releaseService = releaseService;
         this.runRepository = runRepository;
         this.objectMapper = objectMapper;
         this.turnRunService = turnRunService;
@@ -105,24 +105,28 @@ public class Prompt1RunService {
         }
     }
 
+    public Prompt1RunDto submit(List<IntakeFile> files, String preset) {
+        return submit(files, preset, null);
+    }
+
     /**
-     * Queues a run and returns it as QUEUED.
+     * Queues a run and returns it as QUEUED. The run keeps the release it was submitted with, also when
+     * another release is activated before it starts.
      *
-     * @param preset a model-and-effort plan for this run (quality, standard, economy); null = the configured plan
-     * @throws IllegalArgumentException when no intake file is given or a file is empty
+     * @param preset    a model-and-effort plan for this run (quality, standard, economy); null = the configured plan
+     * @param releaseId a release of the release store to run with (e.g. a DRAFT to try); null = the active one
+     * @throws IllegalArgumentException when no intake file is given, a file is empty or the release is unknown
+     * @throws IllegalStateException    when there is no release to run with
      * @throws QueueFullException       when the worker queue is full
      */
-    public Prompt1RunDto submit(List<IntakeFile> files, String preset) {
+    public Prompt1RunDto submit(List<IntakeFile> files, String preset, String releaseId) {
         Prompt1ExperimentService.requireIntake(files);
-        turnRunService.checkReady(files);  // bad intake JSON or missing release files: refused now, not in the background
+        turnRunService.checkReady(files);  // bad intake JSON: refused now, not in the background
+        Prompt1Release release = releaseId == null || releaseId.isBlank()
+                ? releaseService.current() : releaseService.byId(releaseId.strip());
         String runPreset = preset == null || preset.isBlank() ? null : preset.strip();
-        Map<String, String> versions = sourcePackageService.selectedDocumentVersions();
-        Prompt1TurnRunService.TurnSettings settings;
-        try {
-            settings = turnRunService.currentSettings(runPreset);
-        } catch (java.io.IOException e) {
-            throw new IllegalStateException("Turn configuration cannot be read: " + e.getMessage(), e);
-        }
+        Map<String, String> versions = release.documentVersions();
+        Prompt1TurnRunService.TurnSettings settings = turnRunService.settings(runPreset, release);
 
         Prompt1RunEntity run = Prompt1RunEntity.builder()
                 .id(UUID.randomUUID().toString())
@@ -132,6 +136,8 @@ public class Prompt1RunService {
                 .model(settings.model())
                 .reasoningEffort(settings.effort())
                 .packageProfile("TURNS " + settings.release())
+                .releaseId(release.id())
+                .releaseName(release.id() == null ? null : release.name())
                 .systemMessageFile(settings.systemMessageFile())
                 .documentVersions(toJson(versions))
                 .intakeFileNames(toJson(files.stream().map(file -> file.name()).toList()))
@@ -142,7 +148,7 @@ public class Prompt1RunService {
         List<IntakeFile> intake = List.copyOf(files);
         String runId = run.getId();
         try {
-            executor.execute(() -> execute(runId, intake, versions, runPreset));
+            executor.execute(() -> execute(runId, intake, release, runPreset));
         } catch (RejectedExecutionException e) {
             run.setStatus(Status.FAILED);
             run.setError("The run queue is full; try again later.");
@@ -150,12 +156,13 @@ public class Prompt1RunService {
             runRepository.save(run);
             throw new QueueFullException("The Prompt 1 run queue is full; try again later.");
         }
-        log.info("Prompt 1 run {} queued: {} intake file(s), document versions {}", runId, files.size(), versions);
+        log.info("Prompt 1 run {} queued: {} intake file(s), release {}, document versions {}", runId, files.size(),
+                release.name(), versions);
         return toDto(run, false);
     }
 
     /** Runs Prompt 1 for a queued run and records the outcome. Called on a worker thread. */
-    void execute(String runId, List<IntakeFile> files, Map<String, String> versions, String preset) {
+    void execute(String runId, List<IntakeFile> files, Prompt1Release release, String preset) {
         Prompt1RunEntity run = runRepository.findById(runId).orElse(null);
         if (run == null) {
             log.warn("Prompt 1 run {} disappeared before it started", runId);
@@ -166,7 +173,7 @@ public class Prompt1RunService {
         runRepository.save(run);
         log.info("Prompt 1 run {} started", runId);
         try {
-            apply(run, turnRunService.run(runId, files, versions, preset));
+            apply(run, turnRunService.run(runId, files, release, preset));
         } catch (Exception e) {
             log.error("Prompt 1 run {} failed: {}", runId, e.getMessage(), e);
             run.setStatus(Status.FAILED);
@@ -274,6 +281,7 @@ public class Prompt1RunService {
                 .model(run.getModel())
                 .reasoningEffort(run.getReasoningEffort())
                 .packageProfile(run.getPackageProfile())
+                .releaseName(run.getReleaseName())
                 .systemMessageFile(run.getSystemMessageFile())
                 .systemMessageHash(run.getSystemMessageHash())
                 .schemaName(run.getSchemaName())

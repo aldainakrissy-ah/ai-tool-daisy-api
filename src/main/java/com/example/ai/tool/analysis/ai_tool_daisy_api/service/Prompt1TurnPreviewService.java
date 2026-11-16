@@ -4,12 +4,8 @@ import com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1ExperimentS
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1SourcePackageService.KeyText;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -26,36 +22,31 @@ public class Prompt1TurnPreviewService {
     private static final List<String> TURNS = List.of("A1", "A2", "A3", "B", "C", "D");
 
     private final Prompt1SourcePackageService sourcePackageService;
-
-    @Value("${experiment.prompt1.turns.config:prompt1/turns-v0136.json}")
-    private String turnConfig;
-
-    @Value("${experiment.prompt1.turns.system-message-file:}")
-    private String systemMessageFile;
-
-    @Value("${experiment.prompt1.turns.doc18-file:}")
-    private String doc18File;
+    private final Prompt1ReleaseService releaseService;
 
     /** The preview of the A1 turn; texts only when asked for (they hold client data). */
-    public record Preview(String release, String systemMessageFile, String doc18File, int systemMessageCharacters,
+    public record Preview(String release, String systemMessageFile, int systemMessageCharacters,
                           Map<String, Integer> systemMessageCharactersPerTurn, int observationCount,
                           List<String> emptyIntakeFields, Map<String, String> documentVersions,
                           List<String> keysFound, List<String> keysNotFound, int a1MessageCharacters,
                           int a1EstimatedInputTokens, String a1SystemMessage, String a1Message) {
     }
 
-    public Preview previewA1(List<IntakeFile> files, boolean withText) throws IOException {
-        Prompt1TurnConfig config = Prompt1TurnConfig.load(turnConfig);
-        String systemMessage = read(systemMessageFile, "turn system message (experiment.prompt1.turns.system-message-file)");
-        String doc18 = read(doc18File, "doc 18 (experiment.prompt1.turns.doc18-file)");
+    /** @param releaseId a release of the release store (e.g. a DRAFT); null = the release a run would use now */
+    public Preview previewA1(List<IntakeFile> files, boolean withText, String releaseId) {
         Prompt1ExperimentService.requireIntake(files);
+        Prompt1Release release = releaseId == null || releaseId.isBlank()
+                ? releaseService.current() : releaseService.byId(releaseId.strip());
+        Prompt1TurnConfig config = release.config();
+        String systemMessage = release.systemMessage();
+        String doc18 = release.doc18();
 
         Map<String, Integer> perTurn = new LinkedHashMap<>();
         for (String turn : TURNS) {
             perTurn.put(turn, Prompt1TurnSystemMessage.forTurn(systemMessage, turn.equals("C") ? "C_x" : turn, config).length());
         }
         Prompt1TurnInventory.Inventory inventory = Prompt1TurnInventory.build(files);
-        Map<String, String> versions = sourcePackageService.selectedDocumentVersions();
+        Map<String, String> versions = release.documentVersions();
         List<KeyText> step1 = sourcePackageService.readKeys(Prompt1TurnMessages.A1_STEP1_KEYS, versions);
         List<KeyText> step2 = sourcePackageService.readKeys(Prompt1TurnMessages.A1_STEP2_KEYS, versions);
         String a1System = Prompt1TurnSystemMessage.forTurn(systemMessage, "A1", config);
@@ -71,7 +62,7 @@ public class Prompt1TurnPreviewService {
                 .filter(row -> Prompt1TurnInventory.isNullField(row)).map(row -> row.get("observation_id")).toList();
         log.info("Prompt 1 turn preview: {} observations, A1 {} characters, keys found {}/{}", inventory.observationCount(),
                 a1.length(), found.size(), found.size() + notFound.size());
-        return new Preview(config.release(), fileName(systemMessageFile), fileName(doc18File), systemMessage.length(),
+        return new Preview(release.name(), release.systemMessageFile(), systemMessage.length(),
                 perTurn, inventory.observationCount(), nulls, versions, found, notFound, a1.length(),
                 (a1System.length() + a1.length()) / 4, withText ? a1System : null, withText ? a1 : null);
     }
@@ -80,16 +71,5 @@ public class Prompt1TurnPreviewService {
         List<KeyText> all = new ArrayList<>(a);
         all.addAll(b);
         return all;
-    }
-
-    private static String read(String file, String what) throws IOException {
-        if (file == null || file.isBlank()) {
-            throw new IllegalStateException("No " + what + " configured");
-        }
-        return Files.readString(Path.of(file.trim()));
-    }
-
-    private static String fileName(String file) {
-        return file == null || file.isBlank() ? null : Path.of(file.trim()).getFileName().toString();
     }
 }

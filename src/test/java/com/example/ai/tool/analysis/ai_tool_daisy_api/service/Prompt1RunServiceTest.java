@@ -28,13 +28,21 @@ class Prompt1RunServiceTest {
     private final List<Runnable> queued = new ArrayList<>();
 
     private Prompt1TurnRunService turnRunService;
-    private Prompt1SourcePackageService sourcePackageService;
+    private Prompt1ReleaseService releaseService;
     private Prompt1RunRepository runRepository;
+
+    /** A release as the release store gives it (the texts are not read here). */
+    private static Prompt1Release release(String id, String name, Map<String, String> versions) {
+        return new Prompt1Release(id, name, null, "sm", "DAISY_Prompt_1_v0.136_compact.md", "doc18", "{}",
+                Map.of(), versions);
+    }
+
+    private final Prompt1Release active = release("rel-136", "P1-v0.136", Map.of("01", "v4", "R4", "v5"));
 
     @BeforeEach
     void setUp() throws Exception {
         turnRunService = mock(Prompt1TurnRunService.class);
-        sourcePackageService = mock(Prompt1SourcePackageService.class);
+        releaseService = mock(Prompt1ReleaseService.class);
         runRepository = mock(Prompt1RunRepository.class);
         when(runRepository.save(any())).thenAnswer(invocation -> {
             Prompt1RunEntity run = invocation.getArgument(0);
@@ -47,13 +55,13 @@ class Prompt1RunServiceTest {
             Collection<Prompt1RunEntity.Status> statuses = invocation.getArgument(0);
             return table.values().stream().filter(run -> statuses.contains(run.getStatus())).toList();
         });
-        when(sourcePackageService.selectedDocumentVersions()).thenReturn(Map.of("01", "v4", "R4", "v5"));
-        when(turnRunService.currentSettings(any())).thenReturn(new Prompt1TurnRunService.TurnSettings(
-                "gpt-6.1-terra", "A1=high,A2=high,rest=medium", "v0.136", "DAISY_Prompt_1_v0.136_compact.md"));
+        when(releaseService.current()).thenReturn(active);
+        when(turnRunService.settings(nullable(String.class), any(Prompt1Release.class))).thenReturn(new Prompt1TurnRunService.TurnSettings(
+                "gpt-6.1-terra", "A1=high,A2=high,rest=medium", "P1-v0.136", "DAISY_Prompt_1_v0.136_compact.md"));
     }
 
     private Prompt1RunService service(Executor executor) {
-        return new Prompt1RunService(sourcePackageService, runRepository, objectMapper, turnRunService, executor);
+        return new Prompt1RunService(releaseService, runRepository, objectMapper, turnRunService, executor);
     }
 
     private static List<IntakeFile> intake() {
@@ -84,7 +92,7 @@ class Prompt1RunServiceTest {
 
     @Test
     void validRunStoresResultSettingsAndPinnedVersions() throws Exception {
-        when(turnRunService.run(anyString(), anyList(), anyMap(), nullable(String.class))).thenReturn(result("{\"run_status\":\"valid\"}", 13));
+        when(turnRunService.run(anyString(), anyList(), any(Prompt1Release.class), nullable(String.class))).thenReturn(result("{\"run_status\":\"valid\"}", 13));
         Prompt1RunService service = service(task -> task.run());
 
         Prompt1RunDto submitted = service.submit(intake(), "standard");
@@ -100,31 +108,55 @@ class Prompt1RunServiceTest {
         assertNotNull(run.getResult());
         assertNull(run.getError());
         assertNotNull(run.getFinishedAt());
+        assertEquals("P1-v0.136", run.getReleaseName());
         verify(turnRunService).run(eq(submitted.getRunId()), argThat(files -> files.size() == 2),
-                eq(Map.of("01", "v4", "R4", "v5")), eq("standard"));
-        verify(turnRunService).currentSettings("standard");
+                eq(active), eq("standard"));
+        verify(turnRunService).settings("standard", active);
     }
 
     @Test
-    void documentVersionsArePinnedAtSubmitNotAtStart() throws Exception {
-        when(turnRunService.run(anyString(), anyList(), anyMap(), nullable(String.class))).thenReturn(result("{\"run_status\":\"valid\"}", 13));
+    void theReleaseIsPinnedAtSubmitNotAtStart() throws Exception {
+        when(turnRunService.run(anyString(), anyList(), any(Prompt1Release.class), nullable(String.class))).thenReturn(result("{\"run_status\":\"valid\"}", 13));
         Prompt1RunService service = service(task -> queued.add(task));
 
         String runId = service.submit(intake(), null).getRunId();
         assertEquals("QUEUED", service.get(runId).orElseThrow().getStatus());
 
-        // a knowledge reload activates new versions before the worker picks the run up
-        when(sourcePackageService.selectedDocumentVersions()).thenReturn(Map.of("01", "v5", "R4", "v6"));
+        // another release is activated before the worker picks the run up
+        when(releaseService.current()).thenReturn(release("rel-137", "P1-v0.137", Map.of("01", "v5", "R4", "v6")));
         queued.forEach(task -> task.run());
 
-        verify(turnRunService).run(eq(runId), anyList(), eq(Map.of("01", "v4", "R4", "v5")), (String) isNull());
+        verify(turnRunService).run(eq(runId), anyList(), eq(active), (String) isNull());
+        assertEquals(Map.of("01", "v4", "R4", "v5"), service.get(runId).orElseThrow().getDocumentVersions());
+    }
+
+    @Test
+    void aGivenReleaseIsUsedInsteadOfTheActiveOne() throws Exception {
+        Prompt1Release draft = release("rel-draft", "P1-v0.137", Map.of("01", "v5"));
+        when(releaseService.byId("rel-draft")).thenReturn(draft);
+        when(turnRunService.run(anyString(), anyList(), any(Prompt1Release.class), nullable(String.class))).thenReturn(result("{\"run_status\":\"valid\"}", 13));
+        Prompt1RunService service = service(task -> task.run());
+
+        String runId = service.submit(intake(), null, "rel-draft").getRunId();
+
+        verify(turnRunService).run(eq(runId), anyList(), eq(draft), (String) isNull());
+        verify(releaseService, never()).current();
+    }
+
+    @Test
+    void withoutAReleaseNoRunIsCreated() {
+        when(releaseService.current()).thenThrow(new IllegalStateException("Prompt 1 is not ready to run: no active release"));
+        Prompt1RunService service = service(task -> task.run());
+
+        assertThrows(IllegalStateException.class, () -> service.submit(intake(), null));
+        assertTrue(table.isEmpty());
     }
 
     @Test
     void aStoppedRunIsFailedWithItsReasonAndStoresNoResult() throws Exception {
         Prompt1ExperimentResult stopped = result(null, 3);
         stopped.setError("Turn A3: answer refused after 3 tries: a1_selection.tsv: header differs");
-        when(turnRunService.run(anyString(), anyList(), anyMap(), nullable(String.class))).thenReturn(stopped);
+        when(turnRunService.run(anyString(), anyList(), any(Prompt1Release.class), nullable(String.class))).thenReturn(stopped);
         Prompt1RunService service = service(task -> task.run());
 
         Prompt1RunDto run = service.get(service.submit(intake(), null).getRunId()).orElseThrow();
@@ -137,7 +169,7 @@ class Prompt1RunServiceTest {
 
     @Test
     void invalidPrompt1OutcomeIsFailedWithItsReason() throws Exception {
-        when(turnRunService.run(anyString(), anyList(), anyMap(), nullable(String.class))).thenReturn(result("{\"run_status\":\"invalid\","
+        when(turnRunService.run(anyString(), anyList(), any(Prompt1Release.class), nullable(String.class))).thenReturn(result("{\"run_status\":\"invalid\","
                 + "\"failure_stage\":\"A1.primary\",\"failure_reason\":\"no_primary_eligible_canonical_IE\"}", 13));
         Prompt1RunService service = service(task -> task.run());
 
@@ -150,7 +182,7 @@ class Prompt1RunServiceTest {
 
     @Test
     void exceptionMarksTheRunFailed() throws Exception {
-        when(turnRunService.run(anyString(), anyList(), anyMap(), nullable(String.class))).thenThrow(new IllegalArgumentException("B2 matrix missing"));
+        when(turnRunService.run(anyString(), anyList(), any(Prompt1Release.class), nullable(String.class))).thenThrow(new IllegalArgumentException("B2 matrix missing"));
         Prompt1RunService service = service(task -> task.run());
 
         Prompt1RunDto run = service.get(service.submit(intake(), null).getRunId()).orElseThrow();
@@ -207,7 +239,7 @@ class Prompt1RunServiceTest {
 
     @Test
     void storedResultIsReturnedOnlyBySingleRunLookup() throws Exception {
-        when(turnRunService.run(anyString(), anyList(), anyMap(), nullable(String.class))).thenReturn(result("{\"run_status\":\"valid\"}", 13));
+        when(turnRunService.run(anyString(), anyList(), any(Prompt1Release.class), nullable(String.class))).thenReturn(result("{\"run_status\":\"valid\"}", 13));
         when(runRepository.findAllByOrderByCreatedAtDesc(any())).thenAnswer(invocation -> new ArrayList<>(table.values()));
         Prompt1RunService service = service(task -> task.run());
         String runId = service.submit(intake(), null).getRunId();

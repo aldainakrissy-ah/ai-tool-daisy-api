@@ -53,12 +53,20 @@ public class MarkdownSourceReader {
     }
 
     DoclingChunkReader.SourceDocument readFile(Path file) throws IOException {
-        String fileName = file.getFileName().toString();
+        return read(file.getFileName().toString(), Files.readAllBytes(file));
+    }
+
+    /** True for a file name the reader takes as a reference document (01_…_v4.md, R3_…_v06.md, …). */
+    public static boolean isReferenceDocument(String fileName) {
+        return FILE_NAME.matcher(fileName).matches();
+    }
+
+    /** One reference document from its file name and bytes (e.g. a file of an uploaded release). */
+    public DoclingChunkReader.SourceDocument read(String fileName, byte[] bytes) {
         Matcher name = FILE_NAME.matcher(fileName);
         if (!name.matches()) {
             throw new IllegalArgumentException("Not a reference document file name: " + fileName);
         }
-        byte[] bytes = Files.readAllBytes(file);
         String text = new String(bytes, StandardCharsets.UTF_8).replace("\r\n", "\n");
         if (text.startsWith("﻿")) {
             text = text.substring(1);

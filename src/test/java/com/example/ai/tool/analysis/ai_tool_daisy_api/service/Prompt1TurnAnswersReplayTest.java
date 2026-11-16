@@ -27,7 +27,7 @@ class Prompt1TurnAnswersReplayTest {
     void jansRecordedAnswersGiveJansWorkingFilesAndFinalJson() throws Exception {
         Path sources = dir("KNOWLEDGE_MARKDOWN_DIR");
         Path replay = dir("PROMPT1_REPLAY_DIR");
-        Prompt1TurnConfig config = Prompt1TurnConfig.load(null);
+        Prompt1TurnConfig config = Prompt1TestFiles.turnConfig();
         Map<String, DocumentSections> documents = Prompt1SourcePackageService.selectVersions(
                 Prompt1SourcePackageServiceTest.readLikeTheLoader(sources), Map.of());
 

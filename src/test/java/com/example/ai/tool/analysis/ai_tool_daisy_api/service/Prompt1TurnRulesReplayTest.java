@@ -33,7 +33,7 @@ class Prompt1TurnRulesReplayTest {
         intake = dir("PROMPT1_INTAKE_DIR");
         documents = Prompt1SourcePackageService.selectVersions(
                 Prompt1SourcePackageServiceTest.readLikeTheLoader(sources), Map.of());
-        config = Prompt1TurnConfig.load(null);
+        config = Prompt1TestFiles.turnConfig();
     }
 
     @Test

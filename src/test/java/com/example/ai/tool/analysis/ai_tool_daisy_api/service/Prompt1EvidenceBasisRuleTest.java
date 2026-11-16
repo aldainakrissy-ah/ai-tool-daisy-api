@@ -50,7 +50,7 @@ class Prompt1EvidenceBasisRuleTest {
     }
 
     private static Result compare(Path run) throws Exception {
-        Prompt1TurnConfig config = Prompt1TurnConfig.load(null);
+        Prompt1TurnConfig config = Prompt1TestFiles.turnConfig();
         Prompt1TurnRules.Selection selection = Prompt1TurnRules.selection(read(run, "a1_selection.tsv"));
         String ours = Prompt1TurnRules.evidenceBasis(config.headers().get("a3_evidence_basis.tsv"), selection,
                 read(run, "a1_ie_candidates.tsv"), read(run, "ie_core_filter.tsv"), read(run, "priority.tsv"),
