@@ -4,10 +4,12 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1Tsv.directionOf;
+
 /**
  * The fixed rules of the turn-based Prompt 1 route that the backend executes instead of the model,
  * ported from Jan's {@code playground_server.py} and {@code daisy_preload.py}:
- * Step 4 IE membership ({@code derive_ie_candidates}), Step 6 A2 fields ({@code build_a2}),
+ * Step 4 IE membership ({@code derive_ie_candidates}), the Step 4 core filter completion ({@code complete_core_filter}),
  * Step 7 candidate HETAs ({@code a3_candidate_list}), the fixed signal list per HETA
  * ({@code r3_signals}), and the selections the turn messages need ({@code selection},
  * {@code dominant_ftfs}, {@code partial_fit}, {@code in_play}).
@@ -20,9 +22,6 @@ public final class Prompt1TurnRules {
             Pattern.UNICODE_CHARACTER_CLASS);
     private static final Pattern INDEX_MEMBERS = Pattern.compile("members:\\s*\\n((?:\\s*22\\.\\d+\\s*\\n)+)");
     private static final Pattern HETA_REF = Pattern.compile("22\\.\\d+");
-    private static final Pattern R4_TITLE = Pattern.compile("KEY: R4:\\S+ \\| IE \\S+ (.+?) \\|");
-    private static final Pattern SENTENCE_END = Pattern.compile("(?<=[.!?:])\\s+(?=[A-Z])");
-    private static final Pattern DOES_NOT = Pattern.compile("\\bdoes not\\b");
 
     static final String MEMBERSHIP_HEADER = "ie_ref\tftf_id\talt_id\tdominant\tmembership_basis";
     static final String CANDIDATES_HEADER = "ie_ref\trepresented_ftf_ids\trepresented_dominant_ftf_ids\tprimary_eligible";
@@ -231,13 +230,73 @@ public final class Prompt1TurnRules {
         return new Selection(primary.get(0), secondaries);
     }
 
+    /** v06a {@code admitted_ftfs}: the FTFs of Step 4, the admitted directions of cts_admission.tsv in that order. */
+    public static List<String> admittedFtfs(String ctsAdmission) {
+        return Prompt1Tsv.rows(ctsAdmission).stream()
+                .filter(row -> "admitted".equals(row.getOrDefault("decision", "").strip()))
+                .map(row -> Prompt1Tsv.ftfOf(row.get("direction_id")))
+                .toList();
+    }
+
+    /** The completed core filter and the number of "no" rows the backend added. */
+    public record CompletedCoreFilter(String text, int added) {
+    }
+
+    /**
+     * v06a {@code complete_core_filter} (D13): the model writes only the passes = yes rows of ie_core_filter.tsv; the
+     * backend adds a row "ie_ref, ftf_id, no, —, —, —" for every other IE × admitted FTF pair, in IE order and then FTF
+     * (CTS) order. Rows the model wrote are kept unchanged (also a written no row); a row outside the grid is kept after
+     * its IE, for the checks. The text has no trailing newline.
+     */
+    public static CompletedCoreFilter completeCoreFilter(String text, List<String> ftfs, List<String> ies) {
+        List<String> lines = Prompt1Tsv.strip(text, "\n").lines().toList();
+        String head = lines.get(0);
+        // the added row: ie_ref, ftf_id, no, and — for every further column of the header (6 columns in doc 18 today)
+        int further = Math.max(0, head.split("\t", -1).length - 3);
+        Map<List<String>, String> got = new LinkedHashMap<>();
+        Map<String, List<String>> extra = new LinkedHashMap<>();
+        for (String line : lines.subList(1, lines.size())) {
+            if (line.isBlank()) {
+                continue;
+            }
+            String[] c = line.split("\t", -1);
+            String ie = c[0].strip();
+            List<String> pair = List.of(ie, c.length >= 2 ? c[1].strip() : "");
+            if (c.length >= 2 && ies.contains(ie) && ftfs.contains(pair.get(1)) && !got.containsKey(pair)) {
+                got.put(pair, line);
+            } else {
+                extra.computeIfAbsent(ie, key -> new ArrayList<>()).add(line);
+            }
+        }
+        List<String> out = new ArrayList<>(List.of(head));
+        int added = 0;
+        for (String ie : ies) {
+            for (String ftf : ftfs) {
+                String written = got.get(List.of(ie, ftf));
+                if (written != null) {
+                    out.add(written);
+                } else {
+                    List<String> row = new ArrayList<>(List.of(ie, ftf, "no"));
+                    row.addAll(Collections.nCopies(further, Prompt1Tsv.EMPTY));
+                    out.add(String.join("\t", row));
+                    added++;
+                }
+            }
+            List<String> rest = extra.remove(ie);
+            if (rest != null) {
+                out.addAll(rest);
+            }
+        }
+        extra.values().forEach(rest -> out.addAll(rest));
+        return new CompletedCoreFilter(String.join("\n", out), added);
+    }
+
     /** The FTFs of the dominant directions (FD_016 → FTF_016). */
     public static List<String> dominantFtfs(String priority) {
         List<String> ftfs = new ArrayList<>();
         for (Map<String, String> row : Prompt1Tsv.rows(priority)) {
             if ("dominant".equals(row.getOrDefault("priority_status", "").strip())) {
-                String id = row.get("direction_id");
-                ftfs.add("FTF_" + id.substring(id.indexOf('_') + 1));
+                ftfs.add(Prompt1Tsv.ftfOf(row.get("direction_id")));
             }
         }
         return ftfs;
@@ -328,64 +387,6 @@ public final class Prompt1TurnRules {
         return Prompt1Tsv.text(header, rows);
     }
 
-    /**
-     * SM Step 6 (a read-only copy): the R5:A2 rows of the primary and every secondary IE, with the
-     * A1 role, the IE title from the R4 key line and the first sentence of R4:&lt;ie&gt;:01 that says
-     * what the IE does.
-     *
-     * @param keyTexts key → full key text ("KEY: … | …" line first) for R4:&lt;ie&gt;:01 and R5:A2:&lt;ie&gt;
-     */
-    public static String a2Fields(String header, Selection selection, Map<String, String> keyTexts) {
-        List<String[]> roles = new ArrayList<>();
-        roles.add(new String[]{selection.primary(), "primary"});
-        for (String ie : selection.secondaries()) {
-            roles.add(new String[]{ie, "secondary"});
-        }
-        List<List<String>> rows = new ArrayList<>();
-        for (String[] role : roles) {
-            String ie = role[0];
-            String r4 = keyTexts.get("R4:" + ie + ":01");
-            String r5 = keyTexts.get("R5:A2:" + ie);
-            if (r4 == null || r5 == null) {
-                throw new IllegalStateException("Step 6: source key R4:" + ie + ":01 or R5:A2:" + ie + " not found");
-            }
-            List<String> lines = r4.strip().lines().filter(line -> !line.isBlank()).toList();
-            Matcher title = R4_TITLE.matcher(lines.get(0));
-            String ieTitle = title.find() ? title.group(1).strip() : "";
-            List<String> body = new ArrayList<>();
-            for (String line : lines.subList(1, lines.size())) {
-                if (line.startsWith("R4 —")) {
-                    break;
-                }
-                body.add(line.strip());
-            }
-            List<String> sentences = Arrays.stream(SENTENCE_END.split(String.join(" ", body)))
-                    .map(s -> s.strip()).filter(s -> !s.isEmpty()).toList();
-            List<String> positive = sentences.stream().filter(s -> !DOES_NOT.matcher(s).find()).toList();
-            String description = !positive.isEmpty() ? positive.get(0) : !sentences.isEmpty() ? sentences.get(0) : "";
-            description = Prompt1Tsv.rstrip(description, ":").strip();
-            int n = 0;
-            for (String raw : r5.lines().toList()) {
-                String line = raw.strip();
-                if (!line.startsWith("- FIELD_" + ie + "_")) {
-                    continue;
-                }
-                String[] cells = line.substring(2).split(" \\| ", -1);
-                if (cells.length != 6) {
-                    throw new IllegalStateException("Step 6: R5:A2:" + ie + " row not in 6 parts: "
-                            + line.substring(0, Math.min(80, line.length())));
-                }
-                rows.add(List.of(cells[0].strip(), ie, role[1], cells[2].strip(), cells[3].strip(), cells[4].strip(),
-                        cells[5].strip(), ieTitle, description));
-                n++;
-            }
-            if (n == 0) {
-                throw new IllegalStateException("Step 6: R5:A2:" + ie + " has no field rows");
-            }
-        }
-        return Prompt1Tsv.text(header, rows);
-    }
-
     // ---- Step 8: the evidence basis (Jan's backend rule, v04z–v05c) ---------------------------------------
 
     /** Links whose relation_type or scope marks them as uncertain (links.tsv has no uncertain column). */
@@ -416,11 +417,8 @@ public final class Prompt1TurnRules {
                                        String priority, String directions, String links, String membership,
                                        String meanings, List<String> skipped) {
         String primary = selection.primary();
-        Map<String, Map<String, String>> candidate = new LinkedHashMap<>();
-        Prompt1Tsv.rows(candidates).forEach(row -> candidate.put(row.get("ie_ref"), row));
-        Set<String> dominant = new HashSet<>();
-        Prompt1Tsv.rows(priority).stream().filter(r -> "dominant".equals(r.get("priority_status").strip()))
-                .forEach(r -> dominant.add("FTF_" + r.get("direction_id").split("_")[1]));
+        Map<String, Map<String, String>> candidate = Prompt1Tsv.byId(candidates, "ie_ref");
+        Set<String> dominant = new HashSet<>(dominantFtfs(priority));
         List<String> dominantFtfs = new ArrayList<>();
         List<String> allFtfs = new ArrayList<>();
         if (candidate.values().stream().anyMatch(r -> "yes".equals(r.getOrDefault("primary_eligible", "").strip()))) {
@@ -444,8 +442,7 @@ public final class Prompt1TurnRules {
         if (domf.isEmpty()) {
             throw new IllegalStateException("Step 8: the primary " + primary + " represents no dominant FTF");
         }
-        Map<String, Map<String, String>> byDirection = new LinkedHashMap<>();
-        Prompt1Tsv.rows(directions).forEach(row -> byDirection.put(row.get("direction_id"), row));
+        Map<String, Map<String, String>> byDirection = Prompt1Tsv.byId(directions, "direction_id");
         List<Map<String, String>> linkRows = Prompt1Tsv.rows(links);
         Map<String, String> observationOf = new HashMap<>();
         Prompt1Tsv.rows(meanings).forEach(row -> observationOf.put(row.get("meaning_id"), row.get("observation_id")));
@@ -555,11 +552,6 @@ public final class Prompt1TurnRules {
             out.add(columns.stream().map(column -> row.getOrDefault(column, Prompt1Tsv.EMPTY)).toList());
         }
         return Prompt1TurnAnswers.fillEvidenceCopies(meanings, Prompt1Tsv.text(header, out)) + "\n";
-    }
-
-    /** FTF_016 → FD_016 (an FTF has the number of its direction). */
-    private static String directionOf(String ftf) {
-        return "FD_" + ftf.substring(ftf.indexOf('_') + 1);
     }
 
     // ---- Step 9 signals ------------------------------------------------------------------------------------

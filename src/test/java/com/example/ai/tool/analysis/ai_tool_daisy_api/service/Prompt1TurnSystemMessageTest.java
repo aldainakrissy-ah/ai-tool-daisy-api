@@ -11,8 +11,8 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 class Prompt1TurnSystemMessageTest {
 
-    private static final String SM_FILE = "DAISY_Prompt_1_v0.136_compact.md";
-    private static final String DOC18_FILE = "18_werkbestanden_format.md";
+    private static final String SM_FILE = Prompt1TestFiles.SYSTEM_MESSAGE;
+    private static final String DOC18_FILE = Prompt1TestFiles.DOC18;
 
     @Test
     void turnConfigurationLoadsFromTheClasspath() throws Exception {
@@ -45,8 +45,8 @@ class Prompt1TurnSystemMessageTest {
      */
     @Test
     void cutMatchesJansRun() throws Exception {
-        Path sources = dir("KNOWLEDGE_MARKDOWN_DIR");
-        Path replay = dir("PROMPT1_REPLAY_DIR");
+        Path sources = Prompt1TestFiles.dir("KNOWLEDGE_MARKDOWN_DIR");
+        Path replay = Prompt1TestFiles.dir("PROMPT1_REPLAY_DIR");
         Prompt1TurnConfig config = Prompt1TestFiles.turnConfig();
         String sm = Files.readString(sources.resolve(SM_FILE));
         String doc18 = Files.readString(sources.resolve(DOC18_FILE));
@@ -64,9 +64,4 @@ class Prompt1TurnSystemMessageTest {
         }
     }
 
-    private static Path dir(String variable) {
-        String value = System.getenv(variable);
-        assumeTrue(value != null && Files.isDirectory(Path.of(value)), variable + " not set");
-        return Path.of(value);
-    }
 }

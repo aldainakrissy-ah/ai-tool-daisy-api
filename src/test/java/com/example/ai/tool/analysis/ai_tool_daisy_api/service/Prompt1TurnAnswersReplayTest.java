@@ -16,17 +16,18 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
- * Jan's run (pg_run31, release v06) replayed through our answer checks: his recorded model answers
- * (prompts/antwoord_&lt;turn&gt;.txt) go through our ingest turn by turn, with the backend steps in
- * between (Step 4 membership, Steps 6–7, signals), and every working file and the final JSON must
- * equal what his backend wrote. No OpenAI call; client data is never printed.
+ * Jan's run (pg_run34, release v0.139, backend v07) replayed through our answer checks: his recorded model
+ * answers (prompts/antwoord_&lt;turn&gt;.txt) go through our ingest turn by turn, with the backend steps in
+ * between (the core filter completion, Step 4 membership, Steps 7–8, signals), and every working file and both
+ * JSON files (output_controle.json and the production output.json) must equal what his backend wrote. No OpenAI
+ * call; client data is never printed.
  */
 class Prompt1TurnAnswersReplayTest {
 
     @Test
     void jansRecordedAnswersGiveJansWorkingFilesAndFinalJson() throws Exception {
-        Path sources = dir("KNOWLEDGE_MARKDOWN_DIR");
-        Path replay = dir("PROMPT1_REPLAY_DIR");
+        Path sources = Prompt1TestFiles.dir("KNOWLEDGE_MARKDOWN_DIR");
+        Path replay = Prompt1TestFiles.dir("PROMPT1_REPLAY_DIR");
         Prompt1TurnConfig config = Prompt1TestFiles.turnConfig();
         Map<String, DocumentSections> documents = Prompt1SourcePackageService.selectVersions(
                 Prompt1SourcePackageServiceTest.readLikeTheLoader(sources), Map.of());
@@ -55,14 +56,10 @@ class Prompt1TurnAnswersReplayTest {
 
         Prompt1TurnRules.Selection selection = Prompt1TurnRules.selection(files.get("a1_selection.tsv"));
         List<String> keys = new ArrayList<>(List.of("R4:INDEX:" + selection.primary()));
-        List<String> ies = new ArrayList<>(List.of(selection.primary()));
-        ies.addAll(selection.secondaries());
-        ies.forEach(ie -> keys.addAll(List.of("R4:" + ie + ":01", "R5:A2:" + ie)));
         Map<String, String> texts = new HashMap<>();
         Prompt1SourcePackageService.readKeys(documents, keys).forEach(key -> texts.put(key.key(), key.text()));
         List<String> hetas = Prompt1TurnRules.a3Candidates(selection.primary(), texts.get("R4:INDEX:" + selection.primary()));
-        // turn B by the backend (Steps 6–8, v04z)
-        files.put("a2_fields.tsv", Prompt1TurnRules.a2Fields(config.headers().get("a2_fields.tsv"), selection, texts));
+        // turn B by the backend (Steps 7–8, v04z; Step 6 is removed since v07)
         files.put("a3_candidates.tsv", Prompt1TurnRules.a3CandidatesTsv(config.headers().get("a3_candidates.tsv"),
                 selection.primary(), hetas));
         files.put("a3_evidence_basis.tsv", Prompt1TurnRules.evidenceBasis(config.headers().get("a3_evidence_basis.tsv"),
@@ -80,9 +77,9 @@ class Prompt1TurnAnswersReplayTest {
         // turn D by the backend (B2 from the matrix, v06): its answer must equal the one Jan's backend wrote
         Prompt1TurnOutput.B2 b2 = Prompt1TurnOutput.b2FromMatrix(config, files.get("a3_decisions.tsv"),
                 files.get("a3_candidates.tsv"), files.get("heta_canon.tsv"), files.get("heta_cells.tsv"),
-                Prompt1TurnOutput.b2Matrix(Files.readString(sources.resolve("07_B2_matrix.tsv")), config.b2Order()));
+                Prompt1TurnOutput.b2Matrix(Files.readString(sources.resolve(Prompt1TestFiles.B2_MATRIX)), config.b2Order()));
         sameText("antwoord_D.txt", answer(replay, "D"), b2.answer());
-        String runDate = new ObjectMapper().readTree(Files.readString(replay.resolve("output.json"))).path("current_run_date").asText();
+        String runDate = new ObjectMapper().readTree(Files.readString(replay.resolve("output_controle.json"))).path("current_run_date").asText();
         // turns A1–B closed Steps 0–8 (the runner writes this in tasks.tsv through Prompt1RunFiles.closeSteps)
         StringBuilder tasks = new StringBuilder("step\tstatus\n");
         for (int step = 0; step <= 8; step++) {
@@ -90,7 +87,7 @@ class Prompt1TurnAnswersReplayTest {
         }
         files.put("tasks.tsv", tasks.toString());
         Ingested d = Prompt1TurnAnswers.ingestD(config, b2.answer(), files, replay.getFileName().toString(), runDate,
-                key -> keyText(documents, key));
+                key -> keyText(documents, key), Prompt1TestFiles.productionSchema(sources));
         apply(files, d, "D");
 
         List<String> compared = new ArrayList<>();
@@ -106,11 +103,15 @@ class Prompt1TurnAnswersReplayTest {
             }
         }
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode janOutput = mapper.readTree(Files.readString(replay.resolve("output.json")));
         List<String> differences = new ArrayList<>();
-        diff("", janOutput, d.output(), differences);
-        assertTrue(differences.isEmpty(), "output.json differs at: " + differences);
-        System.out.printf(replay.getFileName() + " answers replayed: %d working files identical to Jan's %s, output.json identical "
+        diff("", mapper.readTree(Files.readString(replay.resolve("output_controle.json"))), d.output(), differences);
+        assertTrue(differences.isEmpty(), "output_controle.json differs at: " + differences);
+        diff("", mapper.readTree(Files.readString(replay.resolve("output.json"))), d.production(), differences);
+        assertTrue(differences.isEmpty(), "output.json (production) differs at: " + differences);
+        assertEquals(mapper.readTree(Files.readString(replay.resolve("output.json"))), mapper.readTree(files.get("output.json")),
+                "written output.json");
+        System.out.printf(replay.getFileName() + " answers replayed: %d working files identical to Jan's %s, output_controle.json "
+                + "and output.json identical "
                 + "(A3 %s, B3 %s)%n", compared.size(), compared, d.output().path("a3").findValuesAsText("classification"),
                 d.output().path("b3").findValuesAsText("heta_ref"));
     }
@@ -181,9 +182,4 @@ class Prompt1TurnAnswersReplayTest {
         return Files.readString(replay.resolve(file));
     }
 
-    private static Path dir(String variable) {
-        String value = System.getenv(variable);
-        assumeTrue(value != null && Files.isDirectory(Path.of(value)), variable + " not set");
-        return Path.of(value);
-    }
 }

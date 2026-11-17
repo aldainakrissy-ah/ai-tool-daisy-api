@@ -53,5 +53,8 @@ public class Prompt1RunDto {
     @Builder.Default
     private List<String> notes = new ArrayList<>();
     private String error;
+    /** The full control JSON (output_controle.json). */
     private JsonNode result;
+    /** The production JSON (output.json, schema production v1). */
+    private JsonNode productionResult;
 }

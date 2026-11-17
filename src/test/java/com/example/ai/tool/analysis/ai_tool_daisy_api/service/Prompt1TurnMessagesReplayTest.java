@@ -23,8 +23,8 @@ class Prompt1TurnMessagesReplayTest {
 
     @Test
     void a1EqualsJansPromptApartFromRepeatedHeadingLines() throws Exception {
-        Path sources = dir("KNOWLEDGE_MARKDOWN_DIR");
-        Path replay = dir("PROMPT1_REPLAY_DIR");
+        Path sources = Prompt1TestFiles.dir("KNOWLEDGE_MARKDOWN_DIR");
+        Path replay = Prompt1TestFiles.dir("PROMPT1_REPLAY_DIR");
         Prompt1TurnConfig config = Prompt1TestFiles.turnConfig();
         Map<String, DocumentSections> documents = Prompt1SourcePackageService.selectVersions(
                 Prompt1SourcePackageServiceTest.readLikeTheLoader(sources), Map.of());
@@ -74,8 +74,8 @@ class Prompt1TurnMessagesReplayTest {
      */
     @Test
     void laterTurnsEqualJansPromptsApartFromRepeatedHeadingLines() throws Exception {
-        Path sources = dir("KNOWLEDGE_MARKDOWN_DIR");
-        Path replay = dir("PROMPT1_REPLAY_DIR");
+        Path sources = Prompt1TestFiles.dir("KNOWLEDGE_MARKDOWN_DIR");
+        Path replay = Prompt1TestFiles.dir("PROMPT1_REPLAY_DIR");
         Prompt1TurnConfig config = Prompt1TestFiles.turnConfig();
         Map<String, DocumentSections> documents = Prompt1SourcePackageService.selectVersions(
                 Prompt1SourcePackageServiceTest.readLikeTheLoader(sources), Map.of());
@@ -205,9 +205,4 @@ class Prompt1TurnMessagesReplayTest {
         return Math.min(a.length(), b.length());
     }
 
-    private static Path dir(String variable) {
-        String value = System.getenv(variable);
-        assumeTrue(value != null && Files.isDirectory(Path.of(value)), variable + " not set");
-        return Path.of(value);
-    }
 }

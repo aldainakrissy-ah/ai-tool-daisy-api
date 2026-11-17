@@ -108,9 +108,13 @@ public class Prompt1RunEntity {
     @Column(name = "notes", columnDefinition = "text")
     private String notes;
 
-    /** The final Prompt 1 JSON; only for VALID runs. */
+    /** The full control JSON (output_controle.json); only for VALID runs. */
     @Column(name = "result", columnDefinition = "text")
     private String result;
+
+    /** The production JSON (output.json, schema production v1); only for VALID runs, since backend v07. */
+    @Column(name = "production_result", columnDefinition = "text")
+    private String productionResult;
 
     @Column(name = "error", columnDefinition = "text")
     private String error;

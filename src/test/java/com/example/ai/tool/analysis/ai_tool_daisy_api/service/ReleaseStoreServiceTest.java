@@ -25,15 +25,15 @@ import static org.mockito.Mockito.*;
 
 /**
  * The release store: package checks, nothing stored for a refused package, activation and rollback, and
- * Jan's v0.136 files as a release that a run reads back unchanged (when KNOWLEDGE_MARKDOWN_DIR and
+ * Jan's v0.139 files as a release that a run reads back unchanged (when KNOWLEDGE_MARKDOWN_DIR and
  * PROMPT1_TURNS_CONFIG are set). No file content is printed.
  */
 class ReleaseStoreServiceTest {
 
-    private static final String SM = "DAISY_Prompt_1_v0.136_compact.md";
-    private static final String DOC18 = "18_werkbestanden_format.md";
-    private static final String SCHEMA = "Structured_JSON_Prompt_1_v0.46d-lean (used by claude).json";
-    private static final String MATRIX = "07_B2_matrix.tsv";
+    private static final String SM = Prompt1TestFiles.SYSTEM_MESSAGE;
+    private static final String DOC18 = Prompt1TestFiles.DOC18;
+    private static final String SCHEMA = Prompt1TestFiles.SCHEMA;
+    private static final String MATRIX = Prompt1TestFiles.B2_MATRIX;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final Map<String, PromptReleaseEntity> releases = new LinkedHashMap<>();
@@ -176,10 +176,10 @@ class ReleaseStoreServiceTest {
         assertTrue(store.activate("unknown").isEmpty());
     }
 
-    /** Jan's v0.136 files as one package, as the manifest in sourceData/releases lists them. */
+    /** Jan's v0.139 files as one package, as the manifest in sourceData/releases lists them. */
     private static Map<String, byte[]> janPackage(Path sources) throws Exception {
         Map<String, byte[]> entries = new LinkedHashMap<>();
-        StringBuilder manifest = new StringBuilder("{\"prompt\":\"P1\",\"release\":\"P1-v0.136\",\"changes\":\"test\",\"files\":[");
+        StringBuilder manifest = new StringBuilder("{\"prompt\":\"P1\",\"release\":\"P1-v0.139\",\"changes\":\"test\",\"files\":[");
         Map<String, String> roles = new LinkedHashMap<>();
         roles.put(SM, "system_message");
         roles.put(DOC18, "doc18");
@@ -193,8 +193,8 @@ class ReleaseStoreServiceTest {
             entries.put(role.getKey(), Files.readAllBytes(sources.resolve(role.getKey())));
             manifest.append("{\"file\":\"").append(role.getKey()).append("\",\"role\":\"").append(role.getValue()).append("\"},");
         }
-        entries.put("turns-v0136.json", Files.readAllBytes(Prompt1TestFiles.turnConfigFile()));
-        manifest.append("{\"file\":\"turns-v0136.json\",\"role\":\"turn_config\"}]}");
+        entries.put("turns-v0139.json", Files.readAllBytes(Prompt1TestFiles.turnConfigFile()));
+        manifest.append("{\"file\":\"turns-v0139.json\",\"role\":\"turn_config\"}]}");
         entries.put("manifest.json", utf8(manifest.toString()));
         return entries;
     }
@@ -217,13 +217,13 @@ class ReleaseStoreServiceTest {
         assertEquals(14, report.files().size());
         assertTrue(files.stream().filter(f -> f.getRole().equals("reference")).allMatch(f -> f.getContent() == null),
                 "reference documents go to the knowledge tables, not into the release files");
-        verify(knowledgeLoader).loadReleaseDocuments(eq("P1-v0.136"), argThat(documents -> documents.size() == 9));
+        verify(knowledgeLoader).loadReleaseDocuments(eq("P1-v0.139"), argThat(documents -> documents.size() == 9));
         verify(sourcePackageService).clearSnapshot();
 
         store.activate(report.id());
         Prompt1Release release = new Prompt1ReleaseService(releaseRepository, fileRepository, sourcePackageService,
                 objectMapper).current();
-        assertEquals("P1-v0.136", release.name());
+        assertEquals("P1-v0.139", release.name());
         assertEquals(Files.readString(sources.resolve(SM)), release.systemMessage(), "the system message is unchanged");
         assertEquals(Files.readString(sources.resolve(DOC18)), release.doc18());
         assertEquals(Files.readString(sources.resolve(SCHEMA)), release.schemaText());

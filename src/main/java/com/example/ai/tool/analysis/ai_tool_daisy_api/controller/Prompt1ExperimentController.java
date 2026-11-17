@@ -2,6 +2,7 @@ package com.example.ai.tool.analysis.ai_tool_daisy_api.controller;
 
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1RunDto;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1ExperimentService.IntakeFile;
+import com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1NotReadyException;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1RunFiles;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1RunService;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1TurnPreviewService;
@@ -98,6 +99,14 @@ public class Prompt1ExperimentController {
     @GetMapping("/prompt1/runs")
     public ResponseEntity<List<Prompt1RunDto>> listRuns(@RequestParam(defaultValue = "20") int limit) {
         return ResponseEntity.ok(prompt1RunService.list(limit));
+    }
+
+    /** No usable release (none active, or made for another backend): 503 with what to do, not a 500. */
+    @ExceptionHandler(Prompt1NotReadyException.class)
+    public ResponseEntity<Map<String, String>> notReady(Prompt1NotReadyException e) {
+        log.warn("{}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(Map.of("error", "Service Unavailable", "message", e.getMessage()));
     }
 
     private static List<IntakeFile> intakeFiles(List<MultipartFile> files) throws IOException {

@@ -212,10 +212,12 @@ public class Prompt1RunService {
         if (valid) {
             run.setStatus(Status.VALID);
             run.setResult(toJson(output));
+            run.setProductionResult(toJson(result.getProductionResult()));
             run.setError(null);
         } else {
             run.setStatus(Status.FAILED);
             run.setResult(null);
+            run.setProductionResult(null);
             run.setError(failureReason(result));
         }
     }
@@ -301,6 +303,7 @@ public class Prompt1RunService {
                 }, new ArrayList<>()))
                 .error(run.getError())
                 .result(withResult && run.getResult() != null ? readTree(run.getResult()) : null)
+                .productionResult(withResult && run.getProductionResult() != null ? readTree(run.getProductionResult()) : null)
                 .build();
     }
 

@@ -1,7 +1,6 @@
 package com.example.ai.tool.analysis.ai_tool_daisy_api.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,11 +13,12 @@ import java.util.Map;
  * that is already queued or running. The texts are confidential: never log them.
  *
  * @param id                the release ID in the release store; null for the local files
- * @param name              the release name, e.g. P1-v0.136 (the turn configuration's release for local files)
+ * @param name              the release name, e.g. P1-v0.139 (the turn configuration's release for local files)
+ * @param productionSchema  the JSON Schema of the production output.json, parsed once from {@code schemaText}
  * @param documentVersions  document code → version of the reference documents (the knowledge tables)
  */
 public record Prompt1Release(String id, String name, Prompt1TurnConfig config, String systemMessage,
-                             String systemMessageFile, String doc18, String schemaText,
+                             String systemMessageFile, String doc18, String schemaText, JsonNode productionSchema,
                              Map<String, List<String>> b2Matrix, Map<String, String> documentVersions) {
 
     public static final String PROMPT = "P1";
@@ -35,11 +35,9 @@ public record Prompt1Release(String id, String name, Prompt1TurnConfig config, S
     /** The reference documents the turn route reads by key. */
     public static final List<String> REFERENCE_CODES = List.of("01", "02", "03", "05", "06", "07", "R3", "R4", "R5");
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-
     /**
      * Builds a release from its file texts and checks that they can be read: the turn configuration, the
-     * schema as JSON and the B2 matrix against the configuration's B2 order.
+     * production schema file ({name, strict, schema}) and the B2 matrix against the configuration's B2 order.
      *
      * @throws IllegalArgumentException with the file that cannot be read
      */
@@ -52,10 +50,11 @@ public record Prompt1Release(String id, String name, Prompt1TurnConfig config, S
         } catch (IOException | RuntimeException e) {
             throw new IllegalArgumentException("Turn configuration cannot be read: " + e.getMessage(), e);
         }
+        JsonNode productionSchema;
         try {
-            MAPPER.readTree(schemaText);
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Output schema is not valid JSON: " + e.getOriginalMessage(), e);
+            productionSchema = Prompt1ProductionJson.schema(schemaText);  // v07: the production schema file {name, strict, schema}
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Output schema: " + e.getMessage(), e);
         }
         Map<String, List<String>> matrix;
         try {
@@ -64,6 +63,6 @@ public record Prompt1Release(String id, String name, Prompt1TurnConfig config, S
             throw new IllegalArgumentException("B2 matrix cannot be read: " + e.getMessage(), e);
         }
         return new Prompt1Release(id, name == null ? config.release() : name, config, systemMessage, systemMessageFile,
-                doc18, schemaText, matrix, Map.copyOf(documentVersions));
+                doc18, schemaText, productionSchema, matrix, Map.copyOf(documentVersions));
     }
 }

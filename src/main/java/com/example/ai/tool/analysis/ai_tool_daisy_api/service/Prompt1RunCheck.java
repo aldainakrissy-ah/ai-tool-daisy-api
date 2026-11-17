@@ -40,7 +40,7 @@ public final class Prompt1RunCheck {
             "observations.tsv", "observation_audit.tsv", "ie_membership.tsv", "a1_ie_candidates.tsv");
     private static final Set<String> MODEL_FILES = Set.of("tasks.tsv", "meanings.tsv", "links.tsv", "grouping.tsv",
             "directions.tsv", "cts_admission.tsv", "priority.tsv", "ie_core_filter.tsv", "ie_ftf_cells.tsv",
-            "a1_selection.tsv", "heta_canon.tsv", "heta_cells.tsv", "b2_needs.tsv", "b2_coverage.tsv", "a2_fields.tsv",
+            "a1_selection.tsv", "heta_canon.tsv", "heta_cells.tsv", "b2_needs.tsv", "b2_coverage.tsv",
             "a3_candidates.tsv", "a3_evidence_basis.tsv", "a3_decisions.tsv");
     private static final Pattern ELEM_ROW = Pattern.compile(
             "-\\s*(\\d+\\.\\d+-A(\\d+)-([EQC])\\d+)\\s*\\|\\s*(\\w+)\\s*\\|\\s*(required|not required)");
@@ -60,15 +60,16 @@ public final class Prompt1RunCheck {
     /**
      * Checks a run up to a step.
      *
-     * @param files  the run's working files (and output.json once turn D wrote it)
-     * @param stop   the last step to check; null = output.json's stop_after_step, else tasks.tsv
-     * @param intake the run's intake files (personal data and intake questionnaire), for Steps 12–13
-     * @param key    the text of a source key ("KEY: …" up to the next key), or null when not found
+     * @param files            the run's working files (and output_controle.json and output.json once turn D wrote them)
+     * @param stop             the last step to check; null = the control JSON's stop_after_step, else tasks.tsv
+     * @param intake           the run's intake files (personal data and intake questionnaire), for Steps 12–13
+     * @param productionSchema the JSON Schema of the production output.json (v07)
+     * @param key              the text of a source key ("KEY: …" up to the next key), or null when not found
      */
     public static Result check(Prompt1TurnConfig config, Map<String, String> files, Integer stop, List<IntakeFile> intake,
-                               Function<String, String> key) {
+                               JsonNode productionSchema, Function<String, String> key) {
         Prompt1RunCheck c = new Prompt1RunCheck();
-        c.run(config, files, stop, intake, key);
+        c.run(config, files, stop, intake, productionSchema, key);
         return new Result(List.copyOf(c.problems), List.copyOf(c.warnings));
     }
 
@@ -150,15 +151,84 @@ public final class Prompt1RunCheck {
         return WHITESPACE.split(q.substring(4).strip())[0];
     }
 
+    /**
+     * validate_run.py v07: the production JSON (output.json) conforms to the schema and agrees with the control JSON:
+     * the same primary and secondary IEs, B1/B2 questionnaires, B3 modules and number of direct/indirect HETAs.
+     */
+    private void checkProduction(Map<String, String> files, JsonNode out, JsonNode productionSchema) {
+        if (!files.containsKey("output.json")) {
+            bad("output.json (production) ontbreekt naast output_controle.json");
+            return;
+        }
+        try {
+            JsonNode prod = MAPPER.readTree(files.get("output.json"));
+            List<String> errors = Prompt1ProductionJson.schemaErrors(prod, productionSchema);
+            errors.forEach(e -> bad("production-JSON: " + e));
+            if (!errors.isEmpty() || out == null) {
+                return;
+            }
+            if (!firstWord(prod.path("A1").path("primary_ie").asText()).equals(out.path("a1").path("primary_ie").path("ie_ref").asText())) {
+                bad("production-JSON: primary_ie ≠ controle");
+            }
+            List<String> prodSecondary = new ArrayList<>();
+            prod.path("A1").path("secondary_ie").forEach(x -> prodSecondary.add(firstWord(x.asText())));
+            List<String> controlSecondary = new ArrayList<>();
+            out.path("a1").path("secondary_ie").forEach(x -> controlSecondary.add(x.path("ie_ref").asText()));
+            if (!prodSecondary.equals(controlSecondary)) {
+                bad("production-JSON: secondary_ie ≠ controle");
+            }
+            if (!values(prod.path("B1"), "ID").equals(values(out.path("b1"), "ID"))
+                    || !values(prod.path("B2"), "ID").equals(values(out.path("b2").path("items"), "ID"))) {
+                bad("production-JSON: B1/B2 ≠ controle");
+            }
+            if (!values(prod.path("B3"), "heta_json").equals(values(out.path("b3"), "heta_json"))) {
+                bad("production-JSON: B3 ≠ controle");
+            }
+            for (String c : List.of("direct", "indirect")) {
+                long count = 0;
+                for (JsonNode a : out.path("a3")) {
+                    if (c.equals(a.path("classification").asText())) {
+                        count++;
+                    }
+                }
+                if (prod.path("A3").path(c).size() != count) {
+                    bad("production-JSON: A3 " + c + " ≠ controle");
+                }
+            }
+        } catch (Exception e) {
+            bad("production-JSON niet te controleren: " + e.getMessage());
+        }
+    }
+
+    private static String firstWord(String text) {
+        int space = text.indexOf(' ');
+        return space < 0 ? text : text.substring(0, space);
+    }
+
+    private static List<String> values(JsonNode list, String field) {
+        List<String> out = new ArrayList<>();
+        list.forEach(x -> out.add(x.path(field).asText()));
+        return out;
+    }
+
     private void run(Prompt1TurnConfig config, Map<String, String> files, Integer stop, List<IntakeFile> intake,
-                     Function<String, String> key) {
+                     JsonNode productionSchema, Function<String, String> key) {
         List<String> ies = config.ies();
         JsonNode out = null;
-        if (files.containsKey("output.json")) {
+        // v07: output_controle.json is the full control JSON; output.json is the production JSON (old runs: output.json is full)
+        String src = files.containsKey("output_controle.json") ? "output_controle.json" : "output.json";
+        if (files.containsKey(src)) {
             try {
-                out = MAPPER.readTree(files.get("output.json"));
+                out = MAPPER.readTree(files.get(src));
             } catch (Exception e) {
-                bad("output.json is geen geldige JSON");
+                bad(src + " is geen geldige JSON");
+            }
+            if (out != null && !out.has("a1")) {
+                out = null;  // a production JSON without a control JSON: nothing in it can be checked
+                bad("output.json ontbreekt (eind-JSON uit de Playground opslaan als output.json); JSON-controles overgeslagen");
+            }
+            if (src.equals("output_controle.json")) {
+                checkProduction(files, out, productionSchema);
             }
         } else {
             bad("output.json ontbreekt (eind-JSON uit de Playground opslaan als output.json); JSON-controles overgeslagen");
@@ -728,7 +798,7 @@ public final class Prompt1RunCheck {
         // ---- step 6 (A2)
         String prim = out != null && out.path("a1").path("primary_ie").isObject()
                 && !out.path("a1").path("primary_ie").isEmpty() ? out.path("a1").path("primary_ie").path("ie_ref").asText() : null;
-        if (req.test(6) && out != null) {
+        if (req.test(6) && out != null && out.has("a2")) {  // v07: A2 is no longer produced (SM v0.138); only old runs have it
             Map<String, String> roles = new LinkedHashMap<>();
             if (prim != null) {
                 roles.put(prim, "primary");

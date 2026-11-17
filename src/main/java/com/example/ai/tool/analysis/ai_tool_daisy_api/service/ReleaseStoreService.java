@@ -8,7 +8,6 @@ import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.ReleaseReport.Check;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.ReleaseReport.FileInfo;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.PromptReleaseFileRepository;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.PromptReleaseRepository;
-import com.example.ai.tool.analysis.ai_tool_daisy_api.service.KnowledgeSectionSplitter.ParsedSection;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1SourcePackageService.DocumentSections;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1SourcePackageService.KeyText;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -130,11 +129,12 @@ public class ReleaseStoreService {
         Optional<PromptReleaseEntity> existing = releaseRepository.findByPromptAndName(prompt, name);
         checks.add(new Check("release name is new", existing.isEmpty(), existing.isEmpty() ? name
                 : name + " was already uploaded (" + existing.get().getStatus() + "); give a new release a new name"));
-        List<FileInfo> files = checkListedFiles(listed, entries, checks);
+        Map<String, DoclingChunkReader.SourceDocument> parsed = new HashMap<>();  // each reference document parsed once
+        List<FileInfo> files = checkListedFiles(listed, entries, checks, parsed);
 
         Prompt1Upload prompt1 = null;
         if (PROMPT.equals(prompt)) {
-            prompt1 = checkPrompt1(name, listed, entries, checks);
+            prompt1 = checkPrompt1(name, listed, entries, parsed, checks);
         } else {
             checks.add(new Check("supported prompt", false, "only Prompt 1 (P1) releases are stored for now"));
         }
@@ -184,7 +184,8 @@ public class ReleaseStoreService {
     }
 
     /** Every listed file is in the zip, once, with a known role; every file in the zip is listed. */
-    private List<FileInfo> checkListedFiles(List<ManifestFile> listed, Map<String, byte[]> entries, List<Check> checks) {
+    private List<FileInfo> checkListedFiles(List<ManifestFile> listed, Map<String, byte[]> entries, List<Check> checks,
+                                            Map<String, DoclingChunkReader.SourceDocument> parsed) {
         List<String> problems = new ArrayList<>();
         Set<String> seen = new HashSet<>();
         List<FileInfo> files = new ArrayList<>();
@@ -208,6 +209,7 @@ public class ReleaseStoreService {
             String version = file.version();
             if (REFERENCE.equals(file.role()) && MarkdownSourceReader.isReferenceDocument(file.file())) {
                 DoclingChunkReader.SourceDocument document = markdownReader.read(file.file(), bytes);
+                parsed.put(file.file(), document);
                 if (code != null && !code.equals(document.documentCode())
                         || version != null && !version.equalsIgnoreCase(document.version())) {
                     problems.add(file.file() + ": manifest says " + code + " " + version + ", the file name says "
@@ -233,6 +235,7 @@ public class ReleaseStoreService {
      * document has the keys Prompt 1 looks up; and no document version is already loaded with other content.
      */
     private Prompt1Upload checkPrompt1(String name, List<ManifestFile> listed, Map<String, byte[]> entries,
+                                       Map<String, DoclingChunkReader.SourceDocument> parsed,
                                        List<Check> checks) {
         Map<String, ManifestFile> byRole = new HashMap<>();
         List<String> problems = new ArrayList<>();
@@ -245,7 +248,7 @@ public class ReleaseStoreService {
                 if (!MarkdownSourceReader.isReferenceDocument(file.file())) {
                     problems.add(file.file() + " is not named like a reference document (e.g. 01_…_v4.md)");
                 } else {
-                    documents.add(markdownReader.read(file.file(), entries.get(file.file())));
+                    documents.add(parsed.computeIfAbsent(file.file(), key -> markdownReader.read(key, entries.get(key))));
                 }
             } else if (byRole.put(file.role(), file) != null) {
                 problems.add("more than one " + file.role() + " file");
@@ -266,7 +269,7 @@ public class ReleaseStoreService {
             return new Prompt1Upload(documents, versions);
         }
 
-        Prompt1Release release;
+        Prompt1Release release = null;
         try {
             release = Prompt1Release.of(null, name, entries.get(byRole.get(TURN_CONFIG).file()),
                     text(entries, byRole.get(SYSTEM_MESSAGE)), byRole.get(SYSTEM_MESSAGE).file(),
@@ -291,9 +294,8 @@ public class ReleaseStoreService {
             if (!split.duplicateKeys().isEmpty()) {
                 duplicates.add(document.documentCode() + " " + split.duplicateKeys().size());
             }
-            List<ParsedSection> parsed = split.sections();
             sections.put(document.documentCode(), new DocumentSections(document.documentCode(), document.version(),
-                    document.fileName(), true, parsed));
+                    document.fileName(), true, split.sections()));
         }
         checks.add(new Check("reference documents have the keys Prompt 1 looks up", missingKeys.isEmpty(),
                 missingKeys.isEmpty() ? "all expected keys found" + (duplicates.isEmpty() ? ""
@@ -310,6 +312,15 @@ public class ReleaseStoreService {
         }
         checks.add(new Check("first-turn keys and the R4 lookup are found", notFoundAll.isEmpty(),
                 notFoundAll.isEmpty() ? (routeKeys.size() + 1) + " keys" : "not found: " + notFoundAll));
+        if (release != null) {
+            // v07: output.json names each IE as "<ref> <title>", the title from the header of KEY R4:<ie>:01; a run
+            // would write an empty title (as Jan's ie_title does) when it cannot be read, so the release is refused here
+            List<String> ies = release.config().ies();
+            List<String> untitled = Prompt1SourcePackageService.readKeys(sections, ies.stream().map(ie -> "R4:" + ie + ":01").toList())
+                    .stream().filter(key -> Prompt1TurnOutput.ieTitle(key.text()).isEmpty()).map(key -> key.key()).toList();
+            checks.add(new Check("every IE has its title in R4", untitled.isEmpty(),
+                    untitled.isEmpty() ? ies.size() + " IE titles" : "no title in the header of: " + untitled));
+        }
         List<String> conflicts = knowledgeLoader.conflicts(documents);
         checks.add(new Check("document versions are new or unchanged", conflicts.isEmpty(), conflicts.isEmpty()
                 ? "no conflict with the knowledge tables"

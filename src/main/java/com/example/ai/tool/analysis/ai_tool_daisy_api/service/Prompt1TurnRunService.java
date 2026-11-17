@@ -183,7 +183,7 @@ public class Prompt1TurnRunService {
                 .documentVersions(documentVersions)
                 .build();
         Map<String, List<String>> matrix = release.b2Matrix();
-        Run run = new Run(runId, config, release.systemMessage(), release.doc18(), ask, documentVersions, result);
+        Run run = new Run(runId, release, ask, result);
         runFiles.open(runId);  // the working files are read many times per turn: keep them in memory during the run
         try {
             run.execute(files, matrix);
@@ -207,6 +207,8 @@ public class Prompt1TurnRunService {
         private final Prompt1TurnConfig config;
         private final String systemMessage;
         private final String doc18;
+        /** The JSON Schema output.json must conform to (the release's production schema). */
+        private final com.fasterxml.jackson.databind.JsonNode productionSchema;
         private final Model ask;
         /** The document versions this run reads, selected once at its start (a knowledge reload does not change them). */
         private final Map<String, Prompt1SourcePackageService.DocumentSections> documents;
@@ -228,7 +230,7 @@ public class Prompt1TurnRunService {
 
         /** The run check up to a step (null = the whole run), with source keys read without logging. */
         private Prompt1RunCheck.Result runCheck(Integer stop) {
-            return Prompt1RunCheck.check(config, files(), stop, intake,
+            return Prompt1RunCheck.check(config, files(), stop, intake, productionSchema,
                     key -> Prompt1SourcePackageService.readKeys(documents, List.of(key)).get(0).text());
         }
 
@@ -257,21 +259,20 @@ public class Prompt1TurnRunService {
             return text.length() > 6000 ? text.substring(text.length() - 6000) : text;
         }
 
-        Run(String runId, Prompt1TurnConfig config, String systemMessage, String doc18, Model ask,
-            Map<String, String> versions, Prompt1ExperimentResult result) {
+        Run(String runId, Prompt1Release release, Model ask, Prompt1ExperimentResult result) {
             this.runId = runId;
-            this.config = config;
-            this.systemMessage = systemMessage;
-            this.doc18 = doc18;
+            this.config = release.config();
+            this.systemMessage = release.systemMessage();
+            this.doc18 = release.doc18();
+            this.productionSchema = release.productionSchema();
             this.ask = ask;
-            this.documents = sourcePackageService.documents(versions);  // fixed for the whole run
+            this.documents = sourcePackageService.documents(release.documentVersions());  // fixed for the whole run
             this.result = result;
             this.sources = new Prompt1TurnMessages.Sources() {
                 @Override
                 public List<KeyText> keys(String step, List<String> keys) {
                     List<KeyText> texts = Prompt1SourcePackageService.readKeys(documents, keys);
-                    runFiles.logRetrievals(runId, step, texts.stream().map(key -> new Prompt1RunFiles.Retrieval("KEY: " + key.key(),
-                            key.fileName(), key.found() ? key.key() : "ERROR: not found")).toList());
+                    runFiles.logRetrievals(runId, step, texts.stream().map(key -> retrieval(key)).toList());
                     return texts;
                 }
 
@@ -283,6 +284,11 @@ public class Prompt1TurnRunService {
                     return lookup;
                 }
             };
+        }
+
+        /** The retrieval_log.tsv row of one key read. */
+        private Prompt1RunFiles.Retrieval retrieval(KeyText key) {
+            return new Prompt1RunFiles.Retrieval("KEY: " + key.key(), key.fileName(), key.found() ? key.key() : "ERROR: not found");
         }
 
         void execute(List<IntakeFile> files, Map<String, List<String>> matrix) {
@@ -315,7 +321,7 @@ public class Prompt1TurnRunService {
                 List<FileWrite> writes = new ArrayList<>(ingested.files());
                 writes.add(new FileWrite("ie_membership.tsv", membership.membershipTsv(), false));
                 writes.add(new FileWrite("a1_ie_candidates.tsv", membership.candidatesTsv(), false));
-                return new Ingested(writes, ingested.closeSteps(), ingested.notes(), null);
+                return new Ingested(writes, ingested.closeSteps(), ingested.notes());
             });
 
             turn("A3", () -> Prompt1TurnMessages.a3(config, runId, files(), sources, doc18Part("A3")),
@@ -332,18 +338,9 @@ public class Prompt1TurnRunService {
             }
             String primary = selection.primary();
             result.setPrimaryIeRef(primary);
-            // Steps 6 and 7 (fixed rules): the A2 fields of the selected IEs and the A3 candidate set
-            List<String> ies = new ArrayList<>(List.of(primary));
-            ies.addAll(selection.secondaries());
-            List<String> keys = new ArrayList<>();
-            ies.forEach(ie -> keys.addAll(List.of("R5:A2:" + ie, "R4:" + ie + ":01")));
-            Map<String, String> texts = new HashMap<>();
-            sources.keys("6", keys).forEach(key -> texts.put(key.key(), key.text()));
-            Map<String, String> steps6And7 = new LinkedHashMap<>();
-            steps6And7.put("a2_fields.tsv", Prompt1TurnRules.a2Fields(config.headers().get("a2_fields.tsv"), selection, texts));
-            steps6And7.put("a3_candidates.tsv", Prompt1TurnRules.a3CandidatesTsv(config.headers().get("a3_candidates.tsv"),
-                    primary, hetas));
-            stepsSixToEightByBackend(selection, steps6And7);
+            // Step 7 (a fixed rule): the A3 candidate set. Step 6 (A2) is removed since SM v0.138 (backend v07, D14).
+            stepsSevenAndEightByBackend(selection,
+                    Prompt1TurnRules.a3CandidatesTsv(config.headers().get("a3_candidates.tsv"), primary, hetas));
 
             runCTurns(hetas);
 
@@ -369,14 +366,28 @@ public class Prompt1TurnRunService {
                         files.get("heta_canon.tsv"), files.get("heta_cells.tsv"), matrix);
                 runFiles.writeAnswer(runId, "antwoord_D.txt", b2.answer());
                 Map<String, String> keyTexts = new HashMap<>();
-                ingested = Prompt1TurnAnswers.ingestD(config, b2.answer(), files, runId, date, key -> {
-                    if (!keyTexts.containsKey(key)) {
-                        String step = key.startsWith("07:B1") ? "12" : key.startsWith("07:B2") ? "13" : "14";
-                        KeyText text = sources.keys(step, List.of(key)).get(0);
-                        keyTexts.put(key, text.found() ? text.text() : null);
+                // the key reads of D, logged afterwards in one write per step (same rows, same order, as one write per read)
+                List<Map.Entry<String, Prompt1RunFiles.Retrieval>> reads = new ArrayList<>();
+                try {
+                    ingested = Prompt1TurnAnswers.ingestD(config, b2.answer(), files, runId, date, key -> {
+                        if (!keyTexts.containsKey(key)) {
+                            String step = key.startsWith("07:B1") ? "12" : key.startsWith("07:B2") ? "13" : "14";
+                            KeyText text = Prompt1SourcePackageService.readKeys(documents, List.of(key)).get(0);
+                            reads.add(Map.entry(step, retrieval(text)));
+                            keyTexts.put(key, text.found() ? text.text() : null);
+                        }
+                        return keyTexts.get(key);
+                    }, productionSchema);
+                } finally {
+                    for (int i = 0; i < reads.size(); ) {
+                        String step = reads.get(i).getKey();
+                        List<Prompt1RunFiles.Retrieval> batch = new ArrayList<>();
+                        for (; i < reads.size() && reads.get(i).getKey().equals(step); i++) {
+                            batch.add(reads.get(i).getValue());
+                        }
+                        runFiles.logRetrievals(runId, step, batch);
                     }
-                    return keyTexts.get(key);
-                });
+                }
             } catch (RuntimeException e) {
                 throw new TurnFailedException("D", e.getMessage());
             }
@@ -387,19 +398,25 @@ public class Prompt1TurnRunService {
             b2.notes().forEach(note -> result.getNotes().add("D: " + note));
             ingested.notes().forEach(note -> result.getNotes().add("D: " + note));
             result.setResult(ingested.output());
+            result.setProductionResult(ingested.production());
             log.info("Prompt 1 turn run {}: D by the backend, {} need(s), run_status {}", runId,
                     ingested.output().path("b2").path("needs").size(), ingested.output().path("run_status").asText());
-            String problems = checkTurn("D", before);
-            if (!problems.isEmpty()) {  // no model to correct a backend step: the run stops
-                throw new TurnFailedException("D", "the run check finds these problems after the backend step:\n" + problems);
+            stopOnBackendProblems("D", before);
+        }
+
+        /** The run check after a backend step; there is no model to correct a backend step, so problems stop the run. */
+        private void stopOnBackendProblems(String turn, Prompt1RunCheck.Result before) {
+            String problems = checkTurn(turn, before);
+            if (!problems.isEmpty()) {
+                throw new TurnFailedException(turn, "the run check finds these problems after the backend step:\n" + problems);
             }
         }
 
         /**
-         * Turn B without a model call (Jan's backend rule for Step 8): A2 fields, the candidate set
-         * and the evidence basis are written by the backend, with the empty Step 9–10 files.
+         * Turn B without a model call (Jan's backend rules for Steps 7 and 8; Step 6 is removed since v07): the
+         * candidate set and the evidence basis are written by the backend, with the empty Step 9–10 files.
          */
-        private void stepsSixToEightByBackend(Prompt1TurnRules.Selection selection, Map<String, String> backend) {
+        private void stepsSevenAndEightByBackend(Prompt1TurnRules.Selection selection, String a3Candidates) {
             Prompt1RunCheck.Result before = baseline("B");
             Map<String, String> files = files();
             String basis;
@@ -416,7 +433,7 @@ public class Prompt1TurnRunService {
             } catch (RuntimeException e) {
                 throw new TurnFailedException("B", "Step 8 rule failed: " + e.getMessage());
             }
-            backend.forEach((name, content) -> runFiles.write(runId, name, content));
+            runFiles.write(runId, "a3_candidates.tsv", a3Candidates);
             runFiles.write(runId, "a3_evidence_basis.tsv", basis);
             for (String name : config.cFiles()) {
                 if (!files.containsKey(name)) {
@@ -424,12 +441,10 @@ public class Prompt1TurnRunService {
                 }
             }
             runFiles.closeSteps(runId, config.turns().get("B").closeSteps());
-            String problems = checkTurn("B", before);
-            if (!problems.isEmpty()) {  // no model to correct a backend step: the run stops
-                throw new TurnFailedException("B", "the run check finds these problems after the backend step:\n" + problems);
-            }
+            stopOnBackendProblems("B", before);
             int rows = Prompt1Tsv.rows(basis).size();
-            result.getNotes().add("B: Steps 6–8 by the backend (no model call); evidence basis " + rows + " meanings");
+            result.getNotes().add("B: Steps 7–8 by the backend (no model call; Step 6 removed since v07); evidence basis "
+                    + rows + " meanings");
             log.info("Prompt 1 turn run {}: B by the backend, evidence basis {} meanings", runId, rows);
         }
 
@@ -524,6 +539,7 @@ public class Prompt1TurnRunService {
                     ingested.notes().forEach(note -> result.getNotes().add(turn + ": " + note));
                     if (ingested.output() != null) {
                         result.setResult(ingested.output());
+                        result.setProductionResult(ingested.production());
                         CallUsage last = result.getCalls().get(result.getCalls().size() - 1);
                         last.setRunStatus(ingested.output().path("run_status").asText(null));
                         last.setCompletedThroughStep(ingested.output().path("completed_through_step").isInt()

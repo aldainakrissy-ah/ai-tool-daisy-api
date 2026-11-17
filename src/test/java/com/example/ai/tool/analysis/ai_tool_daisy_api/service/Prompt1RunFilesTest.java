@@ -43,10 +43,11 @@ class Prompt1RunFilesTest {
         repository = mock(Prompt1RunFileRepository.class);
         when(repository.findByRunIdAndName(anyString(), anyString()))
                 .thenAnswer(call -> Optional.ofNullable(stored.get(call.getArgument(0) + "/" + call.getArgument(1))));
-        when(repository.save(any(Prompt1RunFileEntity.class))).thenAnswer(call -> {
-            Prompt1RunFileEntity file = call.getArgument(0);
-            stored.put(file.getRunId() + "/" + file.getName(), file);
-            return file;
+        when(repository.upsert(anyString(), anyString(), anyString(), any())).thenAnswer(call -> {
+            stored.put(call.getArgument(0) + "/" + call.getArgument(1), Prompt1RunFileEntity.builder()
+                    .runId(call.getArgument(0)).name(call.getArgument(1)).content(call.getArgument(2))
+                    .updatedAt(call.getArgument(3)).build());
+            return 1;
         });
         when(repository.findNamesOfRun(anyString())).thenAnswer(call -> stored.values().stream()
                 .filter(file -> file.getRunId().equals(call.getArgument(0))).map(file -> file.getName()).sorted().toList());

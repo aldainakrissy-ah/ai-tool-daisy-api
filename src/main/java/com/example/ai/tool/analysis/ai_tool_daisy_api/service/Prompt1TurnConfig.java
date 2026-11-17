@@ -12,11 +12,12 @@ import java.util.Set;
 
 /**
  * The fixed tables and texts of Jan's turn-based Prompt 1 route for one release, kept as data
- * (e.g. {@code turns-v0136.json}, a file of the release, never in the repository) so that most of
+ * (e.g. {@code turns-v0139.json}, a file of the release, never in the repository) so that most of
  * his weekly updates are edits to a file, not to code. Ported from {@code daisy_preload.py}: {@code SM_SECTIONS}, {@code S0_DROP},
  * {@code S0_D_ONLY}, {@code HEADERS}, {@code TURNS}, the doc 18 parts per turn and the turn texts.
  *
- * @param smSections   top-level SM sections each turn receives (§0 always; turn "C" covers every C_&lt;heta&gt;)
+ * @param backend      the version of Jan's backend the release needs (e.g. v07); this code runs only {@link #BACKEND}
+ * @param smSections  top-level SM sections each turn receives (§0 always; turn "C" covers every C_&lt;heta&gt;)
  * @param s0Drop       §0 lines left out of every turn (the backend does tools, retrieval, files)
  * @param s0DOnly      §0 lines on the final JSON; left out of every turn, because the backend writes it (v04z)
  * @param headers      working file → its doc 18 header line (tab-separated)
@@ -33,7 +34,7 @@ import java.util.Set;
  * @param continuation the message that asks for the rest of a cut-off answer ({name}, {line})
  * @param texts        the per-turn instruction lines; {name} marks a value filled in at run time
  */
-public record Prompt1TurnConfig(String release, List<String> ies, Set<String> sigAbsent,
+public record Prompt1TurnConfig(String release, String backend, List<String> ies, Set<String> sigAbsent,
                                 Map<String, List<Integer>> smSections, List<String> s0Drop, List<String> s0DOnly,
                                 Map<String, String> headers, Map<String, Turn> turns, List<String> cFiles,
                                 String doc18General, Map<String, List<String>> doc18Headings, List<String> b2Order,
@@ -44,6 +45,16 @@ public record Prompt1TurnConfig(String release, List<String> ies, Set<String> si
     /** One turn: the steps it executes, the files the model returns, the steps closed when it is ingested. */
     public record Turn(String steps, List<String> files, String closeSteps) {
     }
+
+    /**
+     * The backend version this code implements (Jan's daisy_preload.py v07a: core filter yes rows, no A2, production
+     * JSON). A release made for another backend (e.g. v0.136, backend v06) cannot run on it: its turns and output differ.
+     */
+    public static final String BACKEND = "v07";
+
+    /** The turn texts this backend uses; a release without one would fail only partway through a run. */
+    static final List<String> REQUIRED_TEXTS = List.of("trimNote", "sigNotFound", "a1", "a1Nulls", "a2", "a3", "a3YesOnly",
+            "a3PartialFit", "a3Others");
 
     private static final ObjectMapper MAPPER = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
@@ -68,8 +79,21 @@ public record Prompt1TurnConfig(String release, List<String> ies, Set<String> si
         return validate(MAPPER.readValue(json, Prompt1TurnConfig.class));
     }
 
-    /** Every file a turn returns has a header, and every turn has its SM sections. */
+    /**
+     * The release is made for this backend and has every turn text it uses; every file a turn returns has a header,
+     * and every turn has its SM sections.
+     */
     static Prompt1TurnConfig validate(Prompt1TurnConfig config) {
+        if (!BACKEND.equals(config.backend())) {
+            throw new IllegalArgumentException("Release " + config.release() + " is made for backend "
+                    + (config.backend() == null ? "v06 or older" : config.backend()) + "; this server runs backend " + BACKEND
+                    + ". Upload a release for " + BACKEND + " (e.g. P1-v0.139).");
+        }
+        List<String> missingTexts = REQUIRED_TEXTS.stream()
+                .filter(name -> config.texts() == null || !config.texts().containsKey(name)).toList();
+        if (!missingTexts.isEmpty()) {
+            throw new IllegalArgumentException("The turn configuration has no turn text " + missingTexts);
+        }
         for (Map.Entry<String, Turn> turn : config.turns().entrySet()) {
             if (!config.smSections().containsKey(turn.getKey())) {
                 throw new IllegalArgumentException("Turn " + turn.getKey() + " has no smSections entry");

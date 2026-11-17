@@ -35,29 +35,39 @@ class Prompt1TurnRunServiceReplayTest {
     private Path replay;
     private Path intake;
     private Prompt1RunFiles runFiles;
+    /** Measurement (clean-up pass 6a): the working-file repository and every source-key lookup of a run. */
+    private Prompt1RunFileRepository repository;
+    private final java.util.concurrent.atomic.AtomicInteger keyLookups = new java.util.concurrent.atomic.AtomicInteger();
     private Prompt1TurnRunService service;
     private Prompt1Release release;
     private final Map<String, Prompt1RunFileEntity> stored = new ConcurrentHashMap<>();
 
     @BeforeEach
     void setUp() throws Exception {
-        sources = dir("KNOWLEDGE_MARKDOWN_DIR");
-        replay = dir("PROMPT1_REPLAY_DIR");
-        intake = dir("PROMPT1_INTAKE_DIR");
-        Map<String, DocumentSections> documents = Prompt1SourcePackageService.selectVersions(
-                Prompt1SourcePackageServiceTest.readLikeTheLoader(sources), Map.of());
+        sources = Prompt1TestFiles.dir("KNOWLEDGE_MARKDOWN_DIR");
+        replay = Prompt1TestFiles.dir("PROMPT1_REPLAY_DIR");
+        intake = Prompt1TestFiles.dir("PROMPT1_INTAKE_DIR");
+        Map<String, DocumentSections> documents = new TreeMap<>(Prompt1SourcePackageService.selectVersions(
+                Prompt1SourcePackageServiceTest.readLikeTheLoader(sources), Map.of())) {
+            @Override
+            public DocumentSections get(Object code) {  // one call per key read (readKeys looks up the document per key)
+                keyLookups.incrementAndGet();
+                return super.get(code);
+            }
+        };
 
         Prompt1SourcePackageService packages = mock(Prompt1SourcePackageService.class);
         when(packages.readKeys(anyList(), any())).thenAnswer(call -> Prompt1SourcePackageService.readKeys(documents, call.getArgument(0)));
         when(packages.documents(any())).thenReturn(documents);
 
-        Prompt1RunFileRepository repository = mock(Prompt1RunFileRepository.class);
+        repository = mock(Prompt1RunFileRepository.class);
         when(repository.findByRunIdAndName(anyString(), anyString()))
                 .thenAnswer(call -> Optional.ofNullable(stored.get(call.getArgument(0) + "/" + call.getArgument(1))));
-        when(repository.save(any(Prompt1RunFileEntity.class))).thenAnswer(call -> {
-            Prompt1RunFileEntity file = call.getArgument(0);
-            stored.put(file.getRunId() + "/" + file.getName(), file);
-            return file;
+        when(repository.upsert(anyString(), anyString(), anyString(), any())).thenAnswer(call -> {
+            stored.put(call.getArgument(0) + "/" + call.getArgument(1), Prompt1RunFileEntity.builder()
+                    .runId(call.getArgument(0)).name(call.getArgument(1)).content(call.getArgument(2))
+                    .updatedAt(call.getArgument(3)).build());
+            return 1;
         });
         when(repository.findNamesOfRun(anyString())).thenAnswer(call -> stored.values().stream()
                 .filter(file -> file.getRunId().equals(call.getArgument(0))).map(file -> file.getName()).sorted().toList());
@@ -69,14 +79,11 @@ class Prompt1TurnRunServiceReplayTest {
                         && !file.getName().startsWith(call.<String>getArgument(1).replace("%", "")))
                 .sorted(Comparator.comparing(file -> file.getName())).toList());
         runFiles = new Prompt1RunFiles(repository);
+        org.mockito.Mockito.clearInvocations(repository);  // count only the calls of the run
 
         service = new Prompt1TurnRunService(null, packages, runFiles, new ObjectMapper());
-        release = Prompt1Release.of(null, "P1-v0.136", Files.readAllBytes(Prompt1TestFiles.turnConfigFile()),
-                Files.readString(sources.resolve("DAISY_Prompt_1_v0.136_compact.md")), "DAISY_Prompt_1_v0.136_compact.md",
-                Files.readString(sources.resolve("18_werkbestanden_format.md")),
-                Files.readString(sources.resolve("Structured_JSON_Prompt_1_v0.46d-lean (used by claude).json")),
-                Files.readString(sources.resolve("07_B2_matrix.tsv")), Map.of());
-        String runDate = new ObjectMapper().readTree(Files.readString(replay.resolve("output.json"))).path("current_run_date").asText();
+        release = Prompt1TestFiles.release(sources, Map.of());
+        String runDate = new ObjectMapper().readTree(Files.readString(replay.resolve("output_controle.json"))).path("current_run_date").asText();
         ReflectionTestUtils.setField(service, "clock", java.time.Clock.fixed(
                 java.time.LocalDate.parse(runDate).atStartOfDay(java.time.ZoneOffset.UTC).toInstant(), java.time.ZoneOffset.UTC));
         ReflectionTestUtils.setField(service, "effort", "A1=high,A2=high,rest=medium");
@@ -131,8 +138,12 @@ class Prompt1TurnRunServiceReplayTest {
                 compared.add(name);
             }
         }
-        assertEquals(new ObjectMapper().readTree(Files.readString(replay.resolve("output.json"))), result.getResult(),
-                "output.json");
+        assertEquals(new ObjectMapper().readTree(Files.readString(replay.resolve("output_controle.json"))), result.getResult(),
+                "output_controle.json");
+        assertEquals(new ObjectMapper().readTree(Files.readString(replay.resolve("output.json"))), result.getProductionResult(),
+                "output.json (production)");
+        assertEquals(new ObjectMapper().readTree(Files.readString(replay.resolve("output.json"))),
+                new ObjectMapper().readTree(runFiles.require(run, "output.json")), "stored output.json");
         sameText("antwoord_D.txt", Files.readString(replay.resolve("prompts/antwoord_D.txt")),
                 runFiles.require(run, "prompts/antwoord_D.txt"));
         assertTrue(runFiles.has(run, "prompts/C_22.27.txt"));
@@ -141,8 +152,24 @@ class Prompt1TurnRunServiceReplayTest {
         System.out.println("run check (validate_run.py port): " + finalCheck.substring(0, Math.min(80, finalCheck.length())));
         result.getNotes().stream().filter(note -> note.contains("warning(s)")).forEach(note -> System.out.println("  " + note));
         long keyReads = runFiles.require(run, "retrieval_log.tsv").lines().count() - 1;
+        // the same keys, read at the same steps and in the same order as Jan's backend
+        // the R4 lookup (Step 4) is a section read, labelled by Jan's index as "source=… section^=… start=0" and by
+        // ours as "section=…": the same read of the same table, so the label is compared as "R4 lookup"
+        java.util.function.Function<String, List<String>> reads = log -> Prompt1Tsv.rows(log).stream()
+                .map(row -> row.get("step") + " " + (row.get("query").contains(Prompt1SourcePackageService.R4_LOOKUP_KEY.substring("R4:".length()))
+                        ? "R4 lookup" : row.get("query"))).toList();
+        List<String> janReads = reads.apply(Files.readString(replay.resolve("retrieval_log.tsv")));
+        List<String> ourReads = reads.apply(runFiles.require(run, "retrieval_log.tsv"));
+        for (int i = 0; i < Math.min(janReads.size(), ourReads.size()); i++) {
+            assertEquals(janReads.get(i), ourReads.get(i), "retrieval_log.tsv read " + (i + 1) + " (step and key)");
+        }
+        assertEquals(janReads.size(), ourReads.size(), "retrieval_log.tsv: number of reads");
+        Map<String, Long> calls = new TreeMap<>();
+        org.mockito.Mockito.mockingDetails(repository).getInvocations().forEach(i -> calls.merge(i.getMethod().getName(), 1L, (a, b) -> a + b));
+        System.out.printf("measure: working-file repository calls %s (total %d); source-key lookups %d (logged %d)%n", calls,
+                calls.values().stream().mapToLong(n -> n).sum(), keyLookups.get(), keyReads);
         System.out.printf("Replay through the runner: %d model calls, %d working files identical to Jan's, the backend's "
-                + "D answer and output.json identical, %d key reads logged%n", labels.size(), compared.size(), keyReads);
+                + "D answer, output_controle.json and output.json identical, %d key reads logged%n", labels.size(), compared.size(), keyReads);
     }
 
     @Test
@@ -172,7 +199,7 @@ class Prompt1TurnRunServiceReplayTest {
     void aRefusedA2AnswerIsFixedByTheRepairTurn() throws Exception {
         String a2 = Files.readString(replay.resolve("prompts/antwoord_A2.txt"));
         String header = "seq\tie_ref\tftf_id\telement_id\tstatus\tmeaning_ids\tlink_ids\tmissing\tbasis\tcounterclaims";
-        String removed = a2.lines().filter(line -> line.startsWith("2\t22.2\tFTF_017\t22.2-A1-Q1\t")).findFirst().orElseThrow();
+        String removed = firstQCellRow(a2);
         String broken = a2.replace(removed + "\n", "");
         List<String> labels = new CopyOnWriteArrayList<>();
         List<String> repairPrompts = new CopyOnWriteArrayList<>();
@@ -199,7 +226,15 @@ class Prompt1TurnRunServiceReplayTest {
         assertTrue(result.getNotes().contains("A2: repair applied: ie_ftf_cells.tsv: 0 gewijzigd, 1 toegevoegd, 0 verwijderd"));
         assertTrue(runFiles.has("run5", "prompts/A2_repair1.txt"));
         assertTrue(runFiles.has("run5", "prompts/antwoord_A2_poging1.txt"), "the refused answer is kept");
-        assertEquals(result.getResult().path("a3"), new ObjectMapper().readTree(Files.readString(replay.resolve("output.json"))).path("a3"));
+        assertEquals(result.getResult().path("a3"), new ObjectMapper().readTree(Files.readString(replay.resolve("output_controle.json"))).path("a3"));
+    }
+
+    /** The first ie_ftf_cells.tsv row of a required Q element (10 columns), whatever the reference run. */
+    private static String firstQCellRow(String a2Answer) {
+        return a2Answer.lines().filter(line -> {
+            String[] c = line.split("\t", -1);
+            return c.length == 10 && c[3].matches("\\d+\\.\\d+-A\\d+-Q\\d+");
+        }).findFirst().orElseThrow();
     }
 
     /** store-prompts=false: no prompt texts are stored, the answers and working files are, and the repair turn still works. */
@@ -208,7 +243,7 @@ class Prompt1TurnRunServiceReplayTest {
         ReflectionTestUtils.setField(runFiles, "storePrompts", false);
         String a2 = Files.readString(replay.resolve("prompts/antwoord_A2.txt"));
         String header = "seq\tie_ref\tftf_id\telement_id\tstatus\tmeaning_ids\tlink_ids\tmissing\tbasis\tcounterclaims";
-        String removed = a2.lines().filter(line -> line.startsWith("2\t22.2\tFTF_017\t22.2-A1-Q1\t")).findFirst().orElseThrow();
+        String removed = firstQCellRow(a2);
         List<String> labels = new CopyOnWriteArrayList<>();
         List<String> repairPrompts = new CopyOnWriteArrayList<>();
         Prompt1TurnRunService.Model model = (turn, label, instructions, input, previous) -> {
@@ -346,9 +381,4 @@ class Prompt1TurnRunServiceReplayTest {
         return new IntakeFile(name, Files.readAllBytes(intake.resolve(name)));
     }
 
-    private static Path dir(String variable) {
-        String value = System.getenv(variable);
-        assumeTrue(value != null && Files.isDirectory(Path.of(value)), variable + " not set");
-        return Path.of(value);
-    }
 }

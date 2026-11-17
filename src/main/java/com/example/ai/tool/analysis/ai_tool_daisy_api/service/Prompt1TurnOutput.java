@@ -158,8 +158,7 @@ public final class Prompt1TurnOutput {
     static B2 b2FromMatrix(Prompt1TurnConfig config, String decisions, String candidates, String canon, String cells,
                            Map<String, List<String>> matrix) {
         List<String> order = Prompt1Tsv.candidateOrder(candidates);
-        Map<String, Map<String, String>> dec = new HashMap<>();
-        Prompt1Tsv.rows(decisions).forEach(r -> dec.put(r.get("heta_ref"), r));
+        Map<String, Map<String, String>> dec = Prompt1Tsv.byId(decisions, "heta_ref");
         List<Map<String, String>> canonRows = Prompt1Tsv.rows(canon);
         Map<String, Integer> pos = new HashMap<>();
         Map<String, String> ckey = new LinkedHashMap<>();
@@ -500,14 +499,13 @@ public final class Prompt1TurnOutput {
         }
         stage.put("eindcontrole", "closed");
 
-        Map<String, Map<String, String>> dirs = new HashMap<>();
-        rows(file, "directions.tsv").forEach(d -> dirs.put(d.get("direction_id"), d));
+        Map<String, Map<String, String>> dirs = Prompt1Tsv.byId(file.apply("directions.tsv"), "direction_id");
         ArrayNode ftfs = f.arrayNode();
         for (Map<String, String> p : rows(file, "priority.tsv")) {
             String direction = p.get("direction_id");
             Map<String, String> d = dirs.getOrDefault(direction, Map.of());
             ObjectNode ftf = ftfs.addObject();
-            ftf.put("ftf_id", "FTF_" + direction.split("_", 2)[1]);
+            ftf.put("ftf_id", Prompt1Tsv.ftfOf(direction));
             ftf.put("source_direction_id", direction);
             ftf.put("identity", d.getOrDefault("identity", ""));
             ftf.put("functional_directionality", d.getOrDefault("functional_directionality", ""));
@@ -522,12 +520,14 @@ public final class Prompt1TurnOutput {
         List<String> secondaries = new ArrayList<>(selection.stream()
                 .filter(r -> r.get("step").startsWith("7.3") && "secondary".equals(r.get("finding").strip()))
                 .map(r -> r.get("ie_ref")).toList());
-        secondaries.sort(Comparator.comparingInt(ie -> config.ies().contains(ie) ? config.ies().indexOf(ie) : 99));
-        Map<String, Map<String, String>> candidates = new HashMap<>();
-        rows(file, "a1_ie_candidates.tsv").forEach(r -> candidates.put(r.get("ie_ref"), r));
-        List<Map<String, String>> membership = rows(file, "ie_membership.tsv");
+        // v07: the IE titles come from the header of KEY R4:<ie>:01 (not from A2), read primary first, then the
+        // secondaries in a1_selection.tsv order, as Jan's backend does (the order of the retrieval log)
         Map<String, String> titles = new HashMap<>();
-        rows(file, "a2_fields.tsv").forEach(r -> titles.put(r.get("source_ie_ref"), r.get("ie_title")));
+        titles.put(primary.get("ie_ref"), ieTitle(key.apply("R4:" + primary.get("ie_ref") + ":01")));
+        secondaries.forEach(ie -> titles.put(ie, ieTitle(key.apply("R4:" + ie + ":01"))));
+        secondaries.sort(Comparator.comparingInt(ie -> config.ies().contains(ie) ? config.ies().indexOf(ie) : 99));
+        Map<String, Map<String, String>> candidates = Prompt1Tsv.byId(file.apply("a1_ie_candidates.tsv"), "ie_ref");
+        List<Map<String, String>> membership = rows(file, "ie_membership.tsv");
         Function<String, ObjectNode> ieSelection = ie -> {
             ObjectNode entry = f.objectNode();
             entry.put("ie_ref", ie);
@@ -547,20 +547,11 @@ public final class Prompt1TurnOutput {
         secondaries.forEach(ie -> secondaryIe.add(ieSelection.apply(ie)));
         a1.put("primary_selection_basis", primary.get("basis"));
 
-        ObjectNode a2 = f.objectNode();
-        ArrayNode fields = a2.putArray("fields");
-        for (Map<String, String> r : rows(file, "a2_fields.tsv")) {
-            ObjectNode field = fields.addObject();
-            for (String k : List.of("field_id", "source_ie_ref", "field_role", "field_label", "domain_id", "domain_label")) {
-                field.put(k, r.get(k));
-            }
-        }
-
         List<String> order = Prompt1Tsv.candidateOrder(file.apply("a3_candidates.tsv"));
-        Map<String, Map<String, String>> decisions = new HashMap<>();
-        rows(file, "a3_decisions.tsv").forEach(r -> decisions.put(r.get("heta_ref"), r));
+        Map<String, Map<String, String>> decisions = Prompt1Tsv.byId(file.apply("a3_decisions.tsv"), "heta_ref");
         ArrayNode a3 = f.arrayNode();
         List<String> direct = new ArrayList<>();
+        List<String> directOrIndirect = new ArrayList<>();
         for (String h : order) {
             Map<String, String> d = decisions.get(h);
             if (d == null) {
@@ -576,8 +567,12 @@ public final class Prompt1TurnOutput {
             ArrayNode decisive = entry.putArray("decisive_meaning_ids");
             Prompt1Tsv.commaList(d.get("decisive_meaning_ids")).forEach(x -> decisive.add(x));
             entry.put("basis", d.get("basis"));
-            if ("direct".equals(d.get("classification"))) {
+            String classification = d.get("classification");
+            if ("direct".equals(classification)) {
                 direct.add(h);
+            }
+            if ("direct".equals(classification) || "indirect".equals(classification)) {
+                directOrIndirect.add(h);
             }
         }
 
@@ -617,6 +612,16 @@ public final class Prompt1TurnOutput {
         }
         ArrayNode uncovered = b2.putArray("uncovered_gap_ids");
         needs.stream().map(n -> n.get("gap_id")).filter(g -> !covered.contains(g)).forEach(x -> uncovered.add(x));
+
+        // v07: the HETA_JSON_IDENTIFIER of every direct and indirect HETA (production A3), from KEY 06:<heta_ref>
+        ObjectNode hetaJson = f.objectNode();
+        for (String h : directOrIndirect) {
+            Matcher json = HETA_JSON_IDENTIFIER.matcher(Objects.requireNonNullElse(key.apply("06:" + h), ""));
+            if (!json.find()) {
+                throw new IllegalStateException("Step 14: HETA_JSON_IDENTIFIER not found in KEY 06:" + h);
+            }
+            hetaJson.put(h, json.group(1));
+        }
 
         ArrayNode b3 = f.arrayNode();
         for (String h : direct) {
@@ -666,12 +671,22 @@ public final class Prompt1TurnOutput {
         }
         out.set("ftfs", ftfs);
         out.set("a1", a1);
-        out.set("a2", a2);
         out.set("a3", a3);
+        out.set("heta_json", hetaJson);
         out.set("b1", b1);
         out.set("b2", b2);
         out.set("b3", b3);
         return new Output(out, notes);
+    }
+
+    private static final Pattern R4_TITLE = Pattern.compile("KEY: R4:\\S+ \\| IE \\S+ (.+?) \\|");
+
+    /** v07 {@code ie_title}: the IE title from the header line of KEY R4:&lt;ie&gt;:01 ("KEY: R4:… | IE 22.7 &lt;title&gt; | …"). */
+    static String ieTitle(String r4Text) {
+        String first = Objects.requireNonNullElse(r4Text, "").strip().lines().filter(line -> !line.isBlank())
+                .findFirst().orElse("");
+        Matcher m = R4_TITLE.matcher(first);
+        return m.lookingAt() ? m.group(1).strip() : "";
     }
 
     private static List<Map<String, String>> rows(Function<String, String> file, String name) {

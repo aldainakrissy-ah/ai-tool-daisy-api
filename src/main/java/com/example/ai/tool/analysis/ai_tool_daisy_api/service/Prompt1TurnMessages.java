@@ -76,10 +76,14 @@ public final class Prompt1TurnMessages {
                 "=== CLOSED STEPS 1–3 ==="));
         parts.addAll(closedSteps1To3(files));
         parts.addAll(List.of("", "=== STEP 4: R4 LOOKUP ===", text(sources.r4Lookup("4"))));
-        for (String ie : config.ies()) {
+        // every IE's two keys in one read (one retrieval-log write), in the same order as one read per IE
+        List<String> keys = new ArrayList<>();
+        config.ies().forEach(ie -> keys.addAll(List.of("R4:" + ie + ":01", "R5:ELEM:" + ie)));
+        List<KeyText> texts = sources.keys("4", keys);
+        for (int i = 0; i < config.ies().size(); i++) {
             parts.add("");
-            parts.add("=== STEP 4: IE " + ie + " ===");
-            parts.addAll(keysBlock(config, sources.keys("4", List.of("R4:" + ie + ":01", "R5:ELEM:" + ie))));
+            parts.add("=== STEP 4: IE " + config.ies().get(i) + " ===");
+            parts.addAll(keysBlock(config, texts.subList(2 * i, 2 * i + 2)));
         }
         parts.addAll(doc18Part);
         return prompt(config, "A2", runLabel, parts);
@@ -90,7 +94,10 @@ public final class Prompt1TurnMessages {
                             List<String> doc18Part) {
         StringBuilder intro = new StringBuilder(config.text("a3")).append(config.text("trimNote"));
         List<String> body = new ArrayList<>(closedSteps1To3(files));
-        body.add(filesBlock("ie_core_filter.tsv", file(files, "ie_core_filter.tsv")));
+        // v06a: only the passes = yes rows of the core filter, with a note that every other pair is no
+        body.add(filteredBlock("ie_core_filter.tsv", file(files, "ie_core_filter.tsv"),
+                row -> "yes".equals(row.getOrDefault("passes", "").strip())));
+        intro.append(config.text("a3YesOnly"));
         body.add(filesBlock("ie_membership.tsv", file(files, "ie_membership.tsv")));
         body.add(filesBlock("a1_ie_candidates.tsv", file(files, "a1_ie_candidates.tsv")));
         List<String> candidates = new ArrayList<>(Prompt1Tsv.rows(file(files, "a1_ie_candidates.tsv")).stream()
@@ -126,9 +133,9 @@ public final class Prompt1TurnMessages {
             throw new IllegalStateException(heta + " is not in a3_candidates.tsv");
         }
         String primary = candidates.get(0).get("primary_ie_ref");
-        Map<String, Map<String, String>> observations = byId(file(files, "observations.tsv"), "observation_id");
-        Map<String, Map<String, String>> links = byId(file(files, "links.tsv"), "link_id");
-        Map<String, Map<String, String>> meanings = byId(file(files, "meanings.tsv"), "meaning_id");
+        Map<String, Map<String, String>> observations = Prompt1Tsv.byId(file(files, "observations.tsv"), "observation_id");
+        Map<String, Map<String, String>> links = Prompt1Tsv.byId(file(files, "links.tsv"), "link_id");
+        Map<String, Map<String, String>> meanings = Prompt1Tsv.byId(file(files, "meanings.tsv"), "meaning_id");
         List<String> keys = new ArrayList<>(List.of("R3:" + heta + ".2", "R3:" + heta + ".4", "R3:" + heta + ".4:" + primary));
         if (!config.sigAbsent().contains(heta)) {
             keys.add("R3:" + heta + ".4:SIG");
@@ -214,8 +221,8 @@ public final class Prompt1TurnMessages {
         sources.add(promptText);
         for (int round = 0; round < 2; round++) {
             Set<String> more = new HashSet<>();
-            ids.stream().filter(x -> x.startsWith("FTF_")).forEach(x -> more.add("FD_" + x.substring(4)));
-            ids.stream().filter(x -> x.startsWith("FD_")).forEach(x -> more.add("FTF_" + x.substring(3)));
+            ids.stream().filter(x -> x.startsWith("FTF_")).forEach(x -> more.add(Prompt1Tsv.directionOf(x)));
+            ids.stream().filter(x -> x.startsWith("FD_")).forEach(x -> more.add(Prompt1Tsv.ftfOf(x)));
             ids.stream().filter(x -> x.contains("-A")).forEach(x -> more.add(x.split("-")[0]));
             ids.addAll(more);
             for (String text : sources) {
@@ -331,14 +338,6 @@ public final class Prompt1TurnMessages {
             throw new IllegalStateException("Working file " + name + " is missing for this turn");
         }
         return content;
-    }
-
-    private static Map<String, Map<String, String>> byId(String tsv, String column) {
-        Map<String, Map<String, String>> out = new LinkedHashMap<>();
-        for (Map<String, String> row : Prompt1Tsv.rows(tsv)) {
-            out.put(row.get(column), row);
-        }
-        return out;
     }
 
     private static String or(String value) {

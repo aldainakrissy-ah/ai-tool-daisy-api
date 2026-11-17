@@ -1,6 +1,5 @@
 package com.example.ai.tool.analysis.ai_tool_daisy_api.service;
 
-import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1RunFileEntity;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.Prompt1RunFileRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -105,14 +104,11 @@ public class Prompt1RunFiles {
         return repository.findNamesOfRun(runId);
     }
 
+    /** Stores a file, new or replaced, with one statement (an upsert; no SELECT before it). */
     @Transactional
     public void write(String runId, String name, String content) {
         synchronized (lockFor(runId)) {
-            Prompt1RunFileEntity file = repository.findByRunIdAndName(runId, name)
-                    .orElseGet(() -> Prompt1RunFileEntity.builder().runId(runId).name(name).build());
-            file.setContent(content);
-            file.setUpdatedAt(LocalDateTime.now());
-            repository.save(file);
+            repository.upsert(runId, name, content, LocalDateTime.now());
             Map<String, String> cache = cached(runId, name);
             if (cache != null) {
                 cache.put(name, content);

@@ -29,7 +29,7 @@ import java.util.*;
 public class Prompt1SourcePackageService {
 
     private static final Set<String> HEADING_BASED_CODES = Set.of("01", "02", "03");
-    private static final String R4_LOOKUP_KEY = "R4:Lookup — 19 own IE entries";
+    static final String R4_LOOKUP_KEY = "R4:Lookup — 19 own IE entries";
 
     private final KnowledgeDocumentRepository documentRepository;
     private final KnowledgeSectionRepository sectionRepository;

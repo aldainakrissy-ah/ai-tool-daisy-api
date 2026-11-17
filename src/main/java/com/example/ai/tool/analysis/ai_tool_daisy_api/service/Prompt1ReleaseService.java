@@ -8,6 +8,7 @@ import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.PromptReleaseRe
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -100,11 +101,18 @@ public class Prompt1ReleaseService {
         if (!missing.isEmpty()) {
             throw new IllegalStateException("Release " + release.getName() + " has no file for " + missing);
         }
-        Prompt1Release built = Prompt1Release.of(release.getId(), release.getName(),
-                byRole.get(TURN_CONFIG).getContent().getBytes(StandardCharsets.UTF_8),
-                byRole.get(SYSTEM_MESSAGE).getContent(), byRole.get(SYSTEM_MESSAGE).getFileName(),
-                byRole.get(DOC18).getContent(), byRole.get(SCHEMA).getContent(), byRole.get(B2_MATRIX).getContent(),
-                documentVersions(release));
+        Prompt1Release built;
+        try {
+            built = Prompt1Release.of(release.getId(), release.getName(),
+                    byRole.get(TURN_CONFIG).getContent().getBytes(StandardCharsets.UTF_8),
+                    byRole.get(SYSTEM_MESSAGE).getContent(), byRole.get(SYSTEM_MESSAGE).getFileName(),
+                    byRole.get(DOC18).getContent(), byRole.get(SCHEMA).getContent(), byRole.get(B2_MATRIX).getContent(),
+                    documentVersions(release));
+        } catch (IllegalArgumentException e) {
+            // e.g. a release made for an older backend (P1-v0.136 after the v07 deploy): not a bad request, Prompt 1 is not ready
+            throw new Prompt1NotReadyException("Prompt 1 is not ready to run: release " + release.getName()
+                    + " cannot be used: " + e.getMessage(), e);
+        }
         stored.put(release.getId(), built);
         log.info("Prompt 1 release {} read from the release store", release.getName());
         return built;
@@ -131,7 +139,7 @@ public class Prompt1ReleaseService {
                     read(b2MatrixFile, "B2 matrix (experiment.prompt1.turns.b2-matrix-file)"),
                     sourcePackageService.selectedDocumentVersions());
         } catch (IOException | RuntimeException e) {
-            throw new IllegalStateException("Prompt 1 is not ready to run: no active release in the release store, "
+            throw new Prompt1NotReadyException("Prompt 1 is not ready to run: no active release in the release store, "
                     + "and the local files cannot be used: " + e.getMessage(), e);
         }
     }
@@ -163,6 +171,11 @@ public class Prompt1ReleaseService {
                 .filter(heading -> headingLines.stream().noneMatch(line -> line.startsWith(heading))).toList();
         checks.add(new Check("doc 18 headings per turn", notFound.isEmpty(),
                 notFound.isEmpty() ? wanted.size() + " headings" : "not found: " + notFound));
+
+        // v07: the production schema can check an output.json (an empty object misses every required field)
+        List<String> errors = Prompt1ProductionJson.schemaErrors(JsonNodeFactory.instance.objectNode(), release.productionSchema());
+        checks.add(new Check("production schema checks output.json", !errors.isEmpty(), errors.isEmpty()
+                ? "the schema accepts an empty output.json" : "an empty output.json is refused (" + errors.size() + " problem(s))"));
         return checks;
     }
 

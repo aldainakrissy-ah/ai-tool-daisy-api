@@ -14,9 +14,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
- * Replays Jan's run pg_run23 (gpt-6.1-terra, SM v0.133) through our fixed rules: given his
+ * Replays Jan's run pg_run34 (gpt-6.1-terra, SM v0.139) through our fixed rules: given his
  * closed working files and our knowledge sections, each rule must give exactly his server's file.
- * Needs KNOWLEDGE_MARKDOWN_DIR (reference documents), PROMPT1_REPLAY_DIR (pg_run23) and
+ * Needs KNOWLEDGE_MARKDOWN_DIR (reference documents), PROMPT1_REPLAY_DIR (pg_run34) and
  * PROMPT1_INTAKE_DIR (the Klaas files); skipped otherwise. Client data is never printed.
  */
 class Prompt1TurnRulesReplayTest {
@@ -28,9 +28,9 @@ class Prompt1TurnRulesReplayTest {
 
     @BeforeAll
     static void setUp() throws Exception {
-        Path sources = dir("KNOWLEDGE_MARKDOWN_DIR");
-        replay = dir("PROMPT1_REPLAY_DIR");
-        intake = dir("PROMPT1_INTAKE_DIR");
+        Path sources = Prompt1TestFiles.dir("KNOWLEDGE_MARKDOWN_DIR");
+        replay = Prompt1TestFiles.dir("PROMPT1_REPLAY_DIR");
+        intake = Prompt1TestFiles.dir("PROMPT1_INTAKE_DIR");
         documents = Prompt1SourcePackageService.selectVersions(
                 Prompt1SourcePackageServiceTest.readLikeTheLoader(sources), Map.of());
         config = Prompt1TestFiles.turnConfig();
@@ -67,7 +67,7 @@ class Prompt1TurnRulesReplayTest {
     }
 
     @Test
-    void steps6And7AndSignalsEqualJansFiles() throws Exception {
+    void step7TitlesAndSignalsEqualJansFiles() throws Exception {
         Prompt1TurnRules.Selection selection = Prompt1TurnRules.selection(jan("a1_selection.tsv"));
         assertEquals("22.7", selection.primary());
 
@@ -75,7 +75,6 @@ class Prompt1TurnRulesReplayTest {
         keys.add("R4:INDEX:" + selection.primary());
         for (String ie : ieList(selection)) {
             keys.add("R4:" + ie + ":01");
-            keys.add("R5:A2:" + ie);
         }
         Map<String, String> texts = new HashMap<>();
         for (KeyText key : Prompt1SourcePackageService.readKeys(documents, keys)) {
@@ -86,8 +85,15 @@ class Prompt1TurnRulesReplayTest {
         List<String> refs = Prompt1TurnRules.a3Candidates(selection.primary(), texts.get("R4:INDEX:" + selection.primary()));
         assertEquals(jan("a3_candidates.tsv").strip(), Prompt1TurnRules.a3CandidatesTsv(
                 config.headers().get("a3_candidates.tsv"), selection.primary(), refs).strip());
-        assertEquals(jan("a2_fields.tsv").strip(),
-                Prompt1TurnRules.a2Fields(config.headers().get("a2_fields.tsv"), selection, texts).strip());
+        // v07: the IE titles of the control JSON come from the header of KEY R4:<ie>:01
+        com.fasterxml.jackson.databind.JsonNode control = new com.fasterxml.jackson.databind.ObjectMapper()
+                .readTree(jan("output_controle.json")).path("a1");
+        Map<String, String> janTitles = new HashMap<>();
+        janTitles.put(control.path("primary_ie").path("ie_ref").asText(), control.path("primary_ie").path("ie_title").asText());
+        control.path("secondary_ie").forEach(x -> janTitles.put(x.path("ie_ref").asText(), x.path("ie_title").asText()));
+        for (String ie : ieList(selection)) {
+            assertEquals(janTitles.get(ie), Prompt1TurnOutput.ieTitle(texts.get("R4:" + ie + ":01")), "title of " + ie);
+        }
 
         Map<String, TreeMap<Integer, String>> janSignals = new HashMap<>();
         for (Map<String, String> row : Prompt1Tsv.rows(jan("heta_canon.tsv"))) {
@@ -102,8 +108,8 @@ class Prompt1TurnRulesReplayTest {
             List<String> his = new ArrayList<>(janSignals.getOrDefault(heta, new TreeMap<>()).values());
             assertEquals(his, ours, "signals of " + heta);
         }
-        System.out.printf(replay.getFileName() + " replay: %d candidate HETAs, %d A2 field rows, signals per HETA %s%n", refs.size(),
-                Prompt1Tsv.rows(jan("a2_fields.tsv")).size(), janSignals.entrySet().stream()
+        System.out.printf(replay.getFileName() + " replay: %d candidate HETAs, %d IE titles, signals per HETA %s%n", refs.size(),
+                janTitles.size(), janSignals.entrySet().stream()
                         .map(e -> e.getKey() + "=" + e.getValue().size()).sorted().toList());
     }
 
@@ -195,9 +201,4 @@ class Prompt1TurnRulesReplayTest {
         return new IntakeFile(name, Files.readAllBytes(intake.resolve(name)));
     }
 
-    private static Path dir(String variable) {
-        String value = System.getenv(variable);
-        assumeTrue(value != null && Files.isDirectory(Path.of(value)), variable + " not set");
-        return Path.of(value);
-    }
 }

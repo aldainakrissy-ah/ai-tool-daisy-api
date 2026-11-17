@@ -13,6 +13,25 @@ public final class Prompt1Tsv {
     private Prompt1Tsv() {
     }
 
+    /** The rows of a TSV text by the value of one column (a later row with the same value wins), in file order. */
+    public static Map<String, Map<String, String>> byId(String tsv, String column) {
+        Map<String, Map<String, String>> out = new LinkedHashMap<>();
+        for (Map<String, String> row : rows(tsv)) {
+            out.put(row.get(column), row);
+        }
+        return out;
+    }
+
+    /** FD_016 → FTF_016: a functional teleonic form has the number of its direction (the part after the first '_'). */
+    public static String ftfOf(String directionId) {
+        return "FTF_" + directionId.substring(directionId.indexOf('_') + 1);
+    }
+
+    /** FTF_016 → FD_016. */
+    public static String directionOf(String ftfId) {
+        return "FD_" + ftfId.substring(ftfId.indexOf('_') + 1);
+    }
+
     /** The rows of a TSV text as column → value maps (missing trailing cells are empty strings). */
     public static List<Map<String, String>> rows(String text) {
         List<Map<String, String>> rows = new ArrayList<>();

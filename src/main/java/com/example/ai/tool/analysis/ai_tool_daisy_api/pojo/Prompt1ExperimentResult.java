@@ -41,8 +41,10 @@ public class Prompt1ExperimentResult {
     private List<String> notes = new ArrayList<>();
     /** Set when the run stopped: the turn and the reason. */
     private String error;
-    /** The final JSON (output.json), assembled by the backend. */
+    /** The full control JSON (output_controle.json), assembled by the backend; its run_status decides VALID. */
     private JsonNode result;
+    /** The production JSON (output.json, schema production v1) for the app; since backend v07. */
+    private JsonNode productionResult;
 
     @Data
     @Builder

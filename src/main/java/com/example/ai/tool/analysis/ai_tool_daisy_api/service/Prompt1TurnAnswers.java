@@ -29,8 +29,15 @@ public final class Prompt1TurnAnswers {
     public record FileWrite(String name, String content, boolean append) {
     }
 
-    /** The files an accepted answer writes, the steps it closes, the repairs made, and (turn D) the final JSON. */
-    public record Ingested(List<FileWrite> files, String closeSteps, List<String> notes, JsonNode output) {
+    /**
+     * The files an accepted answer writes, the steps it closes, the repairs made, and (turn D) the control JSON
+     * ({@code output_controle.json}) and the production JSON ({@code output.json}).
+     */
+    public record Ingested(List<FileWrite> files, String closeSteps, List<String> notes, JsonNode output, JsonNode production) {
+
+        public Ingested(List<FileWrite> files, String closeSteps, List<String> notes) {
+            this(files, closeSteps, notes, null, null);
+        }
     }
 
     private static final Pattern BLOCK = Pattern.compile("```\\s*([\\w.]+)\\s*\\n(.*?)```", Pattern.DOTALL);
@@ -86,6 +93,17 @@ public final class Prompt1TurnAnswers {
         joinBrokenLines(config, blocks, table.files(), notes);
         if (turn.equals("A1")) {
             repairA1(blocks, files.get("observations.tsv"), notes);
+        }
+        if (turn.equals("A2")) {  // v06a: the model writes only passes = yes rows; the backend completes the core filter grid
+            quietly(() -> {
+                Prompt1TurnRules.CompletedCoreFilter completed = Prompt1TurnRules.completeCoreFilter(
+                        blocks.get("ie_core_filter.tsv"), Prompt1TurnRules.admittedFtfs(file(files, "cts_admission.tsv")),
+                        config.ies());
+                blocks.put("ie_core_filter.tsv", completed.text());
+                if (completed.added() > 0) {
+                    notes.add("kernfilter: " + completed.added() + " regels met passes = no door de backend aangevuld");
+                }
+            });
         }
         List<FileWrite> writes = new ArrayList<>();
         for (String name : table.files()) {
@@ -143,7 +161,7 @@ public final class Prompt1TurnAnswers {
                         + "primary-eligible IE apply 7.1 PARTIAL-FIT PRIMARY), and one 7.3 row for every other candidate IE.");
             }
         }
-        return new Ingested(writes, table.closeSteps(), notes, null);
+        return new Ingested(writes, table.closeSteps(), notes);
     }
 
     // ---- turn D, by the backend --------------------------------------------------------------------------
@@ -151,12 +169,15 @@ public final class Prompt1TurnAnswers {
     /**
      * Turn D since v06: the answer (b2_needs.tsv and b2_coverage.tsv) is written by the backend from
      * the B2 matrix. The ingest numbers the GAPs (15.1), checks the columns and assembles the final
-     * JSON from the closed working files (Steps 11, 12, 14, 15.3, 15.4).
+     * JSON from the closed working files (Steps 11, 12, 14, 15.3, 15.4). Since v07 it writes two files: the full
+     * control JSON {@code output_controle.json} and the production JSON {@code output.json}, which must conform to
+     * the production schema (otherwise turn D is refused and the run stops).
      *
-     * @param key returns the text of a source key, or null when it is not found
+     * @param key              returns the text of a source key, or null when it is not found
+     * @param productionSchema the JSON Schema of the release's production schema file
      */
     public static Ingested ingestD(Prompt1TurnConfig config, String answer, Map<String, String> files, String runId,
-                                   String runDate, java.util.function.Function<String, String> key) {
+                                   String runDate, java.util.function.Function<String, String> key, JsonNode productionSchema) {
         Prompt1TurnConfig.Turn table = config.turns().get("D");
         Map<String, String> blocks = blocks(answer);
         List<String> missing = table.files().stream().filter(name -> !blocks.containsKey(name)).toList();
@@ -186,12 +207,19 @@ public final class Prompt1TurnAnswers {
         }
         Prompt1TurnOutput.Output output = Prompt1TurnOutput.assembleOutput(config,
                 name -> written.containsKey(name) ? written.get(name) : files.getOrDefault(name, ""), runId, runDate, key);
-        writes.add(new FileWrite("output.json", json(output.json()) + "\n", false));
+        writes.add(new FileWrite("output_controle.json", json(output.json()) + "\n", false));  // v07: the full control JSON
+        JsonNode production = Prompt1ProductionJson.production(output.json(), file(files, "observations.tsv"));
+        List<String> errors = Prompt1ProductionJson.schemaErrors(production, productionSchema);
+        if (!errors.isEmpty()) {
+            throw new IllegalStateException("output.json does not conform to the production schema:\n  "
+                    + String.join("\n  ", errors.subList(0, Math.min(20, errors.size()))));
+        }
+        writes.add(new FileWrite("output.json", json(production) + "\n", false));
         notes.addAll(output.notes());
         notes.add("eind-JSON door de backend samengesteld (B1 " + output.json().path("b1").size() + ", B2 "
                 + output.json().path("b2").path("items").size() + " vragenlijst(en), B3 " + output.json().path("b3").size()
                 + " module(s))");
-        return new Ingested(writes, table.closeSteps(), notes, output.json());
+        return new Ingested(writes, table.closeSteps(), notes, output.json(), production);
     }
 
     // ---- repair turn (v05) ----------------------------------------------------------------------------------
@@ -302,10 +330,8 @@ public final class Prompt1TurnAnswers {
      * sit in the observation of a member. Returns "FD_x: Mnnn" for each one that is not.
      */
     static List<String> unconnectedDominantContext(Map<String, String> blocks) {
-        Map<String, Map<String, String>> meanings = new HashMap<>();
-        Prompt1Tsv.rows(blocks.get("meanings.tsv")).forEach(r -> meanings.put(r.get("meaning_id"), r));
-        Map<String, Map<String, String>> directions = new HashMap<>();
-        Prompt1Tsv.rows(blocks.get("directions.tsv")).forEach(r -> directions.put(r.get("direction_id"), r));
+        Map<String, Map<String, String>> meanings = Prompt1Tsv.byId(blocks.get("meanings.tsv"), "meaning_id");
+        Map<String, Map<String, String>> directions = Prompt1Tsv.byId(blocks.get("directions.tsv"), "direction_id");
         List<Map<String, String>> links = Prompt1Tsv.rows(blocks.get("links.tsv"));
         List<String> bad = new ArrayList<>();
         for (Map<String, String> p : Prompt1Tsv.rows(blocks.get("priority.tsv"))) {
@@ -476,7 +502,7 @@ public final class Prompt1TurnAnswers {
         if (!projected.notes().isEmpty()) {
             notes.add("12.4-projectie wijkt af van het antwoord (backend gevolgd): " + String.join("; ", projected.notes()));
         }
-        return new Ingested(writes, "", notes, null);
+        return new Ingested(writes, "", notes);
     }
 
     /**
@@ -1092,8 +1118,7 @@ public final class Prompt1TurnAnswers {
 
     /** observation_ids, source_excerpt, recognized_meaning and qualifications of the evidence basis copy meanings.tsv. */
     static String fillEvidenceCopies(String meanings, String basis) {
-        Map<String, Map<String, String>> byId = new HashMap<>();
-        Prompt1Tsv.rows(meanings).forEach(row -> byId.put(row.get("meaning_id"), row));
+        Map<String, Map<String, String>> byId = Prompt1Tsv.byId(meanings, "meaning_id");
         List<String> lines = new ArrayList<>(stripNewlines(basis).lines().toList());
         List<String> head = List.of(lines.get(0).split("\t", -1));
         String[][] columns = {{"observation_ids", "carrier_observation_ids"}, {"source_excerpt", "source_excerpt"},

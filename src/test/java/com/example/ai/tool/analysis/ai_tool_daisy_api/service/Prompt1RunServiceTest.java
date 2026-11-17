@@ -33,7 +33,7 @@ class Prompt1RunServiceTest {
 
     /** A release as the release store gives it (the texts are not read here). */
     private static Prompt1Release release(String id, String name, Map<String, String> versions) {
-        return new Prompt1Release(id, name, null, "sm", "DAISY_Prompt_1_v0.136_compact.md", "doc18", "{}",
+        return new Prompt1Release(id, name, null, "sm", "DAISY_Prompt_1_v0.139_compact.md", "doc18", "{}", null,
                 Map.of(), versions);
     }
 
