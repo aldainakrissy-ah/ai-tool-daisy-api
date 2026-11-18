@@ -35,82 +35,117 @@ public class ClientDataDumpService {
         "client_vaccinations", "client_vice_frequencies"
     );
 
+    private static final java.util.regex.Pattern SCHEMA_NAME = java.util.regex.Pattern.compile("[A-Za-z_][A-Za-z0-9_]*");
+
     // Special handling for these tables
     private static final List<String> TABLES_WITHOUT_CLIENT_ID = Arrays.asList(
         "client_bio_females", "client_gids"
     );
 
+    /** The data dump of every portal client with this email; empty when there is none. Does not log the email. */
     @Transactional(readOnly = true)
     public Map<String, List<Map<String, Object>>> getClientDataDump(String email) {
-        logger.info("Starting data dump for email: {}", email);
-        Map<String, List<Map<String, Object>>> allData = new HashMap<>();
+        List<Map<String, Object>> clients = findClientsByEmail(email);
+        if (clients.isEmpty()) {
+            logger.warn("No client found for the given email");
+            return Collections.emptyMap();
+        }
+        return getClientDataDump(clients);
+    }
 
+    /**
+     * The portal clients with this email, in every schema with a clients table (two queries): the {@code clients}
+     * rows of {@link #getClientDataDump(String)}, so a caller can check them before the dump. Does not log the email.
+     */
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> findClientsByEmail(String email) {
+        return databaseCall("the client lookup", () -> findClients(email));
+    }
+
+    /**
+     * The data dump of clients as {@link #findClientsByEmail(String)} returns them (the schema name must be a plain
+     * schema name). Does not log the email.
+     */
+    @Transactional(readOnly = true)
+    public Map<String, List<Map<String, Object>>> getClientDataDump(List<Map<String, Object>> clients) {
+        return databaseCall("the client data dump", () -> dump(clients));
+    }
+
+    /** Runs a lookup; a database error becomes one RuntimeException with what failed (no personal data). */
+    private static <T> T databaseCall(String what, java.util.function.Supplier<T> call) {
         try {
-            // Find all schemas that have a 'clients' table
-            List<String> schemas = findSchemasWithClientsTable();
-            if (schemas.isEmpty()) {
-                logger.warn("No schemas found with a 'clients' table.");
-                return Collections.emptyMap();
-            }
-
-            String clientQueryStr = schemas.stream()
-                .map(schema -> String.format("SELECT CAST(id AS TEXT), CAST(client_gid_id AS TEXT), first_name, family_name, '%s' as schema_name FROM %s.clients WHERE lower(email) = lower(:email)", schema, schema))
-                .collect(Collectors.joining(" UNION ALL "));
-
-            Query clientQuery = entityManager.createNativeQuery(clientQueryStr);
-            clientQuery.setParameter("email", email);
-            List<Object[]> clients = clientQuery.getResultList();
-
-            if (clients.isEmpty()) {
-                logger.warn("No client found with email: {}", email);
-                return Collections.emptyMap();
-            }
-
-            for (Object[] clientData : clients) {
-                Long clientId = Long.parseLong((String) clientData[0]);
-                String clientGidId = clientData[1] != null ? String.valueOf(clientData[1]) : null;
-                String schemaName = (String) clientData[4];
-                String clientIdentifier = String.format("schema '%s', clientId '%d'", schemaName, clientId);
-
-                logger.info("Processing data for client: {}", clientIdentifier);
-
-                // Handle base client table data
-                Map<String, Object> clientInfo = new HashMap<>();
-                clientInfo.put("id", clientId);
-                clientInfo.put("client_gid_id", clientGidId);
-                clientInfo.put("first_name", clientData[2]);
-                clientInfo.put("family_name", clientData[3]);
-                clientInfo.put("email", email);
-                clientInfo.put("schema_name", schemaName);
-                allData.computeIfAbsent("clients", k -> new ArrayList<>()).add(clientInfo);
-
-
-                // Query all tables that have a direct client_id relationship
-                for (String tableName : TABLES_WITH_CLIENT_ID) {
-                    allData.computeIfAbsent(tableName, k -> new ArrayList<>())
-                           .addAll(queryTableByClientId(tableName, schemaName, clientId));
-                }
-
-                // Special handling for client_gids
-                if (clientGidId != null) {
-                     allData.computeIfAbsent("client_gids", k -> new ArrayList<>())
-                           .addAll(queryTableByColumn( "client_gids", schemaName, "id", Long.parseLong(clientGidId)));
-                }
-
-                // Special handling for client_bio_females (joins through client_bios)
-                Long clientBioId = getClientBioId(schemaName, clientId);
-                if (clientBioId != null) {
-                    allData.computeIfAbsent("client_bio_females", k -> new ArrayList<>())
-                           .addAll(queryTableByColumn("client_bio_females", schemaName, "client_bio_id", clientBioId));
-                }
-            }
-
+            return call.get();
+        } catch (IllegalArgumentException e) {
+            throw e;
         } catch (Exception e) {
-            logger.error("An error occurred during data dump for email: {}", email, e);
-            throw new RuntimeException("Failed to retrieve client data dump due to a database error.", e);
+            logger.error("An error occurred during {}", what, e);
+            throw new RuntimeException("Failed to retrieve client data due to a database error (" + what + ").", e);
+        }
+    }
+
+    private List<Map<String, Object>> findClients(String email) {
+        // Find all schemas that have a 'clients' table
+        List<String> schemas = findSchemasWithClientsTable();
+        if (schemas.isEmpty()) {
+            logger.warn("No schemas found with a 'clients' table.");
+            return Collections.emptyList();
         }
 
-        logger.info("Successfully completed data dump for email: {}", email);
+        String clientQueryStr = schemas.stream()
+            .map(schema -> String.format("SELECT CAST(id AS TEXT), CAST(client_gid_id AS TEXT), first_name, family_name, '%s' as schema_name FROM %s.clients WHERE lower(email) = lower(:email)", schema, schema))
+            .collect(Collectors.joining(" UNION ALL "));
+
+        Query clientQuery = entityManager.createNativeQuery(clientQueryStr);
+        clientQuery.setParameter("email", email);
+        List<Object[]> rows = clientQuery.getResultList();
+
+        List<Map<String, Object>> clients = new ArrayList<>();
+        for (Object[] clientData : rows) {
+            Map<String, Object> clientInfo = new HashMap<>();
+            clientInfo.put("id", Long.parseLong((String) clientData[0]));
+            clientInfo.put("client_gid_id", clientData[1] != null ? String.valueOf(clientData[1]) : null);
+            clientInfo.put("first_name", clientData[2]);
+            clientInfo.put("family_name", clientData[3]);
+            clientInfo.put("email", email);
+            clientInfo.put("schema_name", clientData[4]);
+            clients.add(clientInfo);
+        }
+        return clients;
+    }
+
+    private Map<String, List<Map<String, Object>>> dump(List<Map<String, Object>> clients) {
+        Map<String, List<Map<String, Object>>> allData = new HashMap<>();
+        for (Map<String, Object> clientInfo : clients) {
+            Long clientId = ((Number) clientInfo.get("id")).longValue();
+            String clientGidId = clientInfo.get("client_gid_id") == null ? null : String.valueOf(clientInfo.get("client_gid_id"));
+            String schemaName = String.valueOf(clientInfo.get("schema_name"));
+            if (!SCHEMA_NAME.matcher(schemaName).matches()) {  // it goes into native SQL: only a plain schema name
+                throw new IllegalArgumentException("Not a schema name: " + schemaName);
+            }
+            logger.info("Processing data for client: {}", String.format("schema '%s', clientId '%d'", schemaName, clientId));
+
+            // Handle base client table data
+            allData.computeIfAbsent("clients", k -> new ArrayList<>()).add(clientInfo);
+
+            // Query all tables that have a direct client_id relationship
+            for (String tableName : TABLES_WITH_CLIENT_ID) {
+                allData.computeIfAbsent(tableName, k -> new ArrayList<>())
+                       .addAll(queryTableByClientId(tableName, schemaName, clientId));
+            }
+
+            // Special handling for client_gids
+            if (clientGidId != null) {
+                 allData.computeIfAbsent("client_gids", k -> new ArrayList<>())
+                       .addAll(queryTableByColumn( "client_gids", schemaName, "id", Long.parseLong(clientGidId)));
+            }
+
+            // Special handling for client_bio_females (joins through client_bios)
+            Long clientBioId = getClientBioId(schemaName, clientId);
+            if (clientBioId != null) {
+                allData.computeIfAbsent("client_bio_females", k -> new ArrayList<>())
+                       .addAll(queryTableByColumn("client_bio_females", schemaName, "client_bio_id", clientBioId));
+            }
+        }
         return allData;
     }
 

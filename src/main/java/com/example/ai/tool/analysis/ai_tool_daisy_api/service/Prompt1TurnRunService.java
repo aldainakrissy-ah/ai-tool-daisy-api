@@ -7,7 +7,6 @@ import com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1SourcePacka
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1TurnAnswers.FileWrite;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1TurnAnswers.Ingested;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1TurnAnswers.RefusedException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,7 +57,6 @@ public class Prompt1TurnRunService {
     private final Prompt1OpenAiCaller openAiCaller;
     private final Prompt1SourcePackageService sourcePackageService;
     private final Prompt1RunFiles runFiles;
-    private final ObjectMapper objectMapper;
 
     @Value("${experiment.prompt1.turns.effort:A1=high,A2=high,rest=medium}")
     private String effort;
@@ -100,11 +99,10 @@ public class Prompt1TurnRunService {
     private java.time.Clock clock = java.time.Clock.systemDefaultZone();
 
     public Prompt1TurnRunService(Prompt1OpenAiCaller openAiCaller, Prompt1SourcePackageService sourcePackageService,
-                                 Prompt1RunFiles runFiles, ObjectMapper objectMapper) {
+                                 Prompt1RunFiles runFiles) {
         this.openAiCaller = openAiCaller;
         this.sourcePackageService = sourcePackageService;
         this.runFiles = runFiles;
-        this.objectMapper = objectMapper;
     }
 
     /**
@@ -153,23 +151,26 @@ public class Prompt1TurnRunService {
      *
      * @param release         the release of the run (its files and document versions)
      * @param requestedPreset a preset for this run, or null for the configured plan
+     * @param onPhase         told when each phase starts (A1, A2, A3, B, C, D), e.g. to show a run's progress; a
+     *                        failing listener does not stop the run
      */
     public Prompt1ExperimentResult run(String runId, List<IntakeFile> files, Prompt1Release release,
-                                       String requestedPreset) {
+                                       String requestedPreset, Consumer<String> onPhase) {
         Plan plan = plan(requestedPreset);
         return run(runId, files, release, (turn, label, instructions, input, previous) -> {
             String key = Prompt1TurnConfig.tableKey(turn);
             String turnModel = plan.models().get(key);
             return openAiCaller.ask(turn, label, instructions, input, previous,
                     turnModel == null || turnModel.isBlank() ? model : turnModel, plan.efforts().get(key));
-        }, plan);
+        }, plan, onPhase);
     }
 
     Prompt1ExperimentResult run(String runId, List<IntakeFile> files, Prompt1Release release, Model ask) {
-        return run(runId, files, release, ask, plan(null));
+        return run(runId, files, release, ask, plan(null), phase -> { });
     }
 
-    Prompt1ExperimentResult run(String runId, List<IntakeFile> files, Prompt1Release release, Model ask, Plan plan) {
+    Prompt1ExperimentResult run(String runId, List<IntakeFile> files, Prompt1Release release, Model ask, Plan plan,
+                                Consumer<String> onPhase) {
         Prompt1TurnConfig config = release.config();
         Map<String, String> documentVersions = release.documentVersions();
         Prompt1ExperimentResult result = Prompt1ExperimentResult.builder()
@@ -183,7 +184,7 @@ public class Prompt1TurnRunService {
                 .documentVersions(documentVersions)
                 .build();
         Map<String, List<String>> matrix = release.b2Matrix();
-        Run run = new Run(runId, release, ask, result);
+        Run run = new Run(runId, release, ask, result, onPhase);
         runFiles.open(runId);  // the working files are read many times per turn: keep them in memory during the run
         try {
             run.execute(files, matrix);
@@ -214,7 +215,9 @@ public class Prompt1TurnRunService {
         private final Map<String, Prompt1SourcePackageService.DocumentSections> documents;
         private final Prompt1ExperimentResult result;
         private final Prompt1TurnMessages.Sources sources;
+        private final Consumer<String> onPhase;
         private List<IntakeFile> intake = List.of();
+
         /** The SM cut per turn type (A1, A2, A3, C): the same for the turn, its corrections, repair and continuations. */
         private final Map<String, String> smCuts = new java.util.concurrent.ConcurrentHashMap<>();
 
@@ -259,8 +262,9 @@ public class Prompt1TurnRunService {
             return text.length() > 6000 ? text.substring(text.length() - 6000) : text;
         }
 
-        Run(String runId, Prompt1Release release, Model ask, Prompt1ExperimentResult result) {
+        Run(String runId, Prompt1Release release, Model ask, Prompt1ExperimentResult result, Consumer<String> onPhase) {
             this.runId = runId;
+            this.onPhase = onPhase;
             this.config = release.config();
             this.systemMessage = release.systemMessage();
             this.doc18 = release.doc18();
@@ -284,6 +288,15 @@ public class Prompt1TurnRunService {
                     return lookup;
                 }
             };
+        }
+
+        /** Tells the listener that a phase starts; its failure is logged, never the run's. */
+        private void phase(String phase) {
+            try {
+                onPhase.accept(phase);
+            } catch (RuntimeException e) {
+                log.warn("Prompt 1 run {}: could not record phase {}: {}", runId, phase, e.getMessage());
+            }
         }
 
         /** The retrieval_log.tsv row of one key read. */
@@ -329,6 +342,7 @@ public class Prompt1TurnRunService {
 
             Prompt1TurnRules.Selection selection;
             List<String> hetas;
+            phase("B");  // B starts here: the selection and the A3 candidates are its first backend rules
             try {
                 selection = Prompt1TurnRules.selection(runFiles.require(runId, "a1_selection.tsv"));
                 KeyText index = sources.keys("7", List.of("R4:INDEX:" + selection.primary())).get(0);
@@ -357,6 +371,7 @@ public class Prompt1TurnRunService {
          * files and the B2 matrix, then the D ingest numbers the GAPs and assembles the final JSON.
          */
         private void stepDByBackend(Map<String, List<String>> matrix, String date) {
+            phase("D");
             Prompt1RunCheck.Result before = baseline("D");
             Map<String, String> files = files();
             Prompt1TurnOutput.B2 b2;
@@ -450,6 +465,7 @@ public class Prompt1TurnRunService {
 
         /** All C prompts first (their key reads are logged in order), then the calls in parallel, then ingest in order. */
         private void runCTurns(List<String> hetas) {
+            phase("C");
             Map<String, String> prompts = new LinkedHashMap<>();
             Map<String, List<String>> signals = new HashMap<>();
             Map<String, String> names = new HashMap<>();
@@ -497,6 +513,7 @@ public class Prompt1TurnRunService {
         }
 
         private void turn(String turn, java.util.function.Supplier<String> message, Function<String, Ingested> ingest) {
+            phase(turn);
             String prompt;
             try {
                 prompt = message.get();

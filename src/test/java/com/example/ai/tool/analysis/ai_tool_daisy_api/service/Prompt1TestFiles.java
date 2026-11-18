@@ -1,9 +1,13 @@
 package com.example.ai.tool.analysis.ai_tool_daisy_api.service;
 
+import com.example.ai.tool.analysis.phase_two_api.pojo.QuestionnaireDto;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assumptions;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
@@ -48,6 +52,16 @@ final class Prompt1TestFiles {
                 Files.readString(sources.resolve(SYSTEM_MESSAGE)), SYSTEM_MESSAGE,
                 Files.readString(sources.resolve(DOC18)), Files.readString(sources.resolve(SCHEMA)),
                 Files.readString(sources.resolve(B2_MATRIX)), documentVersions);
+    }
+
+    /** A mapper that ignores unknown fields, as the questionnaire definition has more than its DTOs. */
+    static final ObjectMapper LENIENT = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    /** The repo's MyHealth Intake (Adult) definition (in the repository: it holds no client data). */
+    static QuestionnaireDto intakeQuestionnaire() throws IOException {
+        try (InputStream in = Prompt1TestFiles.class.getResourceAsStream("/questionnaires/my-health-intake-adult.json")) {
+            return LENIENT.readValue(in, QuestionnaireDto.class);
+        }
     }
 
     /** The JSON Schema of the production output.json. */

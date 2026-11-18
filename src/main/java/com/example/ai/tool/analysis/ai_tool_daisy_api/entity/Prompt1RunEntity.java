@@ -18,7 +18,10 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "prompt1_run", indexes = @Index(name = "idx_prompt1_run_created_at", columnList = "created_at"))
+@Table(name = "prompt1_run", indexes = {
+        @Index(name = "idx_prompt1_run_created_at", columnList = "created_at"),
+        @Index(name = "idx_prompt1_run_client_id", columnList = "client_id"),
+        @Index(name = "idx_prompt1_run_professional_name", columnList = "professional_name")})
 public class Prompt1RunEntity {
 
     public enum Status { QUEUED, RUNNING, VALID, FAILED, INTERRUPTED }
@@ -118,4 +121,22 @@ public class Prompt1RunEntity {
 
     @Column(name = "error", columnDefinition = "text")
     private String error;
+
+    /** The portal client of a run started for a client (POST /analyze/prompt1/runs); null for experiment runs. */
+    @Column(name = "client_id", length = 64)
+    private String clientId;
+
+    /** The client's name, as the apps look up the result in prompt1_results. */
+    @Column(name = "client_name")
+    private String clientName;
+
+    @Column(name = "professional_id", length = 64)
+    private String professionalId;
+
+    @Column(name = "professional_name")
+    private String professionalName;
+
+    /** The phase the run is in (A1, A2, A3, B, C, D) or the last one it reached. */
+    @Column(name = "current_turn", length = 8)
+    private String currentTurn;
 }

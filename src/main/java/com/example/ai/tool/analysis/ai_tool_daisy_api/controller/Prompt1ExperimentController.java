@@ -2,13 +2,11 @@ package com.example.ai.tool.analysis.ai_tool_daisy_api.controller;
 
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1RunDto;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1ExperimentService.IntakeFile;
-import com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1NotReadyException;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1RunFiles;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1RunService;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1TurnPreviewService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Experiment endpoints for Prompt 1 on Jan's turn-based route, with the sources read by key from
@@ -63,12 +60,7 @@ public class Prompt1ExperimentController {
                                        @RequestParam(required = false) String preset,
                                        @RequestParam(required = false) String releaseId) throws IOException {
         log.info("Prompt 1 background run requested: {} file(s), preset={}, releaseId={}", files.size(), preset, releaseId);
-        try {
-            return ResponseEntity.accepted().body(prompt1RunService.submit(intakeFiles(files), preset, releaseId));
-        } catch (Prompt1RunService.QueueFullException e) {
-            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                    .body(Map.of("error", "Service Unavailable", "message", e.getMessage()));
-        }
+        return ResponseEntity.accepted().body(prompt1RunService.submit(intakeFiles(files), preset, releaseId));
     }
 
     /** One run with its status, usage, notes and, once VALID, the final Prompt 1 JSON. */
@@ -99,14 +91,6 @@ public class Prompt1ExperimentController {
     @GetMapping("/prompt1/runs")
     public ResponseEntity<List<Prompt1RunDto>> listRuns(@RequestParam(defaultValue = "20") int limit) {
         return ResponseEntity.ok(prompt1RunService.list(limit));
-    }
-
-    /** No usable release (none active, or made for another backend): 503 with what to do, not a 500. */
-    @ExceptionHandler(Prompt1NotReadyException.class)
-    public ResponseEntity<Map<String, String>> notReady(Prompt1NotReadyException e) {
-        log.warn("{}", e.getMessage());
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body(Map.of("error", "Service Unavailable", "message", e.getMessage()));
     }
 
     private static List<IntakeFile> intakeFiles(List<MultipartFile> files) throws IOException {

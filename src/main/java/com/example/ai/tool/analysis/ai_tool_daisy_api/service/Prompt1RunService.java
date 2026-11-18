@@ -4,6 +4,7 @@ import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1RunEntity;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.entity.Prompt1RunEntity.Status;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1ExperimentResult;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1ExperimentResult.CallUsage;
+import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1Result;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1RunDto;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.repository.Prompt1RunRepository;
 import com.example.ai.tool.analysis.ai_tool_daisy_api.service.Prompt1ExperimentService.IntakeFile;
@@ -18,15 +19,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 /**
  * Background runs of Prompt 1 on Jan's turn-based route: submitting returns a run ID at once, a
@@ -59,10 +60,25 @@ public class Prompt1RunService {
         }
     }
 
+    /** The client and professional of a run started for a client; the apps find its result by {@code clientName}. */
+    public record Client(String clientId, String clientName, String professionalId, String professionalName) {
+    }
+
+    /** A run started for a client; {@code existing} = the client already had a QUEUED or RUNNING run, returned instead. */
+    public record ClientSubmit(Prompt1RunDto run, boolean existing) {
+    }
+
+    private static final List<Status> ACTIVE = List.of(Status.QUEUED, Status.RUNNING);
+    /** The client of an experiment run: none. */
+    private static final Client NO_CLIENT = new Client(null, null, null, null);
+
     private final Prompt1ReleaseService releaseService;
     private final Prompt1RunRepository runRepository;
     private final ObjectMapper objectMapper;
+    private final Prompt1ResultStore resultStore;
     private final Executor executor;
+    /** The clients whose run is being started right now, so two quick requests cannot start two paid runs. */
+    private final Set<String> starting = ConcurrentHashMap.newKeySet();
 
     /** The route of every run (stored per run; the two-call route was retired on 13 Nov 2026). */
     public static final String FLOW_TURNS = "turns";
@@ -74,17 +90,20 @@ public class Prompt1RunService {
                              Prompt1RunRepository runRepository,
                              ObjectMapper objectMapper,
                              Prompt1TurnRunService turnRunService,
+                             Prompt1ResultStore resultStore,
                              @Value("${experiment.prompt1.runs.concurrency:2}") int concurrency,
                              @Value("${experiment.prompt1.runs.queue-capacity:50}") int queueCapacity) {
-        this(releaseService, runRepository, objectMapper, turnRunService, newExecutor(concurrency, queueCapacity));
+        this(releaseService, runRepository, objectMapper, turnRunService, resultStore, newExecutor(concurrency, queueCapacity));
     }
 
     Prompt1RunService(Prompt1ReleaseService releaseService, Prompt1RunRepository runRepository,
-                      ObjectMapper objectMapper, Prompt1TurnRunService turnRunService, Executor executor) {
+                      ObjectMapper objectMapper, Prompt1TurnRunService turnRunService, Prompt1ResultStore resultStore,
+                      Executor executor) {
         this.releaseService = releaseService;
         this.runRepository = runRepository;
         this.objectMapper = objectMapper;
         this.turnRunService = turnRunService;
+        this.resultStore = resultStore;
         this.executor = executor;
     }
 
@@ -120,14 +139,59 @@ public class Prompt1RunService {
      * @throws QueueFullException       when the worker queue is full
      */
     public Prompt1RunDto submit(List<IntakeFile> files, String preset, String releaseId) {
-        Prompt1ExperimentService.requireIntake(files);
-        turnRunService.checkReady(files);  // bad intake JSON: refused now, not in the background
+        checkFiles(files);
         Prompt1Release release = releaseId == null || releaseId.isBlank()
                 ? releaseService.current() : releaseService.byId(releaseId.strip());
-        String runPreset = preset == null || preset.isBlank() ? null : preset.strip();
-        Map<String, String> versions = release.documentVersions();
-        Prompt1TurnRunService.TurnSettings settings = turnRunService.settings(runPreset, release);
+        String runPreset = presetOf(preset);
+        return queue(files, runPreset, release, turnRunService.settings(runPreset, release), NO_CLIENT);
+    }
 
+    /**
+     * Starts a run for a client with the active release, cheapest checks first: when the client already has a QUEUED
+     * or RUNNING run, that run is returned and nothing else is done (no second paid run); then the release and the
+     * preset are checked (503, 400); only then are the client files built ({@code intake}, which reads the databases)
+     * and the run queued.
+     *
+     * @throws Prompt1ClientDataException 409 while another request is starting a run for this client, or as thrown
+     *                                    by {@code intake}
+     */
+    public ClientSubmit submitForClient(Client client, String preset, Supplier<List<IntakeFile>> intake) {
+        if (!starting.add(client.clientId())) {
+            throw new Prompt1ClientDataException(HttpStatus.CONFLICT,
+                    "A Prompt 1 run for this client is being started; try again in a moment.");
+        }
+        try {
+            Prompt1RunEntity active = runRepository
+                    .findFirstByClientIdAndStatusInOrderByCreatedAtDesc(client.clientId(), ACTIVE).orElse(null);
+            if (active != null) {
+                log.info("Prompt 1 run {} is already {} for this client; not starting another", active.getId(),
+                        active.getStatus());
+                return new ClientSubmit(toDto(active, false), true);
+            }
+            Prompt1Release release = releaseService.current();
+            String runPreset = presetOf(preset);
+            Prompt1TurnRunService.TurnSettings settings = turnRunService.settings(runPreset, release);
+            List<IntakeFile> files = intake.get();
+            checkFiles(files);
+            return new ClientSubmit(queue(files, runPreset, release, settings, client), false);
+        } finally {
+            starting.remove(client.clientId());
+        }
+    }
+
+    /** Refuses missing, empty or unreadable client files now, not in the background. */
+    private void checkFiles(List<IntakeFile> files) {
+        Prompt1ExperimentService.requireIntake(files);
+        turnRunService.checkReady(files);
+    }
+
+    private static String presetOf(String preset) {
+        return preset == null || preset.isBlank() ? null : preset.strip();
+    }
+
+    private Prompt1RunDto queue(List<IntakeFile> files, String runPreset, Prompt1Release release,
+                                Prompt1TurnRunService.TurnSettings settings, Client client) {
+        Map<String, String> versions = release.documentVersions();
         Prompt1RunEntity run = Prompt1RunEntity.builder()
                 .id(UUID.randomUUID().toString())
                 .status(Status.QUEUED)
@@ -142,6 +206,10 @@ public class Prompt1RunService {
                 .documentVersions(toJson(versions))
                 .intakeFileNames(toJson(files.stream().map(file -> file.name()).toList()))
                 .intakeHash(intakeHash(files))
+                .clientId(client.clientId())
+                .clientName(client.clientName())
+                .professionalId(client.professionalId())
+                .professionalName(client.professionalName())
                 .build();
         runRepository.save(run);
 
@@ -173,7 +241,14 @@ public class Prompt1RunService {
         runRepository.save(run);
         log.info("Prompt 1 run {} started", runId);
         try {
-            apply(run, turnRunService.run(runId, files, release, preset));
+            Prompt1ExperimentResult result = turnRunService.run(runId, files, release, preset, phase -> {
+                run.setCurrentTurn(phase);  // kept by the final save below
+                runRepository.updateCurrentTurn(runId, phase);
+            });
+            apply(run, result);
+            if (run.getStatus() == Status.VALID && run.getClientId() != null) {
+                saveForApps(run, result);
+            }
         } catch (Exception e) {
             log.error("Prompt 1 run {} failed: {}", runId, e.getMessage(), e);
             run.setStatus(Status.FAILED);
@@ -222,6 +297,21 @@ public class Prompt1RunService {
         }
     }
 
+    /**
+     * Saves a VALID client run in the result format the apps read today (prompt1_results, found by the client's
+     * name). The run stays VALID when this fails; the error says why the apps do not see it.
+     */
+    private void saveForApps(Prompt1RunEntity run, Prompt1ExperimentResult result) {
+        try {
+            Prompt1Result forApps = Prompt1UxMapper.result(result.getResult(), result.getProductionResult(),
+                    run.getProfessionalName());
+            resultStore.save(run.getProfessionalName(), run.getClientName(), forApps.getPromptId(), forApps.toJson());
+        } catch (Exception e) {
+            log.error("Prompt 1 run {}: the result for the apps could not be saved", run.getId(), e);
+            run.setError("VALID, but the result for the apps could not be saved: " + e.getMessage());
+        }
+    }
+
     /** The clearest available reason why a run is not VALID. */
     static String failureReason(Prompt1ExperimentResult result) {
         if (result.getError() != null) {
@@ -249,12 +339,32 @@ public class Prompt1RunService {
         return runRepository.findById(runId).map(run -> toDto(run, true));
     }
 
+    /** A run without its result JSON (which holds client text): status, phase, release, usage and error. */
+    public Optional<Prompt1RunDto> status(String runId) {
+        return runRepository.findById(runId).map(run -> toDto(run, false));
+    }
+
     /** The latest runs, newest first, without their result JSON. */
     public List<Prompt1RunDto> list(int limit) {
-        int size = Math.max(1, Math.min(limit, MAX_LIST_LIMIT));
-        return runRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(0, size)).stream()
-                .map(run -> toDto(run, false))
-                .toList();
+        return withoutResults(runRepository.findAllByOrderByCreatedAtDesc(page(limit)));
+    }
+
+    /** A client's runs, newest first, without their result JSON. */
+    public List<Prompt1RunDto> listForClient(String clientId, int limit) {
+        return withoutResults(runRepository.findByClientIdOrderByCreatedAtDesc(clientId, page(limit)));
+    }
+
+    /** A professional's client runs, newest first, without their result JSON. */
+    public List<Prompt1RunDto> listForProfessional(String professionalName, int limit) {
+        return withoutResults(runRepository.findByProfessionalNameOrderByCreatedAtDesc(professionalName, page(limit)));
+    }
+
+    private static PageRequest page(int limit) {
+        return PageRequest.of(0, Math.max(1, Math.min(limit, MAX_LIST_LIMIT)));
+    }
+
+    private List<Prompt1RunDto> withoutResults(List<Prompt1RunEntity> runs) {
+        return runs.stream().map(run -> toDto(run, false)).toList();
     }
 
     /** Runs the app did not finish (it stopped or restarted) can never finish now. */
@@ -302,6 +412,11 @@ public class Prompt1RunService {
                 .notes(fromJson(run.getNotes(), new TypeReference<List<String>>() {
                 }, new ArrayList<>()))
                 .error(run.getError())
+                .currentTurn(run.getCurrentTurn())
+                .clientId(run.getClientId())
+                .clientName(run.getClientName())
+                .professionalId(run.getProfessionalId())
+                .professionalName(run.getProfessionalName())
                 .result(withResult && run.getResult() != null ? readTree(run.getResult()) : null)
                 .productionResult(withResult && run.getProductionResult() != null ? readTree(run.getProductionResult()) : null)
                 .build();

@@ -1,7 +1,6 @@
 package com.example.ai.tool.analysis.ai_tool_daisy_api.service;
 
 import com.example.ai.tool.analysis.ai_tool_daisy_api.pojo.Prompt1ExperimentResult.CallUsage;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -18,8 +17,7 @@ class Prompt1TurnPlanTest {
 
     @BeforeEach
     void setUp() {
-        service = new Prompt1TurnRunService(null, mock(Prompt1SourcePackageService.class), mock(Prompt1RunFiles.class),
-                new ObjectMapper());
+        service = new Prompt1TurnRunService(null, mock(Prompt1SourcePackageService.class), mock(Prompt1RunFiles.class));
         ReflectionTestUtils.setField(service, "model", "gpt-6.1-terra");
         ReflectionTestUtils.setField(service, "effort", "A1=high,A2=high,rest=medium");
     }
