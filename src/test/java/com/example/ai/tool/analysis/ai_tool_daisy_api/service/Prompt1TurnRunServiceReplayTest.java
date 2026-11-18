@@ -81,7 +81,7 @@ class Prompt1TurnRunServiceReplayTest {
         runFiles = new Prompt1RunFiles(repository);
         org.mockito.Mockito.clearInvocations(repository);  // count only the calls of the run
 
-        service = new Prompt1TurnRunService(null, packages, runFiles, new ObjectMapper());
+        service = new Prompt1TurnRunService(null, packages, runFiles);
         release = Prompt1TestFiles.release(sources, Map.of());
         String runDate = new ObjectMapper().readTree(Files.readString(replay.resolve("output_controle.json"))).path("current_run_date").asText();
         ReflectionTestUtils.setField(service, "clock", java.time.Clock.fixed(

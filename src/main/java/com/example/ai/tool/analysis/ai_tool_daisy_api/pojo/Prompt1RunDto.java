@@ -53,6 +53,13 @@ public class Prompt1RunDto {
     @Builder.Default
     private List<String> notes = new ArrayList<>();
     private String error;
+    /** The phase the run is in (A1, A2, A3, B, C, D) or the last one it reached. */
+    private String currentTurn;
+    /** Set for runs started for a client (POST /analyze/prompt1/runs). */
+    private String clientId;
+    private String clientName;
+    private String professionalId;
+    private String professionalName;
     /** The full control JSON (output_controle.json). */
     private JsonNode result;
     /** The production JSON (output.json, schema production v1). */

@@ -48,7 +48,9 @@ class QuestionnaireAnalysisServicePrompt2Test {
 
     @BeforeEach
     void setUp() {
-        service = new QuestionnaireAnalysisService(client, prompt1ResultRepository);
+        // the real store on the mocked repository: the saves below go through the shared Prompt1ResultStore
+        service = new QuestionnaireAnalysisService(client, prompt1ResultRepository,
+                new Prompt1ResultStore(prompt1ResultRepository));
         ReflectionTestUtils.setField(service, "vectorStoreId", "vs_test");
         ReflectionTestUtils.setField(service, "prompt2Id", "prompt2_test_id");
         ReflectionTestUtils.setField(service, "prompt2Version", "1");

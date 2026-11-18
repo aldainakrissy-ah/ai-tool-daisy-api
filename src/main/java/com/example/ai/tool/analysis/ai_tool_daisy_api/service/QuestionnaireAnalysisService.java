@@ -38,6 +38,7 @@ public class QuestionnaireAnalysisService {
 
     private final OpenAIClient client;
     private final Prompt1ResultRepository prompt1ResultRepository;
+    private final Prompt1ResultStore resultStore;
 
     @Value("${openai.questionnaire-analysis.prompt-id}")
     private String promptId;
@@ -494,25 +495,14 @@ public class QuestionnaireAnalysisService {
      * @throws JsonProcessingException
      */
     void persistResult(AiAnalysisResult result) throws JsonProcessingException {
-        persistEntity(result.getProfessionalName(), result.getClientName(), result.getPromptId(), result.toJson());
+        resultStore.save(result.getProfessionalName(), result.getClientName(), result.getPromptId(), result.toJson());
     }
 
     void persistPrompt1Result(Prompt1Result result) throws JsonProcessingException {
-        persistEntity(result.getProfessionalName(), result.getClientName(), result.getPromptId(), result.toJson());
+        resultStore.save(result.getProfessionalName(), result.getClientName(), result.getPromptId(), result.toJson());
     }
 
     void persistPrompt2Result(Prompt2Result result) throws JsonProcessingException {
-        persistEntity(result.getProfessionalName(), result.getClientName(), result.getPromptId(), result.toJson());
-    }
-
-    private void persistEntity(String professionalName, String clientName, String promptType, String resultJson) {
-        Prompt1ResultEntity entity = new Prompt1ResultEntity();
-        entity.setProfessionalId(professionalName);
-        entity.setPatientId(clientName);
-        entity.setPromptType(promptType);
-        entity.setResultJson(resultJson);
-        prompt1ResultRepository.save(entity);
-
-        log.debug("Persisted result to database for professional: {}, patient: {}", professionalName, clientName);
+        resultStore.save(result.getProfessionalName(), result.getClientName(), result.getPromptId(), result.toJson());
     }
 }

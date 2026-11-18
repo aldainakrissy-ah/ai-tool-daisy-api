@@ -10,11 +10,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.stubbing.OngoingStubbing;
+import org.springframework.http.HttpStatus;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -30,6 +33,7 @@ class Prompt1RunServiceTest {
     private Prompt1TurnRunService turnRunService;
     private Prompt1ReleaseService releaseService;
     private Prompt1RunRepository runRepository;
+    private Prompt1ResultStore resultStore;
 
     /** A release as the release store gives it (the texts are not read here). */
     private static Prompt1Release release(String id, String name, Map<String, String> versions) {
@@ -44,6 +48,7 @@ class Prompt1RunServiceTest {
         turnRunService = mock(Prompt1TurnRunService.class);
         releaseService = mock(Prompt1ReleaseService.class);
         runRepository = mock(Prompt1RunRepository.class);
+        resultStore = mock(Prompt1ResultStore.class);
         when(runRepository.save(any())).thenAnswer(invocation -> {
             Prompt1RunEntity run = invocation.getArgument(0);
             table.put(run.getId(), run);
@@ -60,8 +65,13 @@ class Prompt1RunServiceTest {
                 "gpt-6.1-terra", "A1=high,A2=high,rest=medium", "P1-v0.136", "DAISY_Prompt_1_v0.136_compact.md"));
     }
 
+    /** Stubs the turn run, whatever its arguments. */
+    private OngoingStubbing<Prompt1ExperimentResult> whenRun() {
+        return when(turnRunService.run(anyString(), anyList(), any(Prompt1Release.class), nullable(String.class), any()));
+    }
+
     private Prompt1RunService service(Executor executor) {
-        return new Prompt1RunService(releaseService, runRepository, objectMapper, turnRunService, executor);
+        return new Prompt1RunService(releaseService, runRepository, objectMapper, turnRunService, resultStore, executor);
     }
 
     private static List<IntakeFile> intake() {
@@ -92,7 +102,7 @@ class Prompt1RunServiceTest {
 
     @Test
     void validRunStoresResultSettingsAndPinnedVersions() throws Exception {
-        when(turnRunService.run(anyString(), anyList(), any(Prompt1Release.class), nullable(String.class))).thenReturn(result("{\"run_status\":\"valid\"}", 13));
+        whenRun().thenReturn(result("{\"run_status\":\"valid\"}", 13));
         Prompt1RunService service = service(task -> task.run());
 
         Prompt1RunDto submitted = service.submit(intake(), "standard");
@@ -110,13 +120,14 @@ class Prompt1RunServiceTest {
         assertNotNull(run.getFinishedAt());
         assertEquals("P1-v0.136", run.getReleaseName());
         verify(turnRunService).run(eq(submitted.getRunId()), argThat(files -> files.size() == 2),
-                eq(active), eq("standard"));
+                eq(active), eq("standard"), any());
         verify(turnRunService).settings("standard", active);
+        verifyNoInteractions(resultStore);  // experiment runs are not shown in the apps
     }
 
     @Test
     void theReleaseIsPinnedAtSubmitNotAtStart() throws Exception {
-        when(turnRunService.run(anyString(), anyList(), any(Prompt1Release.class), nullable(String.class))).thenReturn(result("{\"run_status\":\"valid\"}", 13));
+        whenRun().thenReturn(result("{\"run_status\":\"valid\"}", 13));
         Prompt1RunService service = service(task -> queued.add(task));
 
         String runId = service.submit(intake(), null).getRunId();
@@ -126,7 +137,7 @@ class Prompt1RunServiceTest {
         when(releaseService.current()).thenReturn(release("rel-137", "P1-v0.137", Map.of("01", "v5", "R4", "v6")));
         queued.forEach(task -> task.run());
 
-        verify(turnRunService).run(eq(runId), anyList(), eq(active), (String) isNull());
+        verify(turnRunService).run(eq(runId), anyList(), eq(active), (String) isNull(), any());
         assertEquals(Map.of("01", "v4", "R4", "v5"), service.get(runId).orElseThrow().getDocumentVersions());
     }
 
@@ -134,12 +145,12 @@ class Prompt1RunServiceTest {
     void aGivenReleaseIsUsedInsteadOfTheActiveOne() throws Exception {
         Prompt1Release draft = release("rel-draft", "P1-v0.137", Map.of("01", "v5"));
         when(releaseService.byId("rel-draft")).thenReturn(draft);
-        when(turnRunService.run(anyString(), anyList(), any(Prompt1Release.class), nullable(String.class))).thenReturn(result("{\"run_status\":\"valid\"}", 13));
+        whenRun().thenReturn(result("{\"run_status\":\"valid\"}", 13));
         Prompt1RunService service = service(task -> task.run());
 
         String runId = service.submit(intake(), null, "rel-draft").getRunId();
 
-        verify(turnRunService).run(eq(runId), anyList(), eq(draft), (String) isNull());
+        verify(turnRunService).run(eq(runId), anyList(), eq(draft), (String) isNull(), any());
         verify(releaseService, never()).current();
     }
 
@@ -156,7 +167,7 @@ class Prompt1RunServiceTest {
     void aStoppedRunIsFailedWithItsReasonAndStoresNoResult() throws Exception {
         Prompt1ExperimentResult stopped = result(null, 3);
         stopped.setError("Turn A3: answer refused after 3 tries: a1_selection.tsv: header differs");
-        when(turnRunService.run(anyString(), anyList(), any(Prompt1Release.class), nullable(String.class))).thenReturn(stopped);
+        whenRun().thenReturn(stopped);
         Prompt1RunService service = service(task -> task.run());
 
         Prompt1RunDto run = service.get(service.submit(intake(), null).getRunId()).orElseThrow();
@@ -169,7 +180,7 @@ class Prompt1RunServiceTest {
 
     @Test
     void invalidPrompt1OutcomeIsFailedWithItsReason() throws Exception {
-        when(turnRunService.run(anyString(), anyList(), any(Prompt1Release.class), nullable(String.class))).thenReturn(result("{\"run_status\":\"invalid\","
+        whenRun().thenReturn(result("{\"run_status\":\"invalid\","
                 + "\"failure_stage\":\"A1.primary\",\"failure_reason\":\"no_primary_eligible_canonical_IE\"}", 13));
         Prompt1RunService service = service(task -> task.run());
 
@@ -182,7 +193,7 @@ class Prompt1RunServiceTest {
 
     @Test
     void exceptionMarksTheRunFailed() throws Exception {
-        when(turnRunService.run(anyString(), anyList(), any(Prompt1Release.class), nullable(String.class))).thenThrow(new IllegalArgumentException("B2 matrix missing"));
+        whenRun().thenThrow(new IllegalArgumentException("B2 matrix missing"));
         Prompt1RunService service = service(task -> task.run());
 
         Prompt1RunDto run = service.get(service.submit(intake(), null).getRunId()).orElseThrow();
@@ -239,7 +250,7 @@ class Prompt1RunServiceTest {
 
     @Test
     void storedResultIsReturnedOnlyBySingleRunLookup() throws Exception {
-        when(turnRunService.run(anyString(), anyList(), any(Prompt1Release.class), nullable(String.class))).thenReturn(result("{\"run_status\":\"valid\"}", 13));
+        whenRun().thenReturn(result("{\"run_status\":\"valid\"}", 13));
         when(runRepository.findAllByOrderByCreatedAtDesc(any())).thenAnswer(invocation -> new ArrayList<>(table.values()));
         Prompt1RunService service = service(task -> task.run());
         String runId = service.submit(intake(), null).getRunId();
@@ -247,5 +258,110 @@ class Prompt1RunServiceTest {
         JsonNode single = service.get(runId).orElseThrow().getResult();
         assertNotNull(single);
         assertNull(service.list(20).get(0).getResult());
+    }
+
+    // ---- runs started for a client (POST /analyze/prompt1/runs)
+
+    private final Prompt1RunService.Client client = new Prompt1RunService.Client("c-1", "Test Client", "p-1", "Prof");
+
+    /** A VALID result with a control and production JSON just big enough for the apps' format. */
+    private Prompt1ExperimentResult validClientResult() throws Exception {
+        Prompt1ExperimentResult result = result("{\"run_status\":\"valid\",\"a1\":{\"primary_ie\":{\"ie_ref\":\"22.7\","
+                + "\"ie_title\":\"Titel\"},\"secondary_ie\":[]},\"b3\":[]}", 13);
+        result.setProductionResult(objectMapper.readTree("{\"prompt_id\":\"Prompt_1\",\"date\":\"2026-11-18\","
+                + "\"client-name\":\"Test Client\",\"A1\":{\"teleonic_pattern\":\"p\"},\"A3\":{\"direct\":[],\"indirect\":[]},"
+                + "\"B1\":[],\"B2\":[],\"B3\":[]}"));
+        return result;
+    }
+
+    @Test
+    void clientRunStoresTheClientItsPhasesAndTheResultForTheApps() throws Exception {
+        Prompt1ExperimentResult valid = validClientResult();
+        whenRun()
+                .thenAnswer(invocation -> {
+                    Consumer<String> onPhase = invocation.getArgument(4);
+                    onPhase.accept("A1");
+                    onPhase.accept("D");
+                    return valid;
+                });
+        Prompt1RunService service = service(task -> task.run());
+
+        Prompt1RunService.ClientSubmit submitted = service.submitForClient(client, null, () -> intake());
+
+        assertFalse(submitted.existing());
+        String runId = submitted.run().getRunId();
+        Prompt1RunDto run = service.status(runId).orElseThrow();
+        assertEquals("VALID", run.getStatus());
+        assertEquals("c-1", run.getClientId());
+        assertEquals("Test Client", run.getClientName());
+        assertEquals("Prof", run.getProfessionalName());
+        assertEquals("D", run.getCurrentTurn());
+        assertNull(run.getResult());  // the status read holds no client text
+        assertNull(run.getError());
+        verify(runRepository).updateCurrentTurn(runId, "A1");
+        verify(runRepository).updateCurrentTurn(runId, "D");
+        verify(resultStore).save(eq("Prof"), eq("Test Client"), eq("Prompt_1"),
+                argThat(json -> json.contains("\"primary_ie_ref\":\"22.7\"") && json.contains("\"client-name\":\"Test Client\"")));
+    }
+
+    @Test
+    void aQueuedOrRunningRunOfTheClientIsReturnedWithoutBuildingTheIntake() {
+        Prompt1RunEntity running = Prompt1RunEntity.builder().id("r-1").status(Prompt1RunEntity.Status.RUNNING)
+                .flow("turns").clientId("c-1").build();
+        when(runRepository.findFirstByClientIdAndStatusInOrderByCreatedAtDesc(eq("c-1"), any()))
+                .thenReturn(Optional.of(running));
+        Prompt1RunService service = service(task -> task.run());
+
+        Prompt1RunService.ClientSubmit submitted = service.submitForClient(client, null,
+                () -> fail("the intake must not be built when a run is already queued or running"));
+
+        assertTrue(submitted.existing());
+        assertEquals("r-1", submitted.run().getRunId());
+        verify(runRepository, never()).save(any());
+        verifyNoInteractions(turnRunService);
+    }
+
+    @Test
+    void aSecondRequestWhileTheFirstIsStartingIs409() throws Exception {
+        whenRun()
+                .thenReturn(validClientResult());
+        Prompt1RunService service = service(task -> queued.add(task));
+
+        Prompt1RunService.ClientSubmit first = service.submitForClient(client, null, () -> {
+            // a second request for the same client arrives while the first builds the intake
+            Prompt1ClientDataException e = assertThrows(Prompt1ClientDataException.class,
+                    () -> service.submitForClient(client, null, () -> intake()));
+            assertEquals(HttpStatus.CONFLICT, e.getStatus());
+            return intake();
+        });
+
+        assertFalse(first.existing());
+        assertEquals(1, table.size());
+        // once started, the next request goes through the guard again (here: no active run in the mock)
+        assertFalse(service.submitForClient(client, null, () -> intake()).existing());
+    }
+
+    @Test
+    void aFailedSaveForTheAppsKeepsTheRunValidAndSaysWhy() throws Exception {
+        whenRun()
+                .thenReturn(validClientResult());
+        doThrow(new IllegalStateException("database down")).when(resultStore).save(any(), any(), any(), any());
+        Prompt1RunService service = service(task -> task.run());
+
+        String runId = service.submitForClient(client, null, () -> intake()).run().getRunId();
+
+        Prompt1RunDto run = service.status(runId).orElseThrow();
+        assertEquals("VALID", run.getStatus());
+        assertTrue(run.getError().contains("could not be saved"), run.getError());
+    }
+
+    @Test
+    void noUsableReleaseIsRefusedBeforeTheClientFilesAreBuilt() {
+        when(releaseService.current()).thenThrow(new Prompt1NotReadyException("no active release", null));
+        Prompt1RunService service = service(task -> task.run());
+
+        assertThrows(Prompt1NotReadyException.class, () -> service.submitForClient(client, null,
+                () -> fail("the client files must not be built when Prompt 1 is not ready")));
+        verify(runRepository, never()).save(any());
     }
 }
