@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Prompt 1 for a client on the turn-based route, started by the professional app with IDs instead of a PDF: the
@@ -28,17 +29,22 @@ public class Prompt1RunController {
     private final Prompt1RunService runService;
     private final Prompt1IntakeBuilder intakeBuilder;
 
+    /** Stored as the professional of a run started without one, e.g. by the client's own intake submit. */
+    static final String NO_PROFESSIONAL = "client";
+
     /**
      * 202 with the queued run; 200 with the client's QUEUED or RUNNING run when there is one (no second run);
-     * 400 when a field is missing; 404/409 when the client data cannot be used; 503 when Prompt 1 is not ready.
+     * 400 when clientId or clientEmail is missing; 404/409 when the client data cannot be used; 503 when Prompt 1 is
+     * not ready. clientName and professionalName are optional: without them the portal client's name is used, and
+     * the run is stored with professional "client" (a start from the intake app).
      */
     @PostMapping
     public ResponseEntity<Prompt1RunDto> start(@RequestBody Prompt1ClientRunRequest request) {
         String clientId = required(request.getClientId(), "clientId");
         String email = required(request.getClientEmail(), "clientEmail");
-        String clientName = required(request.getClientName(), "clientName");
-        Client client = new Client(clientId, clientName, request.getProfessionalId(),
-                required(request.getProfessionalName(), "professionalName"));
+        String clientName = optional(request.getClientName());
+        Client client = new Client(clientId, clientName, optional(request.getProfessionalId()),
+                Objects.requireNonNullElse(optional(request.getProfessionalName()), NO_PROFESSIONAL));
         ClientSubmit submitted = runService.submitForClient(client, request.getPreset(),
                 () -> intakeBuilder.build(clientId, email, clientName));
         return submitted.existing() ? ResponseEntity.ok(submitted.run())
@@ -65,9 +71,15 @@ public class Prompt1RunController {
 
     /** The value without surrounding spaces; a 400 (through the global handler) when it is missing. */
     private static String required(String value, String name) {
-        if (value == null || value.isBlank()) {
+        String stripped = optional(value);
+        if (stripped == null) {
             throw new IllegalArgumentException(name + " is required");
         }
-        return value.strip();
+        return stripped;
+    }
+
+    /** The value without surrounding spaces; null when it is missing or blank. */
+    private static String optional(String value) {
+        return value == null || value.isBlank() ? null : value.strip();
     }
 }

@@ -150,12 +150,13 @@ public class Prompt1RunService {
      * Starts a run for a client with the active release, cheapest checks first: when the client already has a QUEUED
      * or RUNNING run, that run is returned and nothing else is done (no second paid run); then the release and the
      * preset are checked (503, 400); only then are the client files built ({@code intake}, which reads the databases)
-     * and the run queued.
+     * and the run queued. The run keeps the client name the files were built for, which may come from the portal when
+     * the request had none.
      *
      * @throws Prompt1ClientDataException 409 while another request is starting a run for this client, or as thrown
      *                                    by {@code intake}
      */
-    public ClientSubmit submitForClient(Client client, String preset, Supplier<List<IntakeFile>> intake) {
+    public ClientSubmit submitForClient(Client client, String preset, Supplier<Prompt1IntakeBuilder.ClientFiles> intake) {
         if (!starting.add(client.clientId())) {
             throw new Prompt1ClientDataException(HttpStatus.CONFLICT,
                     "A Prompt 1 run for this client is being started; try again in a moment.");
@@ -171,9 +172,10 @@ public class Prompt1RunService {
             Prompt1Release release = releaseService.current();
             String runPreset = presetOf(preset);
             Prompt1TurnRunService.TurnSettings settings = turnRunService.settings(runPreset, release);
-            List<IntakeFile> files = intake.get();
-            checkFiles(files);
-            return new ClientSubmit(queue(files, runPreset, release, settings, client), false);
+            Prompt1IntakeBuilder.ClientFiles built = intake.get();
+            checkFiles(built.files());
+            Client named = new Client(client.clientId(), built.clientName(), client.professionalId(), client.professionalName());
+            return new ClientSubmit(queue(built.files(), runPreset, release, settings, named), false);
         } finally {
             starting.remove(client.clientId());
         }

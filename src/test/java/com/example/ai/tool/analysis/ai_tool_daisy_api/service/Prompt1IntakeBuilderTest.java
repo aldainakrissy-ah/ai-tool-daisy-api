@@ -199,7 +199,9 @@ class Prompt1IntakeBuilderTest {
         when(formattingService.formatClientData(dump)).thenReturn(new LinkedHashMap<>(Map.of("bio", Map.of(
                 "date_of_birth", "1980-05-17"))));
 
-        List<IntakeFile> files = builder.build("c-1", "test@example.org", "Test Client");
+        Prompt1IntakeBuilder.ClientFiles built = builder.build("c-1", "test@example.org", "Test Client");
+        List<IntakeFile> files = built.files();
+        assertEquals("Test Client", built.clientName());
 
         assertEquals(List.of("personal_data.json", "intake_questionnaire.json"), files.stream().map(f -> f.name()).toList());
         var order = inOrder(responseService, questionnaireService, dumpService, formattingService);
@@ -215,6 +217,26 @@ class Prompt1IntakeBuilderTest {
         Prompt1TurnInventory.requireClientData(inventory);
         List<String> labels = Prompt1Tsv.rows(inventory.observations()).stream().map(o -> o.get("source_label")).toList();
         assertTrue(labels.containsAll(List.of("client_name", "date_of_birth", "1.1", "2.1.1", "4.7", "5.8", "5.9")), labels.toString());
+    }
+
+    @Test
+    void withoutAClientNameThePortalNameIsUsedAndANamelessClientIsRefused() {
+        when(responseService.getUserResponsesByQuestionnaire(any(), any())).thenReturn(List.of(filled()));
+        List<Map<String, Object>> clients = List.of(portalClient("Test", "Client"));
+        Map<String, List<Map<String, Object>>> dump = Map.of("clients", clients);
+        when(dumpService.findClientsByEmail("test@example.org")).thenReturn(clients);
+        when(dumpService.getClientDataDump(clients)).thenReturn(dump);
+        when(formattingService.formatClientData(dump)).thenReturn(new LinkedHashMap<>());
+
+        assertEquals("Test Client", builder.build("c-1", "test@example.org", null).clientName());
+        assertEquals("Test Client", builder.build("c-1", "test@example.org", " ").clientName());
+
+        Map<String, Object> nameless = new HashMap<>();
+        nameless.put("first_name", null);
+        nameless.put("family_name", null);
+        when(dumpService.findClientsByEmail("nameless@example.org")).thenReturn(List.of(nameless));
+        assertEquals(HttpStatus.CONFLICT, assertThrows(Prompt1ClientDataException.class,
+                () -> builder.build("c-1", "nameless@example.org", null)).getStatus());
     }
 
     @Test

@@ -62,13 +62,19 @@ public class Prompt1IntakeBuilder {
     private final ClientDataFormattingService formattingService;
     private final ObjectMapper objectMapper;
 
+    /** The two client files and the client's name they were built for (the name the apps find the result by). */
+    public record ClientFiles(List<IntakeFile> files, String clientName) {
+    }
+
     /**
+     * @param clientName the client's name as the app shows it; checked against the portal. Null or blank = the portal
+     *                   client's own name (e.g. a start from the intake app, which only knows the ID and email)
      * @throws Prompt1ClientDataException 409 when the intake has no answers yet, or the email matches more than one
-     *                                    portal client or a client with another name; 404 when no portal client has
-     *                                    this email
+     *                                    portal client or a client with another name, or the portal client has no
+     *                                    name; 404 when no portal client has this email
      * @throws Prompt1NotReadyException   when the questionnaire is not on this server
      */
-    public List<IntakeFile> build(String clientId, String email, String clientName) {
+    public ClientFiles build(String clientId, String email, String clientName) {
         QuestionnaireResponseDto response = responseService.getUserResponsesByQuestionnaire(INTAKE_ID, clientId).stream()
                 .filter(r -> r.getQuestionResponses() != null && !r.getQuestionResponses().isEmpty())
                 .findFirst()
@@ -85,18 +91,23 @@ public class Prompt1IntakeBuilder {
             throw new Prompt1ClientDataException(HttpStatus.CONFLICT,
                     "This email belongs to " + clients.size() + " portal clients; their data cannot be told apart.");
         }
+        String portalName = portalName(clients.get(0));
+        String name = clientName == null || clientName.isBlank() ? portalName : clientName.strip();
+        if (name.isBlank()) {
+            throw new Prompt1ClientDataException(HttpStatus.CONFLICT, "The portal client has no name to save the result under.");
+        }
         // the app's client ID is not the portal's, so the name tells whether the email is this client's
-        if (!sameName(portalName(clients.get(0)), clientName)) {
+        if (!sameName(portalName, name)) {
             throw new Prompt1ClientDataException(HttpStatus.CONFLICT,
                     "The email belongs to a portal client with another name than clientName.");
         }
         ObjectNode personal = personalDocument(formattingService.formatClientData(dumpService.getClientDataDump(clients)),
-                clientName);
+                name);
         ObjectNode intake = intakeDocument(questionnaire, response);
         log.info("Prompt 1 client files built: intake response {} with {} saved answer(s), personal data with {} part(s)",
                 response.getId(), response.getQuestionResponses().size(), personal.path("structured_data").size());
-        return List.of(new IntakeFile("personal_data.json", bytes(personal)),
-                new IntakeFile("intake_questionnaire.json", bytes(intake)));
+        return new ClientFiles(List.of(new IntakeFile("personal_data.json", bytes(personal)),
+                new IntakeFile("intake_questionnaire.json", bytes(intake))), name);
     }
 
     /** Jan's intake form from the questionnaire definition and one saved response. */

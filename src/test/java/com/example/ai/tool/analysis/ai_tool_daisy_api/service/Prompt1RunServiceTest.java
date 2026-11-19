@@ -274,6 +274,23 @@ class Prompt1RunServiceTest {
         return result;
     }
 
+    /** The client files as the intake builder returns them, built for this client name. */
+    private static Prompt1IntakeBuilder.ClientFiles files(String clientName) {
+        return new Prompt1IntakeBuilder.ClientFiles(intake(), clientName);
+    }
+
+    @Test
+    void aStartWithoutAClientNameKeepsTheNameTheFilesWereBuiltFor() throws Exception {
+        whenRun().thenReturn(validClientResult());
+        Prompt1RunService service = service(task -> task.run());
+        Prompt1RunService.Client fromIntakeApp = new Prompt1RunService.Client("c-1", null, null, "client");
+
+        String runId = service.submitForClient(fromIntakeApp, null, () -> files("Portal Name")).run().getRunId();
+
+        assertEquals("Portal Name", service.status(runId).orElseThrow().getClientName());
+        verify(resultStore).save(eq("client"), eq("Portal Name"), eq("Prompt_1"), anyString());
+    }
+
     @Test
     void clientRunStoresTheClientItsPhasesAndTheResultForTheApps() throws Exception {
         Prompt1ExperimentResult valid = validClientResult();
@@ -286,7 +303,7 @@ class Prompt1RunServiceTest {
                 });
         Prompt1RunService service = service(task -> task.run());
 
-        Prompt1RunService.ClientSubmit submitted = service.submitForClient(client, null, () -> intake());
+        Prompt1RunService.ClientSubmit submitted = service.submitForClient(client, null, () -> files("Test Client"));
 
         assertFalse(submitted.existing());
         String runId = submitted.run().getRunId();
@@ -330,15 +347,15 @@ class Prompt1RunServiceTest {
         Prompt1RunService.ClientSubmit first = service.submitForClient(client, null, () -> {
             // a second request for the same client arrives while the first builds the intake
             Prompt1ClientDataException e = assertThrows(Prompt1ClientDataException.class,
-                    () -> service.submitForClient(client, null, () -> intake()));
+                    () -> service.submitForClient(client, null, () -> files("Test Client")));
             assertEquals(HttpStatus.CONFLICT, e.getStatus());
-            return intake();
+            return files("Test Client");
         });
 
         assertFalse(first.existing());
         assertEquals(1, table.size());
         // once started, the next request goes through the guard again (here: no active run in the mock)
-        assertFalse(service.submitForClient(client, null, () -> intake()).existing());
+        assertFalse(service.submitForClient(client, null, () -> files("Test Client")).existing());
     }
 
     @Test
@@ -348,7 +365,7 @@ class Prompt1RunServiceTest {
         doThrow(new IllegalStateException("database down")).when(resultStore).save(any(), any(), any(), any());
         Prompt1RunService service = service(task -> task.run());
 
-        String runId = service.submitForClient(client, null, () -> intake()).run().getRunId();
+        String runId = service.submitForClient(client, null, () -> files("Test Client")).run().getRunId();
 
         Prompt1RunDto run = service.status(runId).orElseThrow();
         assertEquals("VALID", run.getStatus());
